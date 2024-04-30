@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @Table(name="_user")
+@EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails {
 
     @Id
@@ -33,7 +35,7 @@ public class User implements UserDetails {
     private String dateOfBirth;
     private String bio;
     @Enumerated(value = EnumType.STRING)
-    private Role role;
+    private Role role = Role.STUDENT;
     @CreatedDate
     @Column(updatable = false,nullable = false)
     private LocalDateTime createdAt;
