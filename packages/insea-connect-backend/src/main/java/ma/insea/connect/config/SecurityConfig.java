@@ -14,6 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -25,9 +28,13 @@ public class SecurityConfig {
 
    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(AbstractHttpConfigurer::disable)
+       /* TODO: Reset Configuration to default settings when using DBs other than H2  */
+        return http.csrf(csrf -> csrf
+                        .ignoringRequestMatchers(toH2Console())
+                        .disable())
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("/login/**")
+                        req->req.requestMatchers("/login/**", "/h2-console/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()

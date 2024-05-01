@@ -19,7 +19,7 @@ public class DegreePath {
     private Long id;
     private String cycle;
     private String major;
-    private int year;
+    private int pathYear;
 
     @OneToMany(mappedBy = "degreePath")
     private List<User> students;
