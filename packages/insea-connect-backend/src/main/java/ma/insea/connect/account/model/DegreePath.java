@@ -3,6 +3,7 @@ package ma.insea.connect.account.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ma.insea.connect.drive.model.DriveItem;
 
 import java.util.List;
 
@@ -23,4 +24,8 @@ public class DegreePath {
 
     @OneToMany(mappedBy = "degreePath")
     private List<User> students;
+
+
+    @OneToMany(mappedBy = "degreePath")
+    private List<DriveItem> driveItems;
 }

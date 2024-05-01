@@ -8,6 +8,7 @@ import ma.insea.connect.chat.conversation.model.DirectMessage;
 import ma.insea.connect.chat.group.model.Group;
 import ma.insea.connect.chat.group.model.GroupMembership;
 import ma.insea.connect.chat.group.model.GroupMessage;
+import ma.insea.connect.drive.model.DriveItem;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -53,6 +54,10 @@ public class User implements UserDetails {
 
     @ManyToOne
     private DegreePath degreePath;
+
+    @OneToMany(mappedBy = "creator")
+    private List<DriveItem> driveItems;
+
 
     @OneToMany(mappedBy = "memberOne")
     private List<Conversation> conversationsAsMemberOne;
