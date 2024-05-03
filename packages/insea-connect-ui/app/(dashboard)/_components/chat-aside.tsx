@@ -1,0 +1,53 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Search, SquarePen } from "lucide-react";
+import ChatList from "./chat-list";
+
+const ChatAside = () => {
+  return (
+    <aside className="hidden lg:order-first lg:block lg:flex-shrink-0">
+      <div className="gap-3 pt-2 relative flex h-full w-96 flex-col border-r border-gray-200 bg-white">
+        <div className="flex flex-col px-4 gap-2">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-semibold tracking-tight first:mt-0">
+              Chats
+            </h2>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-lg"
+              aria-label="New chat"
+            >
+              <SquarePen className="w-5 h-5" />
+            </Button>
+          </div>
+          <div className="relative">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Search..."
+              className="w-full bg-background pl-8 "
+            />
+          </div>
+        </div>
+        <Tabs className="w-full" defaultValue="conversations">
+          <div className="px-4">
+            <TabsList className="rounded-md grid w-full grid-cols-2 ">
+              <TabsTrigger value="conversations">Conversations</TabsTrigger>
+              <TabsTrigger value="groups">Groups</TabsTrigger>
+            </TabsList>
+          </div>
+          <TabsContent value="conversations" className="relative">
+            <ChatList />
+          </TabsContent>
+          <TabsContent value="groups">
+            <ChatList />
+          </TabsContent>
+        </Tabs>
+      </div>
+    </aside>
+  );
+};
+
+export default ChatAside;
