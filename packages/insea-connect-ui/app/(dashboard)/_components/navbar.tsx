@@ -1,3 +1,4 @@
+"use client";
 import { Bot, Folder, MessageSquareText, Moon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -10,8 +11,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { usePathname } from "next/navigation";
+import NavbarItem from "./navbar-item";
 
 const Navbar = () => {
+  const pathname = usePathname();
+  console.log(pathname);
   return (
     <TooltipProvider>
       <aside className="inset-y shadow-sm fixed  left-0 z-20 flex h-full flex-col border-r">
@@ -25,51 +30,11 @@ const Navbar = () => {
         </a>
 
         <nav className="grid gap-1 p-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-lg"
-                aria-label="Assistant"
-              >
-                <Bot className="size-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={5}>
-              Assistant
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-lg"
-                aria-label="chat"
-              >
-                <MessageSquareText className="size-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={5}>
-              Chat
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-lg"
-                aria-label="drive"
-              >
-                <Folder className="size-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={5}>
-              Drive
-            </TooltipContent>
-          </Tooltip>
+          <NavbarItem href="/assistant" label="Assistant" icon={Bot} />
+
+          <NavbarItem href="/chat" label="Chat" icon={MessageSquareText} />
+
+          <NavbarItem href="/drive" label="Drive" icon={Folder} />
         </nav>
         <nav className="mt-auto flex flex-col items-center gap-2  p-2">
           <Tooltip>

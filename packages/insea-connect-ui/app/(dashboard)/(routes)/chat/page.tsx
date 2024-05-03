@@ -1,5 +1,5 @@
-import ChatArea from "../_components/chat-area";
-import ChatAside from "../_components/chat-aside";
+import ChatArea from "../../_components/chat-area";
+import ChatAside from "../../_components/chat-aside";
 
 const MainPage = () => {
   return (
