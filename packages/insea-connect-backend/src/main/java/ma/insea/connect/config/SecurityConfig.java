@@ -28,13 +28,12 @@ public class SecurityConfig {
 
    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-       /* TODO: Reset Configuration to default settings when using DBs other than H2  */
         return http.csrf(csrf -> csrf
                         .ignoringRequestMatchers(toH2Console())
                         .disable())
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("/login/**", "/h2-console/**")
+                        req->req.requestMatchers("/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()

@@ -1,14 +1,8 @@
-package ma.insea.connect.account.model;
+package ma.insea.connect.user;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ma.insea.connect.chat.common.model.Message;
-import ma.insea.connect.chat.conversation.model.Conversation;
-import ma.insea.connect.chat.conversation.model.DirectMessage;
-import ma.insea.connect.chat.group.model.Group;
-import ma.insea.connect.chat.group.model.GroupMembership;
-import ma.insea.connect.chat.group.model.GroupMessage;
-import ma.insea.connect.drive.model.DriveItem;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -17,9 +11,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Entity
 @AllArgsConstructor
@@ -27,23 +22,24 @@ import java.util.stream.Stream;
 @Setter
 @Builder
 @NoArgsConstructor
-@Table(name="_user")
+@Table(name="chat_user",schema = "testo")
 @EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails {
-
-    @Id
+        @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username;
     private String email;
+    private String username;
     private String passwordHash;
-    private String imageUrl;
-    private String firstName;
-    private String lastName;
+    private String imagrUrl;
+    private String firstname;
+    private String lastname;
     private String dateOfBirth;
     private String bio;
+
     @Enumerated(value = EnumType.STRING)
     private Role role = Role.STUDENT;
+
     @CreatedDate
     @Column(updatable = false,nullable = false)
     private LocalDateTime createdAt;
@@ -51,48 +47,45 @@ public class User implements UserDetails {
     @LastModifiedDate
     @Column(insertable = false)
     private LocalDateTime updatedAt;
+    
+    private Status status;
+    private Date lastLogin;
+    private List<Long> groups = new ArrayList<>();
 
-    @ManyToOne
-    private DegreePath degreePath;
+    
 
-    @OneToMany(mappedBy = "creator")
-    private List<DriveItem> driveItems;
-
-
-    @OneToMany(mappedBy = "memberOne")
-    private List<Conversation> conversationsAsMemberOne;
-
-    @OneToMany(mappedBy = "memberTwo")
-    private List<Conversation> conversationsAsMemberTwo;
+    // @ManyToOne
+    // private DegreePath degreePath;
 
 
-    @OneToMany(mappedBy = "user")
-    private List<GroupMembership> memberships;
+    public void addGroup(Long group){
+            List<Long> groups = this.getGroups();
+            if (groups == null) 
+            {
+                groups = new ArrayList<Long>();
+                
+            }
+            groups.add(group);
+
+        }
 
 
-    @OneToMany(mappedBy = "sender")
-    private List<DirectMessage> directMessagesSent;
-
-    @OneToMany(mappedBy = "receiver")
-    private List<DirectMessage> directMessagesReceived;
-
-    @OneToMany(mappedBy = "sender")
-    private List<GroupMessage> groupMessages;
-
-    public List<Conversation> getConversations(){
-        return Stream.concat(conversationsAsMemberOne.stream(),conversationsAsMemberTwo.stream())
-                .toList();
+    public void removeGroup(Long groupId) {
+        List<Long> groups = this.getGroups();
+        if (groups == null) {
+            groups = new ArrayList<Long>();
+        }
+        groups.remove(groupId);
     }
+
+    
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    @Override
-    public String getPassword() {
-        return passwordHash;
-    }
+   
 
     @Override
     public boolean isAccountNonExpired() {
@@ -113,6 +106,23 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+
+    @Override
+    public String getPassword() {
+        return passwordHash;
+    }
+
+
+  
+
+     
 
 
 }

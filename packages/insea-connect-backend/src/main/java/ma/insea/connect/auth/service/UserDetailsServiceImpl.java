@@ -1,7 +1,8 @@
 package ma.insea.connect.auth.service;
 
 import lombok.RequiredArgsConstructor;
-import ma.insea.connect.account.repository.UserRepository;
+import ma.insea.connect.user.UserRepository;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

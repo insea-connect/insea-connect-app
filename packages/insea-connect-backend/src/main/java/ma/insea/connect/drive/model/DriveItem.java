@@ -3,8 +3,8 @@ package ma.insea.connect.drive.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import ma.insea.connect.account.model.DegreePath;
-import ma.insea.connect.account.model.User;
+import ma.insea.connect.user.User;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -23,8 +23,8 @@ public class DriveItem {
     private String name;
     private String description;
 
-    @ManyToOne
-    private DegreePath degreePath;
+    // @ManyToOne
+    // private DegreePath degreePath;
 
     @ManyToOne
     private User creator;
