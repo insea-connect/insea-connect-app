@@ -33,10 +33,10 @@ public class User
     private Long id;
     private String email;
     private String username;
-    private String passwordHash;
+    private String password;
     private String imagrUrl;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private String dateOfBirth;
     private String bio;
 
@@ -53,6 +53,8 @@ public class User
     
     private Status status;
     private Date lastLogin;
+
+    @ElementCollection
     private List<Long> groups = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "sender")
@@ -60,11 +62,6 @@ public class User
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "recipient")
     private List<ChatMessage> receivedMessages;
-
-
-
-   
-
 
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "member1")

@@ -6,6 +6,9 @@ import ma.insea.connect.chat.conversation.ConversationService;
 import ma.insea.connect.chat.group.Group;
 import ma.insea.connect.chat.group.GroupService;
 
+import ma.insea.connect.keycloak.DTO.UserDTO;
+import ma.insea.connect.keycloak.service.KeyCloakService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -18,10 +21,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
+
 @Controller
 @RequiredArgsConstructor
 public class UserController {
-
+    private final KeyCloakService keyCloakService;
     private final UserService userService;
     private final GroupService groupService;
     private final UserRepository userRepository;
@@ -37,10 +41,16 @@ public class UserController {
         {
             user.setStatus(Status.ONLINE);
             userService.saveUser(user);
+            UserDTO userDTO = UserDTO.mapToUserDTO(user);
+            keyCloakService.addUser(userDTO);
+
         }
+
         else
         {
             user1.setStatus(Status.ONLINE);
+            UserDTO userDTO = UserDTO.mapToUserDTO(user);
+            keyCloakService.addUser(userDTO);
             userService.saveUser(user1);
         }
         return user;
@@ -61,13 +71,13 @@ public class UserController {
     }
 
     @GetMapping("/user/{myId}/groups")
-    public ResponseEntity<List<Group>> getGroupsByEmail(@PathVariable Long myId) { 
+    public ResponseEntity<List<Group>> getGroupsByEmail(@PathVariable Long myId) {
         List<Group> groups = groupService.findallgroupsofemail(myId);
         return ResponseEntity.ok(groups);
     }
 
     @GetMapping("/user/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) { 
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         User user=userRepository.findByEmail(email);
         return ResponseEntity.ok(user);
     }
