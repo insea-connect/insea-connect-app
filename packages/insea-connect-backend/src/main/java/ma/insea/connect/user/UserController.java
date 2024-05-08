@@ -28,7 +28,7 @@ public class UserController {
     private final ConversationService conversationService;
 
     @MessageMapping("/users.addUser")
-    @SendTo("/users/public")
+    @SendTo("/user/public")
     public User addUser(
             @Payload User user
     ) {
@@ -66,10 +66,9 @@ public class UserController {
         return ResponseEntity.ok(groups);
     }
 
-    @GetMapping("/users/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) { 
-        User user=userRepository.findByEmail(email);
-        return ResponseEntity.ok(user);
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable Long id) { 
+        return ResponseEntity.ok(userRepository.findById(id).get());
     }
 
     @GetMapping("/users/{myId}/conversations")
