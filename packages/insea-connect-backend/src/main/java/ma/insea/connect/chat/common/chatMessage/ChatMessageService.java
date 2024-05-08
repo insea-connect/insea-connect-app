@@ -6,37 +6,55 @@ import org.springframework.stereotype.Service;
 
 import ma.insea.connect.chat.conversation.Conversation;
 import ma.insea.connect.chat.conversation.ConversationRepository;
+import ma.insea.connect.user.User;
+import ma.insea.connect.user.UserRepository;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class ChatMessageService {
-    private final ChatMessageRepository repository;
     private final ChatMessageRepository chatMessageRepository;
     private final ConversationRepository conversationRepository;
+    private final UserRepository userRepository;
+    private final GroupMessageRepository groupMessageRepository;
 
-    public ChatMessage saveusermessage(ChatMessage chatMessage) {
+    public ChatMessage saveusermessage(ChatMessageDTO chatMessage) {
+        ChatMessage chatMessage1 = new ChatMessage();
         var chatId = getChatRoomId(chatMessage.getSenderId(), chatMessage.getRecipientId(), true);
-        chatMessage.setChatId(chatId);
-        repository.save(chatMessage);
+        chatMessage1.setChatId(chatId);
+
+        User recipient = userRepository.findByEmail(chatMessage.getRecipientId());
+        User sender = userRepository.findByEmail(chatMessage.getSenderId());
+
+        chatMessage1.setSender(sender);
+        chatMessage1.setRecipient(recipient);
+        chatMessage1.setContent(chatMessage.getContent());
+        chatMessage1.setTimestamp(new Date());
+
+        chatMessageRepository.save(chatMessage1);
+
         Conversation conversation = new Conversation();
         conversation.setChatId(chatId);
-        conversation.setMember1Id(chatMessage.getSenderId());
-        conversation.setMember2Id(chatMessage.getRecipientId());
+        conversation.setMember1(chatMessage1.getSender());
+        conversation.setMember2(chatMessage1.getRecipient());
         conversationRepository.save(conversation);
-        return chatMessage;
+        return chatMessage1;
     }
-    public ChatMessage savegroupmessage(ChatMessage chatMessage) {
-        var chatId = getChatRoomId(chatMessage.getRecipientId(), chatMessage.getRecipientId(), true);
-
-        chatMessage.setChatId(chatId);
-        repository.save(chatMessage);
-        return chatMessage;
+    public GroupMessage savegroupmessage(GroupMessageDTO groupMessageDTO) {
+        User sender = userRepository.findById(groupMessageDTO.getSenderId()).get();
+        GroupMessage groupMessage = new GroupMessage();
+        groupMessage.setGroupId(groupMessageDTO.getGroupId());
+        groupMessage.setSender(sender);
+        groupMessage.setContent(groupMessageDTO.getContent());
+        groupMessage.setTimestamp(new Date());
+        groupMessageRepository.save(groupMessage);
+        return groupMessage;
     }
     public List<ChatMessage> findChatMessages(String senderId, String recipientId) {
         var chatId = getChatRoomId(senderId, recipientId, true);
-        return repository.findByChatId(chatId);
+        return chatMessageRepository.findByChatId(chatId);
     }
 
     public void deleteChatMessages(String chatId) {
@@ -64,6 +82,9 @@ public class ChatMessageService {
             return chatMessages.get(chatMessages.size() - 1);
         }
         return null;
+    }
+    public List<GroupMessage> findGroupMessages(Long groupId) {
+        return groupMessageRepository.findByGroupId(groupId);
     }
     
 }

@@ -21,24 +21,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "chat_message",schema = "testo")
+@Table(name = "chat_group_message",schema = "testo")
 
-public class ChatMessage {
+public class GroupMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
-    private String chatId;
+    private Long groupId;
     private String content;
     private Date timestamp;
 
     @ManyToOne
     @JoinColumn(name="sender_id", nullable=false)
     @JsonIgnore
-    private User sender;
-    @ManyToOne
-    @JoinColumn(name="recipient_id", nullable=false)
-    @JsonIgnore
-    private User recipient;
-    
+    private User sender;   
 }

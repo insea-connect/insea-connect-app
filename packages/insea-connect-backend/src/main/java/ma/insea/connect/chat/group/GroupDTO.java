@@ -6,7 +6,8 @@ import lombok.Data;
 @Data
 public class GroupDTO {
     private String name;
-    private String creator;
-    private List<String> users;
+    private String description;
+    private Long creator;
+    private List<Long> members;
     
 }

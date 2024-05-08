@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class ConversatonController {
     private final ConversationService conversationService;
 
-    @GetMapping("/conversation/{conversationId}/messages")
+    @GetMapping("/conversations/{conversationId}/messages")
     public ResponseEntity<List<ChatMessage>> findConversationMessages(@PathVariable String conversationId
                                                  ) {
         return ResponseEntity

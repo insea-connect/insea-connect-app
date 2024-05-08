@@ -5,13 +5,14 @@ import lombok.NoArgsConstructor;
 import ma.insea.connect.user.User;
 import lombok.AllArgsConstructor;
 
-import java.time.LocalDateTime;
 
-import org.springframework.data.annotation.CreatedDate;
 
-import jakarta.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Data
@@ -22,8 +23,16 @@ import jakarta.persistence.Table;
 public class Conversation {
     @Id
     private String chatId;
-    private String member1Id;
-    private String member2Id;
+
+    @ManyToOne
+    @JoinColumn(name="member1_id", nullable=true)
+    @JsonIgnore
+    private User member1;
+
+    @ManyToOne
+    @JoinColumn(name="member2_id", nullable=true)
+    @JsonIgnore
+    private User member2;
 
     
 }

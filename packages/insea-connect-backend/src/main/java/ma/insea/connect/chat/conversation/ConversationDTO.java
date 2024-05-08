@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
-import java.security.Timestamp;
+// import java.security.Timestamp;
 import java.util.Date;
 
 import ma.insea.connect.chat.common.chatMessage.ChatMessage;
@@ -17,7 +17,7 @@ import jakarta.persistence.Id;
 public class ConversationDTO {
     @Id
     private String chatId;
-    private String email;
+    private Long recipientId;
     private ChatMessage lastMessage;  
     private Status status; 
     private Date lastLogin;

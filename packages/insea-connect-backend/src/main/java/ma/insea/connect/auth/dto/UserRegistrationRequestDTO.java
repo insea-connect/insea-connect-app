@@ -1,9 +1,9 @@
-package ma.insea.connect.auth.dto;
+// package ma.insea.connect.auth.dto;
 
-public record UserRegistrationRequestDTO(
-        String username,
-        String firstName,
-        String lastName,
-        String password
-) {
-}
+// public record UserRegistrationRequestDTO(
+//         String username,
+//         String firstName,
+//         String lastName,
+//         String password
+// ) {
+// }

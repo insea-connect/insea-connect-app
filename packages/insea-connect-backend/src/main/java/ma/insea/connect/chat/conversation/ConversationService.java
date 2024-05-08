@@ -23,26 +23,28 @@ public class ConversationService {
     private final ChatMessageService chatMessageService;
     private final ChatMessageRepository chatMessageRepository;
 
-    public List<ConversationDTO> findConversationsByEmail(String email) {
-        List<Conversation> conversations = conversationRepository.findAllByMember1IdOrMember2Id(email,email);
-        System.out.println("hey2"+conversations);
+    public List<ConversationDTO> findConversationsByEmail(Long myId) {
+        User user2=userRepository.findById(myId).get();
+        List<Conversation> conversations = conversationRepository.findAllByMember1OrMember2(user2,user2);
+        
 
         List<ConversationDTO> conversationDTOs = new ArrayList<>();
         for(Conversation conversation:conversations)
         {
             ChatMessage chatMessage=chatMessageService.findLastMessage(conversation.getChatId());
-            String recepient=conversation.getMember1Id().equals(email)?conversation.getMember2Id():conversation.getMember1Id();
-            User user=userRepository.findByEmail(recepient);
+            Long member1=conversation.getMember1().getId();
+            Long member2=conversation.getMember2().getId();
+            Long recepientId=member1.equals(myId)?member2:member1;
+            User user=userRepository.findById(recepientId).get();
 
             ConversationDTO conversationDTO=new ConversationDTO();
 
             conversationDTO.setChatId(conversation.getChatId());
-            conversationDTO.setEmail(recepient);
+            conversationDTO.setRecipientId(recepientId);
             conversationDTO.setUsername(user.getUsername());
             conversationDTO.setLastLogin(user.getLastLogin());
             conversationDTO.setStatus(user.getStatus());
             conversationDTO.setLastMessage(chatMessage);
-            System.out.println("hey3"+conversationDTO);
 
             
             conversationDTOs.add(conversationDTO);

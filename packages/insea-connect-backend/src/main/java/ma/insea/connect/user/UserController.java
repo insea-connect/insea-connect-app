@@ -60,9 +60,9 @@ public class UserController {
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
-    @GetMapping("/user/{email}/groups")
-    public ResponseEntity<List<Group>> getGroupsByEmail(@PathVariable String email) { 
-        List<Group> groups = groupService.findallgroupsofemail(email);
+    @GetMapping("/user/{myId}/groups")
+    public ResponseEntity<List<Group>> getGroupsByEmail(@PathVariable Long myId) { 
+        List<Group> groups = groupService.findallgroupsofemail(myId);
         return ResponseEntity.ok(groups);
     }
 
@@ -72,15 +72,10 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/user/{email}/conversations")
-    public ResponseEntity<List<ConversationDTO>> getUserConversations(@PathVariable String email) {
-        System.out.println("hey1"+email);
-        List<ConversationDTO> conversations = conversationService.findConversationsByEmail(email);
+    @GetMapping("/user/{myId}/conversations")
+    public ResponseEntity<List<ConversationDTO>> getUserConversations(@PathVariable Long myId) {
+        List<ConversationDTO> conversations = conversationService.findConversationsByEmail(myId);
         return ResponseEntity.ok(conversations);
     }
-
-
-
-
 
 }

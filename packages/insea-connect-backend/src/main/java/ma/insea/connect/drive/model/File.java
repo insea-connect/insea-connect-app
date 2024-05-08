@@ -1,17 +1,17 @@
-package ma.insea.connect.drive.model;
+// package ma.insea.connect.drive.model;
 
-import jakarta.persistence.Entity;
-import lombok.*;
+// import jakarta.persistence.Entity;
+// import lombok.*;
 
-@Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@Builder
-public class File extends DriveItem {
+// @Entity
+// @AllArgsConstructor
+// @NoArgsConstructor
+// @Getter
+// @Setter
+// @Builder
+// public class File extends DriveItem {
 
-    private String size;
-    private String mimeType;
-    private String fileUrl;
-}
+//     private String size;
+//     private String mimeType;
+//     private String fileUrl;
+// }

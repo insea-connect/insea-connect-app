@@ -1,8 +1,6 @@
 package ma.insea.connect.chat.common.chatMessage;
 
 import lombok.RequiredArgsConstructor;
-import ma.insea.connect.user.UserRepository;
-import ma.insea.connect.user.User;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -21,27 +19,26 @@ public class ChatController {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatMessageService chatMessageService;
-    private final UserRepository userRepository;
 
     @MessageMapping("/chat.sendmessage")
-    public void processMessage(@Payload ChatMessage chatMessage) {
+    public void processMessage(@Payload ChatMessageDTO chatMessage) {
         ChatMessage savedMsg = chatMessageService.saveusermessage(chatMessage);
 
         messagingTemplate.convertAndSendToUser(
                 chatMessage.getRecipientId(), "/queue/messages",
                 new ChatNotification(
                         savedMsg.getId(),
-                        savedMsg.getSenderId(),
-                        savedMsg.getRecipientId(),
+                        savedMsg.getSender().getEmail(),
+                        savedMsg.getRecipient().getEmail(),
                         savedMsg.getContent()
                 )
         );
     }
     @MessageMapping("/chat.sendgroupmessage")
     @SendTo("/user/public")
-    public ChatMessage processGroupMessage(@Payload ChatMessage chatMessage) {
-        chatMessageService.savegroupmessage(chatMessage);   
-        return chatMessage;
+    public GroupMessage processGroupMessage(@Payload GroupMessageDTO groupMessage) {
+        GroupMessage groupMessage2=chatMessageService.savegroupmessage(groupMessage);   
+        return groupMessage2;
     }
 
 
@@ -51,6 +48,7 @@ public class ChatController {
         return ResponseEntity
                 .ok(chatMessageService.findChatMessages(senderId, recipientId));
     }
+    
     
     
 }

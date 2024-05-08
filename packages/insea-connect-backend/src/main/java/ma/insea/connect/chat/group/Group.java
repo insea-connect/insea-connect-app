@@ -27,7 +27,7 @@ public class Group {
     private String description;
     private Boolean isOffecial;
     private Date createdDate;
-    private List<String> users;
-    private String creator;
-    private List<String> admins;
+    private List<Long> users;
+    private Long creator;
+    private List<Long> admins;
 }

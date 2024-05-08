@@ -2,17 +2,18 @@ package ma.insea.connect.user;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ma.insea.connect.chat.common.chatMessage.ChatMessage;
+import ma.insea.connect.chat.conversation.Conversation;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+// import org.springframework.security.core.GrantedAuthority;
+// import org.springframework.security.core.authority.SimpleGrantedAuthority;
+// import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,9 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name="chat_user",schema = "testo")
 @EntityListeners(AuditingEntityListener.class)
-public class User implements UserDetails {
+public class User 
+// implements UserDetails
+ {
         @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -52,10 +55,26 @@ public class User implements UserDetails {
     private Date lastLogin;
     private List<Long> groups = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "sender")
+    private List<ChatMessage> sentMessages;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "recipient")
+    private List<ChatMessage> receivedMessages;
+
+
+
+   
+
+
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "member1")
+    private List<Conversation> member1conversations;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "member2")
+    private List<Conversation> member2conversations;
+
     
 
-    // @ManyToOne
-    // private DegreePath degreePath;
 
 
     public void addGroup(Long group){
@@ -80,44 +99,44 @@ public class User implements UserDetails {
 
     
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-       return List.of(new SimpleGrantedAuthority(role.name()));
-    }
+    // @Override
+    // public Collection<? extends GrantedAuthority> getAuthorities() {
+    //    return List.of(new SimpleGrantedAuthority(role.name()));
+    // }
 
    
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+    // @Override
+    // public boolean isAccountNonExpired() {
+    //     return true;
+    // }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+    // @Override
+    // public boolean isAccountNonLocked() {
+    //     return true;
+    // }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+    // @Override
+    // public boolean isCredentialsNonExpired() {
+    //     return true;
+    // }
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
+    // @Override
+    // public boolean isEnabled() {
+    //     return true;
+    // }
 
 
-    @Override
-    public String getPassword() {
-        return passwordHash;
-    }
+    // @Override
+    // public String getUsername() {
+    //     return username;
+    // }
+
+
+    // @Override
+    // public String getPassword() {
+    //     return passwordHash;
+    // }
 
 
   

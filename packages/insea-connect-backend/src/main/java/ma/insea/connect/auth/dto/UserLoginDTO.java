@@ -1,7 +1,7 @@
-package ma.insea.connect.auth.dto;
+// package ma.insea.connect.auth.dto;
 
-public record UserLoginDTO(
-        String username,
-        String password
-) {
-}
+// public record UserLoginDTO(
+//         String username,
+//         String password
+// ) {
+// }
