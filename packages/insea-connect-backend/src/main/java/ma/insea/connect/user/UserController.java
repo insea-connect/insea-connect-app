@@ -27,8 +27,8 @@ public class UserController {
     private final UserRepository userRepository;
     private final ConversationService conversationService;
 
-    @MessageMapping("/user.addUser")
-    @SendTo("/user/public")
+    @MessageMapping("/users.addUser")
+    @SendTo("/users/public")
     public User addUser(
             @Payload User user
     ) {
@@ -46,8 +46,8 @@ public class UserController {
         return user;
     }
 
-    @MessageMapping("/user.disconnectUser")
-    @SendTo("/user/public")
+    @MessageMapping("/users.disconnectUser")
+    @SendTo("/users/public")
     public User disconnectUser(
             @Payload User user
     ) {
@@ -60,19 +60,19 @@ public class UserController {
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
-    @GetMapping("/user/{myId}/groups")
+    @GetMapping("/users/{myId}/groups")
     public ResponseEntity<List<Group>> getGroupsByEmail(@PathVariable Long myId) { 
         List<Group> groups = groupService.findallgroupsofemail(myId);
         return ResponseEntity.ok(groups);
     }
 
-    @GetMapping("/user/{email}")
+    @GetMapping("/users/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) { 
         User user=userRepository.findByEmail(email);
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/user/{myId}/conversations")
+    @GetMapping("/users/{myId}/conversations")
     public ResponseEntity<List<ConversationDTO>> getUserConversations(@PathVariable Long myId) {
         List<ConversationDTO> conversations = conversationService.findConversationsByEmail(myId);
         return ResponseEntity.ok(conversations);
