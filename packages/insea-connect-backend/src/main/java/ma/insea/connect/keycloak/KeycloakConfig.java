@@ -8,10 +8,10 @@ import org.keycloak.admin.client.KeycloakBuilder;
 public class KeycloakConfig {
 
     static Keycloak keycloak = null;
-    final static String serverUrl = "http://localhost:8080/";
+    final static String serverUrl = "http://localhost:8088/";
     public final static String realm = "INSEA-CONNECT";
     final static String clientId = "INSEA-CONNECT-API";
-    final static String clientSecret = "CbE70UdwbImSmMAJu0LyiMd1KZ2mTmjB";
+    final static String clientSecret = "**********";
     final static String userName = "admin";
     final static String password = "admin";
 

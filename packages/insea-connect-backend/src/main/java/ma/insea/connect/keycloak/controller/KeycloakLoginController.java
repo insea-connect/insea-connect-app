@@ -71,10 +71,12 @@ public class KeycloakLoginController {
 
             // Return the response containing the token
             return ResponseEntity.ok(response.getBody());
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
+        }
+        catch (HttpClientErrorException | HttpServerErrorException e) {
             // Handle client and server errors specifically
             throw new ResponseStatusException(e.getStatusCode(), "Error requesting token from Keycloak: " + e.getMessage(), e);
-        } catch (RestClientException e) {
+        }
+        catch (RestClientException e) {
             // Catch other REST client errors
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error: " + e.getMessage(), e);
         }

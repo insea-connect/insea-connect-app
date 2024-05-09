@@ -20,7 +20,7 @@ import java.util.List;
 // Annotates this class as a REST controller to handle incoming HTTP requests.
 // Maps the base path of this controller to "api/user".
 @RestController
-@RequestMapping(path = "api/user")
+@RequestMapping(path = "/api/v1/keyCloakUser")
 public class KeyCloakController {
 
     // Injects the KeyCloakService bean to manage Keycloak-related operations.
