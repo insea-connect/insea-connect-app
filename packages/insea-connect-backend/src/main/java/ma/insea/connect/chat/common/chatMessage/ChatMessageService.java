@@ -76,10 +76,16 @@ public class ChatMessageService {
     var chatId = String.format("%s_%s",first, second);
             return chatId;
 }
-    public ChatMessage findLastMessage(String chatId) {
+    public ChatMessageDTO findLastMessage(String chatId) {
         List<ChatMessage> chatMessages = chatMessageRepository.findByChatId(chatId);
         if (chatMessages.size() > 0) {
-            return chatMessages.get(chatMessages.size() - 1);
+            ChatMessage c=chatMessages.get(chatMessages.size() - 1);
+            ChatMessageDTO chatMessageDTO=new ChatMessageDTO();
+            chatMessageDTO.setContent(c.getContent());
+            chatMessageDTO.setTimestamp(c.getTimestamp());
+            chatMessageDTO.setSenderId(c.getSender().getEmail());
+            chatMessageDTO.setRecipientId(c.getRecipient().getEmail());
+            return chatMessageDTO;
         }
         return null;
     }

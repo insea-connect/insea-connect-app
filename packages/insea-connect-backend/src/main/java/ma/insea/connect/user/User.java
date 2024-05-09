@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import ma.insea.connect.chat.common.chatMessage.ChatMessage;
 import ma.insea.connect.chat.conversation.Conversation;
+import ma.insea.connect.chat.group.Group;
+import ma.insea.connect.chat.group.Membership;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -11,6 +13,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 // import org.springframework.security.core.GrantedAuthority;
 // import org.springframework.security.core.authority.SimpleGrantedAuthority;
 // import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -53,19 +58,18 @@ public class User
     
     private Status status;
     private Date lastLogin;
-    private List<Long> groups = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Membership> membership;
+    
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "sender")
+    @JsonIgnore
     private List<ChatMessage> sentMessages;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "recipient")
     private List<ChatMessage> receivedMessages;
-
-
-
-   
-
-
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "member1")
     private List<Conversation> member1conversations;
@@ -73,29 +77,33 @@ public class User
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "member2")
     private List<Conversation> member2conversations;
 
+    // public void addGroup(Group group){
+    //     groups.add(group);
+    // }
+
     
 
 
 
-    public void addGroup(Long group){
-            List<Long> groups = this.getGroups();
-            if (groups == null) 
-            {
-                groups = new ArrayList<Long>();
+    // public void addGroup(Long group){
+    //         List<Long> groups = this.getGroups();
+    //         if (groups == null) 
+    //         {
+    //             groups = new ArrayList<Long>();
                 
-            }
-            groups.add(group);
+    //         }
+    //         groups.add(group);
 
-        }
+    //     }
 
 
-    public void removeGroup(Long groupId) {
-        List<Long> groups = this.getGroups();
-        if (groups == null) {
-            groups = new ArrayList<Long>();
-        }
-        groups.remove(groupId);
-    }
+    // public void removeGroup(Long groupId) {
+    //     List<Long> groups = this.getGroups();
+    //     if (groups == null) {
+    //         groups = new ArrayList<Long>();
+    //     }
+    //     groups.remove(groupId);
+    // }
 
     
 
