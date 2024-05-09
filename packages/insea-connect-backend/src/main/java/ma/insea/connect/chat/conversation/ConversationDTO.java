@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import java.util.Date;
 
 import ma.insea.connect.chat.common.chatMessage.ChatMessage;
+import ma.insea.connect.chat.common.chatMessage.ChatMessageDTO;
 import ma.insea.connect.user.Status;
 import jakarta.persistence.Id;
 
@@ -18,7 +19,7 @@ public class ConversationDTO {
     @Id
     private String chatId;
     private Long recipientId;
-    private ChatMessage lastMessage;  
+    private ChatMessageDTO lastMessage;  
     private Status status; 
     private Date lastLogin;
     private String username;

@@ -31,8 +31,8 @@ public class GroupController {
         return groupDTO;
     }
     @DeleteMapping("/groups/{groupid}")
-    public ResponseEntity<String> deleteGroup(@PathVariable("groupid") Long groupId, @RequestBody Map<String, Long> user) {
-            groupService.deleteGroup(groupId,user.get("id"));
+    public ResponseEntity<String> deleteGroup(@PathVariable("groupid") Long groupId) {
+            groupService.deleteGroup(groupId);
             return ResponseEntity.ok("Group deleted successfully");//cases for response ent
     
     }
@@ -52,12 +52,12 @@ public class GroupController {
     
     @PostMapping("/groups/{groupid}/members")
     public ResponseEntity<String> addGroupMembers(@PathVariable("groupid") Long groupId, @RequestBody Map<String, List<Long>>users) {
-        groupService.addGroupMembers(groupId, users.get("users"));
-        return ResponseEntity.ok("Group members added successfully");
+        
+        return groupService.addGroupMembers(groupId, users.get("members"));
     }
 
     @DeleteMapping("/groups/{groupid}/members/{memberid}")
-    public ResponseEntity<String> removeGroupMember(@PathVariable("groupid") Long groupId, @PathVariable("memberid") Long memberId, @RequestBody Map<String, Long> user) {
-        return groupService.removeGroupMember(groupId, memberId, user.get("name"));
+    public ResponseEntity<String> removeGroupMember(@PathVariable("groupid") Long groupId, @PathVariable("memberid") Long memberId) {
+        return groupService.removeGroupMember(groupId, memberId);
     }
 }

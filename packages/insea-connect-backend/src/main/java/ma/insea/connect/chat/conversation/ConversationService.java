@@ -9,6 +9,7 @@ import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
 import ma.insea.connect.user.User;
 import ma.insea.connect.user.UserRepository;
 import ma.insea.connect.chat.common.chatMessage.ChatMessage;
+import ma.insea.connect.chat.common.chatMessage.ChatMessageDTO;
 import ma.insea.connect.chat.common.chatMessage.ChatMessageRepository;
 
 
@@ -31,7 +32,8 @@ public class ConversationService {
         List<ConversationDTO> conversationDTOs = new ArrayList<>();
         for(Conversation conversation:conversations)
         {
-            ChatMessage chatMessage=chatMessageService.findLastMessage(conversation.getChatId());
+            ChatMessageDTO chatMessage=chatMessageService.findLastMessage(conversation.getChatId());
+
             Long member1=conversation.getMember1().getId();
             Long member2=conversation.getMember2().getId();
             Long recepientId=member1.equals(myId)?member2:member1;
