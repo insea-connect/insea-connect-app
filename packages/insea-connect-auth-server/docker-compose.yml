@@ -4,7 +4,7 @@ services:
   keycloack:
     image: quay.io/keycloak/keycloak:24.0.2
     ports:
-      - 8090:8080
+      - 8088:8080
     volumes:
       - ./keycloak/import:/opt/keycloak/data/import
     environment:
@@ -21,6 +21,8 @@ services:
     command: start-dev --import-realm
     networks:
       - backend
+
+
 
   postgres:
     image: postgres:15.5-alpine3.19

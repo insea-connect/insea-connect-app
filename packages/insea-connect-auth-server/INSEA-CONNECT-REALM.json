@@ -1,9 +1,6 @@
 {
   "id": "7f9e27cd-2eb3-4208-a924-05e73e86c66e",
   "realm": "INSEA-CONNECT",
-
-
-
   "displayName": "",
   "displayNameHtml": "",
   "notBefore": 0,
@@ -571,26 +568,8 @@
       },
       "notBefore": 0,
       "groups": []
-    },
-    {
-      "username": "admin",
-      "enabled": true,
-      "firstName": "Admin",
-      "lastName": "User",
-      "email": "admin@example.com",
-      "credentials": [
-        {
-          "type": "password",
-          "value": "admin",
-          "temporary": false
-        }
-      ],
-      "realmRoles": ["ADMIN", "management"],
-      "clientRoles": {
-        "realm-management": ["manage-users", "view-users"]
-      }
     }
-    ],
+  ],
   "scopeMappings": [
     {
       "clientScope": "offline_access",
