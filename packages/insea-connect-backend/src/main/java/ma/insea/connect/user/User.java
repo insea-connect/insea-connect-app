@@ -5,6 +5,7 @@ import lombok.*;
 import ma.insea.connect.chat.common.chatMessage.ChatMessage;
 import ma.insea.connect.chat.conversation.Conversation;
 import ma.insea.connect.chat.group.Group;
+import ma.insea.connect.chat.group.Membership;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -58,11 +59,13 @@ public class User
     private Status status;
     private Date lastLogin;
 
-    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
-    @JsonBackReference
-    private List<Group> groups = new ArrayList<>();
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Membership> membership;
+    
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "sender")
+    @JsonIgnore
     private List<ChatMessage> sentMessages;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "recipient")
@@ -74,9 +77,9 @@ public class User
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "member2")
     private List<Conversation> member2conversations;
 
-    public void addGroup(Group group){
-        groups.add(group);
-    }
+    // public void addGroup(Group group){
+    //     groups.add(group);
+    // }
 
     
 
