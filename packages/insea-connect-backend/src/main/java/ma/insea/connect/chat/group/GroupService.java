@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
 import ma.insea.connect.user.User;
 import ma.insea.connect.user.UserRepository;
 
@@ -19,7 +18,6 @@ import ma.insea.connect.user.UserRepository;
 public class GroupService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
-    private final ChatMessageService chatMessageService;
     private final MembershipRepository membershipRepository;
 
     public Group saveGroup(GroupDTO groupDTO) {
@@ -27,7 +25,7 @@ public class GroupService {
         
         group.setName(groupDTO.getName());
         group.setCreator(groupDTO.getCreator());
-        group.setIsOffecial(false);
+        group.setIsOfficial(false);
         group.setDescription(groupDTO.getDescription());
         group.setCreatedDate(new java.sql.Date(System.currentTimeMillis()));
         groupRepository.save(group);
@@ -39,14 +37,7 @@ public class GroupService {
             m.setIsAdmin(false);
             m.setJoiningDate(new java.sql.Date(System.currentTimeMillis()));
             membershipRepository.save(m);
-        }
-
-        // for (Long user : groupDTO.getMembers()) {
-        //     User user1 = UserRepository.findById(user).get();
-        //     user1.addGroup(group);
-        //     UserRepository.save(user1);
-        // }
-        
+        }      
         return group;
     }
     public List<Group> findallgroupsofemail(Long myId) {
@@ -59,7 +50,6 @@ public class GroupService {
     }
     public void deleteGroup(Long groupId) {
         Group group = groupRepository.findById(groupId).get();
-        // chatMessageService.deleteGroupMessages(groupId);
         groupRepository.delete(group);
     }
     public Group findById(Long groupId) {

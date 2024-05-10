@@ -4,11 +4,8 @@ import java.io.Serializable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 @Embeddable
-// @AllArgsConstructor
 public class MembershipKey implements Serializable {
 
     @Column(name = "User_id")
