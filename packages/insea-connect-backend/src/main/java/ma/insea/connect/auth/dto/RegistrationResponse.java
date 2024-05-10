@@ -1,4 +1,4 @@
-// package ma.insea.connect.auth.dto;
+package ma.insea.connect.auth.dto;
 
-// public record RegistrationResponse(String token) {
-// }
+public record RegistrationResponse(String token) {
+}

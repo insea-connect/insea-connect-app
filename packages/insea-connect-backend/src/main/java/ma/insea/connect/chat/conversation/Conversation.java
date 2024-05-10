@@ -19,7 +19,6 @@ import jakarta.persistence.Table;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "chat_conversation",schema = "testo")
 public class Conversation {
     @Id
     private String chatId;

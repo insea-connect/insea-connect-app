@@ -1,55 +1,55 @@
-// package ma.insea.connect.auth.service;
+package ma.insea.connect.auth.service;
 
-// import lombok.RequiredArgsConstructor;
-// import ma.insea.connect.auth.dto.RegistrationResponse;
-// import ma.insea.connect.auth.dto.UserLoginDTO;
-// import ma.insea.connect.auth.dto.UserRegistrationRequestDTO;
-// import ma.insea.connect.user.Role;
-// import ma.insea.connect.user.User;
-// import ma.insea.connect.user.UserRepository;
+import lombok.RequiredArgsConstructor;
+import ma.insea.connect.auth.dto.RegistrationResponse;
+import ma.insea.connect.auth.dto.UserLoginDTO;
+import ma.insea.connect.auth.dto.UserRegistrationRequestDTO;
+import ma.insea.connect.user.Role;
+import ma.insea.connect.user.User;
+import ma.insea.connect.user.UserRepository;
 
-// import org.springframework.security.authentication.AuthenticationManager;
-// import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-// import org.springframework.security.crypto.password.PasswordEncoder;
-// import org.springframework.stereotype.Service;
-// @Service
-// @RequiredArgsConstructor
-// public class AuthenticationService {
-
-
-//     private final UserRepository repository;
-//     private final PasswordEncoder passwordEncoder;
-//     private final JWTService jwtService;
-//     private final AuthenticationManager authenticationManager;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+@Service
+@RequiredArgsConstructor
+public class AuthenticationService {
 
 
-//     public RegistrationResponse register(UserRegistrationRequestDTO request) {
-//         User user = User.builder()
-//                 .username(request.username())
-//                 .lastname(request.lastName())
-//                 .firstname(request.firstName())
-//                 .passwordHash(passwordEncoder.encode(request.password()))
-//                 .build();
+    private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
+    private final JWTService jwtService;
+    private final AuthenticationManager authenticationManager;
 
-//         user.setRole(Role.STUDENT);
-//         user = repository.save(user);
 
-//         String token = jwtService.generateToken(user);
+    public RegistrationResponse register(UserRegistrationRequestDTO request) {
+        User user = User.builder()
+                .username(request.username())
+                .lastname(request.lastName())
+                .firstname(request.firstName())
+                .passwordHash(passwordEncoder.encode(request.password()))
+                .build();
 
-//         return new RegistrationResponse(token);
-//     }
+        user.setRole(Role.STUDENT);
+        user = repository.save(user);
 
-//     public RegistrationResponse authenticate (UserLoginDTO request) {
-//         authenticationManager.authenticate(
-//                 new UsernamePasswordAuthenticationToken(
-//                         request.username(),
-//                         request.password()
-//                 )
-//         );
+        String token = jwtService.generateToken(user);
 
-//         User user = repository.findByUsername(request.username()).orElseThrow();
-//         String token = jwtService.generateToken(user);
+        return new RegistrationResponse(token);
+    }
 
-//         return new RegistrationResponse(token);
-//     }
-// }
+    public RegistrationResponse authenticate (UserLoginDTO request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.username(),
+                        request.password()
+                )
+        );
+
+        User user = repository.findByUsername(request.username()).orElseThrow();
+        String token = jwtService.generateToken(user);
+
+        return new RegistrationResponse(token);
+    }
+}

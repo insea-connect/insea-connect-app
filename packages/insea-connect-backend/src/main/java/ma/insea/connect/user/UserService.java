@@ -13,9 +13,10 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public void saveUser(User user) {
+    public User saveUser(User user) {
         user.setStatus(Status.ONLINE);
         userRepository.save(user);
+        return user;
     }
 
     public void disconnect(User user) {
