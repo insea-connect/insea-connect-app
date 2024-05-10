@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import ma.insea.connect.chat.common.chatMessage.ChatMessage;
 import ma.insea.connect.chat.conversation.Conversation;
-import ma.insea.connect.chat.group.Group;
 import ma.insea.connect.chat.group.Membership;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -77,33 +76,6 @@ public class User
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "member2")
     private List<Conversation> member2conversations;
 
-    // public void addGroup(Group group){
-    //     groups.add(group);
-    // }
-
-    
-
-
-
-    // public void addGroup(Long group){
-    //         List<Long> groups = this.getGroups();
-    //         if (groups == null) 
-    //         {
-    //             groups = new ArrayList<Long>();
-                
-    //         }
-    //         groups.add(group);
-
-    //     }
-
-
-    // public void removeGroup(Long groupId) {
-    //     List<Long> groups = this.getGroups();
-    //     if (groups == null) {
-    //         groups = new ArrayList<Long>();
-    //     }
-    //     groups.remove(groupId);
-    // }
 
     
 
