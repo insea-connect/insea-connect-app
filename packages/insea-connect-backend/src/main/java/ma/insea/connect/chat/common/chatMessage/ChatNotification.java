@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "chat_notification",schema = "testo")
 public class ChatNotification {
     private Long id;
     private String senderId;

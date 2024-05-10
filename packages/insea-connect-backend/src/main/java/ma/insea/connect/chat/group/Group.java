@@ -21,7 +21,7 @@ import jakarta.persistence.Table;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "chat_group",schema = "testo")
+@Table(name = "_group")
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

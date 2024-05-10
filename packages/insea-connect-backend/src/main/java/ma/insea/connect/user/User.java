@@ -26,7 +26,7 @@ import java.util.List;
 @Setter
 @Builder
 @NoArgsConstructor
-@Table(name="chat_user",schema = "testo")
+@Table(name="_user")
 @EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails
  {

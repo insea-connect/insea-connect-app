@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "chat_group_message",schema = "testo")
 
 public class GroupMessage {
     @Id
