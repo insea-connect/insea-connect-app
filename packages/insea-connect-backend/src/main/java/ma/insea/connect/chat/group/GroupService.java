@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +39,10 @@ public class GroupService {
             m.setIsAdmin(false);
             m.setJoiningDate(new java.sql.Date(System.currentTimeMillis()));
             membershipRepository.save(m);
-        }      
+        }
+        Membership m=membershipRepository.findById(new MembershipKey(group.getCreator(), group.getId())).get();
+        m.setIsAdmin(true);
+        membershipRepository.save(m);
         return group;
     }
     public List<Group> findallgroupsofemail(Long myId) {
@@ -49,8 +54,12 @@ public class GroupService {
         return groups;
     }
     public void deleteGroup(Long groupId) {
-        Group group = groupRepository.findById(groupId).get();
-        groupRepository.delete(group);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElse(null);
+        if (user.getId() == groupRepository.findById(groupId).get().getCreator()){
+            Group group = groupRepository.findById(groupId).get();
+            groupRepository.delete(group);    
+        }
     }
     public Group findById(Long groupId) {
         Group group=groupRepository.findById(groupId).get();
@@ -68,9 +77,13 @@ public class GroupService {
 
     }
     public ResponseEntity<String> addGroupMembers(Long groupId, List<Long> users) {
-        //test if the connected user is an admin
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User connectedUser = userRepository.findByUsername(authentication.getName()).orElse(null);
+        Membership membership = membershipRepository.findByUserIdAndGroupId(connectedUser.getId(), groupId);
         
-        
+        if(membership == null || !membership.getIsAdmin()) {
+            return ResponseEntity.badRequest().body("You are not allowed to add members to this group");
+        }else{
         for (Long user : users) {
             Membership m = new Membership();
             m.setId(new MembershipKey(user, groupId));
@@ -81,16 +94,20 @@ public class GroupService {
             membershipRepository.save(m);
         }
         return ResponseEntity.ok("Group members added successfully");
+    }
         
     }
     @Transactional
     public ResponseEntity<String> removeGroupMember(Long groupId, Long memberId) {
-        //test if admin
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User connectedUser = userRepository.findByUsername(authentication.getName()).orElse(null);
+        Membership membership = membershipRepository.findByUserIdAndGroupId(connectedUser.getId(), groupId);
+        
+        if(membership == null || !membership.getIsAdmin()) {
+            return ResponseEntity.badRequest().body("You are not allowed to add members to this group");
+        }else{
         membershipRepository.deleteByGroupIdAndUserId(groupId, memberId);
-        return ResponseEntity.ok("Group member removed successfully");
-
-
-        
-        
+        return ResponseEntity.ok("Group member removed successfully");}
     }
+    
 }
