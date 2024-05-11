@@ -10,10 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
@@ -26,6 +29,7 @@ public class UserController {
     private final GroupService groupService;
     private final UserRepository userRepository;
     private final ConversationService conversationService;
+
 
     @MessageMapping("/users.addUser")
     @SendTo("/user/public")
@@ -60,10 +64,11 @@ public class UserController {
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
-    @GetMapping("/users/{myId}/groups")
-    public ResponseEntity<List<Group>> getGroupsByEmail(@PathVariable Long myId) { 
-        List<Group> groups = groupService.findallgroupsofemail(myId);
-        return ResponseEntity.ok(groups);
+    @GetMapping("/users/me/groups")
+    public ResponseEntity<List<Group>> getGroupsByEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElse(null);
+        return ResponseEntity.ok(groupService.findallgroupsofemail(user.getId()));
     }
 
     @GetMapping("/users/{id}")
@@ -71,9 +76,11 @@ public class UserController {
         return ResponseEntity.ok(userRepository.findById(id).get());
     }
 
-    @GetMapping("/users/{myId}/conversations")
-    public ResponseEntity<List<ConversationDTO>> getUserConversations(@PathVariable Long myId) {
-        List<ConversationDTO> conversations = conversationService.findConversationsByEmail(myId);
+    @GetMapping("/users/me/conversations")
+    public ResponseEntity<List<ConversationDTO>> getUserConversations() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName()).orElse(null);
+        List<ConversationDTO> conversations = conversationService.findConversationsByEmail(user.getId());
         return ResponseEntity.ok(conversations);
     }
 
