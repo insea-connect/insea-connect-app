@@ -6,10 +6,15 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Moon } from "lucide-react";
+import { Moon, Paintbrush2, Sun } from "lucide-react";
 import { useMediaQuery } from "usehooks-ts";
+import { useTheme } from "next-themes";
+import { cn } from "@/lib/utils";
+
 const LowerNav = () => {
   const isSmallScreen = useMediaQuery("(max-width: 1280px)");
+  const { setTheme, theme } = useTheme();
+
   return (
     <nav className="mt-auto flex flex-col items-center xl:items-start gap-2  p-2">
       <Tooltip>
@@ -17,11 +22,16 @@ const LowerNav = () => {
           <Button
             variant="ghost"
             size={isSmallScreen ? "icon" : "default"}
-            className="rounded-lg xl:w-full hover:text-primary xl:justify-start gap-2 xl:items-center"
+            className="rounded-md xl:w-full hover:text-primary xl:justify-start gap-2 xl:items-center"
             aria-label="Theme"
+            onClick={() => {
+              setTheme(theme === "light" ? "dark" : "light");
+            }}
           >
-            <Moon className="size-5" />
-            <span className="hidden xl:inline">Night Mode</span>
+            <Paintbrush2 className="size-5" />
+            <span className="hidden xl:inline">
+              {theme === "light" ? "Dark Mode" : "Light Mode"}
+            </span>
           </Button>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={5} className="xl:hidden">
