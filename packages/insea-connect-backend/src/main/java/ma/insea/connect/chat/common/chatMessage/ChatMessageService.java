@@ -22,11 +22,11 @@ public class ChatMessageService {
 
     public ChatMessage saveusermessage(ChatMessageDTO chatMessage) {
         ChatMessage chatMessage1 = new ChatMessage();
-        var chatId = getChatRoomId(chatMessage.getSenderId(), chatMessage.getRecipientId(), true);
+        var chatId = getChatRoomId(Long.toString(chatMessage.getSenderId()),Long.toString(chatMessage.getRecipientId()), true);
         chatMessage1.setChatId(chatId);
 
-        User recipient = userRepository.findByEmail(chatMessage.getRecipientId());
-        User sender = userRepository.findByEmail(chatMessage.getSenderId());
+        User recipient = userRepository.findById(chatMessage.getRecipientId()).get();
+        User sender = userRepository.findById(chatMessage.getSenderId()).get();
 
         chatMessage1.setSender(sender);
         chatMessage1.setRecipient(recipient);
@@ -83,8 +83,8 @@ public class ChatMessageService {
             ChatMessageDTO chatMessageDTO=new ChatMessageDTO();
             chatMessageDTO.setContent(c.getContent());
             chatMessageDTO.setTimestamp(c.getTimestamp());
-            chatMessageDTO.setSenderId(c.getSender().getEmail());
-            chatMessageDTO.setRecipientId(c.getRecipient().getEmail());
+            chatMessageDTO.setSenderId(c.getSender().getId());
+            chatMessageDTO.setRecipientId(c.getRecipient().getId());
             return chatMessageDTO;
         }
         return null;
