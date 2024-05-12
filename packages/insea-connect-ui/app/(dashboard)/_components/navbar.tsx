@@ -1,19 +1,16 @@
 "use client";
 import { Bot, Folder, MessageSquareText, Moon } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-
 import Image from "next/image";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import NavbarItem from "./navbar-item";
-import LowerNav from "./lower-nav";
-
+import dynamic from "next/dynamic";
+const LowerNav = dynamic(() => import("./lower-nav"), { ssr: false });
+const NavbarItem = dynamic(() => import("./navbar-item"), { ssr: false });
 const Navbar = () => {
   return (
     <TooltipProvider>

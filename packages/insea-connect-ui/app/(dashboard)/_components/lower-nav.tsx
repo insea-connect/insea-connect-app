@@ -6,13 +6,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Moon, Paintbrush2, Sun } from "lucide-react";
+import { Paintbrush2 } from "lucide-react";
 import { useMediaQuery } from "usehooks-ts";
 import { useTheme } from "next-themes";
-import { cn } from "@/lib/utils";
 
 const LowerNav = () => {
-  const isSmallScreen = useMediaQuery("(max-width: 1280px)");
+  const isSmallScreen = useMediaQuery("(max-width: 1279px)");
   const { setTheme, theme } = useTheme();
 
   return (

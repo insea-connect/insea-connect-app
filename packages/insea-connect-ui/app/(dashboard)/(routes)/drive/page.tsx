@@ -10,14 +10,14 @@ import DriveItemList from "./_components/drive-item-list";
 const DrivePage = () => {
   return (
     <div className="w-full">
-      <header className="h-24 w-full py-4 px-4 flex-col lg:flex-row flex md:justify-between gap-2">
+      <header className="w-full py-4 px-4 flex-col lg:flex-row flex md:justify-between gap-2">
         <h2 className="text-2xl font-semibold">Drive Storage</h2>
-        <div className="flex gap-2 ">
+        <div className="flex gap-2 flex-col sm:flex-row">
           <YearCombobox />
           <DegreePathCombobox />
         </div>
       </header>
-      <main className="px-4 flex flex-col gap-3 pt-8 lg:py-0">
+      <main className="px-4 flex flex-col gap-3 pt-8 py-0">
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-semibold">All files</h3>
           <Button>
@@ -33,7 +33,7 @@ const DrivePage = () => {
               <TabsTrigger value="files">Files</TabsTrigger>
             </TabsList>
           </Tabs>
-          <div className="relative w-96">
+          <div className="relative lg:w-96 max-w-96">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
