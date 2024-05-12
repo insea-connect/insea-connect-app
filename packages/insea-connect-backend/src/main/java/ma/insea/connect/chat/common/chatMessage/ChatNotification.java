@@ -1,6 +1,5 @@
 package ma.insea.connect.chat.common.chatMessage;
 
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
