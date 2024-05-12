@@ -38,4 +38,8 @@ public class Group {
 
     private Long creator;
 
+    public void addMembership(Membership membership){
+        this.memberships.add(membership);
+    }
+
 }
