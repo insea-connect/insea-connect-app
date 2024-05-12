@@ -23,10 +23,13 @@ public class GroupService {
     private final MembershipRepository membershipRepository;
 
     public Group saveGroup(GroupDTO groupDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User connectedUser = userRepository.findByUsername(authentication.getName()).orElse(null);
+        
         Group group = new Group();
         
         group.setName(groupDTO.getName());
-        group.setCreator(groupDTO.getCreator());
+        group.setCreator(connectedUser.getId());
         group.setIsOfficial(false);
         group.setDescription(groupDTO.getDescription());
         group.setCreatedDate(new java.sql.Date(System.currentTimeMillis()));
