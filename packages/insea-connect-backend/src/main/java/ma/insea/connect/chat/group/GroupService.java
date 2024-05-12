@@ -79,13 +79,13 @@ public class GroupService {
         return users;
 
     }
-    public ResponseEntity<String> addGroupMembers(Long groupId, List<Long> users) {
+    public String addGroupMembers(Long groupId, List<Long> users) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User connectedUser = userRepository.findByUsername(authentication.getName()).orElse(null);
         Membership membership = membershipRepository.findByUserIdAndGroupId(connectedUser.getId(), groupId);
         
         if(membership == null || !membership.getIsAdmin()) {
-            return ResponseEntity.badRequest().body("You are not allowed to add members to this group");
+            return "You are not allowed to add members to this group";
         }else{
         for (Long user : users) {
             Membership m = new Membership();
@@ -96,21 +96,21 @@ public class GroupService {
             m.setJoiningDate(new java.sql.Date(System.currentTimeMillis()));
             membershipRepository.save(m);
         }
-        return ResponseEntity.ok("Group members added successfully");
+        return "Group members added successfully";
     }
         
     }
     @Transactional
-    public ResponseEntity<String> removeGroupMember(Long groupId, Long memberId) {
+    public String removeGroupMember(Long groupId, Long memberId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User connectedUser = userRepository.findByUsername(authentication.getName()).orElse(null);
         Membership membership = membershipRepository.findByUserIdAndGroupId(connectedUser.getId(), groupId);
         
         if(membership == null || !membership.getIsAdmin()) {
-            return ResponseEntity.badRequest().body("You are not allowed to add members to this group");
+            return "You are not allowed to add members to this group";
         }else{
         membershipRepository.deleteByGroupIdAndUserId(groupId, memberId);
-        return ResponseEntity.ok("Group member removed successfully");}
+        return "Group member removed successfully";}
     }
     
 }

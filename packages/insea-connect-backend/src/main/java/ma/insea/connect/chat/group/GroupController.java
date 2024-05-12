@@ -55,11 +55,11 @@ public class GroupController {
     @PostMapping("/groups/{groupid}/members")
     public ResponseEntity<String> addGroupMembers(@PathVariable("groupid") Long groupId, @RequestBody Map<String, List<Long>>users) {
         
-        return groupService.addGroupMembers(groupId, users.get("members"));
+        return ResponseEntity.ok(groupService.addGroupMembers(groupId, users.get("members")));
     }
 
     @DeleteMapping("/groups/{groupid}/members/{memberid}")
     public ResponseEntity<String> removeGroupMember(@PathVariable("groupid") Long groupId, @PathVariable("memberid") Long memberId) {
-        return groupService.removeGroupMember(groupId, memberId);
+        return ResponseEntity.ok(groupService.removeGroupMember(groupId, memberId));
     }
 }
