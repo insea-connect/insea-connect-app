@@ -29,7 +29,7 @@ public class GroupService {
         Group group = new Group();
         
         group.setName(groupDTO.getName());
-        group.setCreator(connectedUser.getId());
+        group.setCreator(connectedUser);
         group.setIsOfficial(false);
         group.setDescription(groupDTO.getDescription());
         group.setCreatedDate(new java.sql.Date(System.currentTimeMillis()));
@@ -45,7 +45,7 @@ public class GroupService {
             group.addMembership(m);
         }
         groupRepository.save(group);
-        Membership m=membershipRepository.findById(new MembershipKey(group.getCreator(), group.getId())).get();
+        Membership m=membershipRepository.findById(new MembershipKey(group.getCreator().getId(), group.getId())).get();
         m.setIsAdmin(true);
         membershipRepository.save(m);
         return group;
@@ -63,7 +63,7 @@ public class GroupService {
         User user = userRepository.findByUsername(authentication.getName()).orElse(null);
 
         Group group = groupRepository.findById(groupId).get();
-        if (user.getId() == group.getCreator()){
+        if (user == group.getCreator()){
             groupRepository.delete(group);    
         }
     }
