@@ -31,6 +31,7 @@ public class GroupService {
         group.setDescription(groupDTO.getDescription());
         group.setCreatedDate(new java.sql.Date(System.currentTimeMillis()));
         groupRepository.save(group);
+        group.memberships = new ArrayList<Membership>();
         for (Long user : groupDTO.getMembers()) {
             Membership m = new Membership();
             m.setId(new MembershipKey(user, group.getId()));
@@ -38,8 +39,9 @@ public class GroupService {
             m.setUser(userRepository.findById(user).get());
             m.setIsAdmin(false);
             m.setJoiningDate(new java.sql.Date(System.currentTimeMillis()));
-            membershipRepository.save(m);
+            group.memberships.add(m);
         }
+        groupRepository.save(group);
         Membership m=membershipRepository.findById(new MembershipKey(group.getCreator(), group.getId())).get();
         m.setIsAdmin(true);
         membershipRepository.save(m);
