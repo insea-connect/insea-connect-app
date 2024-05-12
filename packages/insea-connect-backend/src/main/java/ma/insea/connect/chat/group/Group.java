@@ -2,6 +2,7 @@ package ma.insea.connect.chat.group;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ma.insea.connect.user.User;
 import lombok.AllArgsConstructor;
 
 import java.sql.Date;
@@ -14,6 +15,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -36,10 +39,13 @@ public class Group {
     @JsonIgnore
     private List<Membership> memberships;
 
-    private Long creator;
 
     public void addMembership(Membership membership){
         this.memberships.add(membership);
     }
+
+    @ManyToOne
+    @JoinColumn(name = "creator")
+    private User creator;
 
 }

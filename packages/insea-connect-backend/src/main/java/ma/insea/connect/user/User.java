@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import ma.insea.connect.chat.common.chatMessage.ChatMessage;
 import ma.insea.connect.chat.conversation.Conversation;
+import ma.insea.connect.chat.group.Group;
 import ma.insea.connect.chat.group.Membership;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -74,6 +75,10 @@ public class User implements UserDetails
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "member2")
     private List<Conversation> member2conversations;
+
+    @OneToMany(mappedBy = "creator")
+    @JsonIgnore
+    private List<Group> createdGroups;
 
 
     
