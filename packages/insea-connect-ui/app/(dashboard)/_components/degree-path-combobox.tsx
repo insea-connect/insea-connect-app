@@ -60,7 +60,7 @@ const DegreePathCombobox = () => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[350px] justify-between"
+          className="max-w-[350px] lg:w-[350px] justify-between"
         >
           {value
             ? degreePaths.find((degreePath) => degreePath.value === value)
@@ -69,7 +69,7 @@ const DegreePathCombobox = () => {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[350px] p-0">
+      <PopoverContent className="max-w-[350px] lg:w-[350px] p-0">
         <Command>
           <CommandInput placeholder="Search degree paths..." />
           <CommandEmpty>No degree path found.</CommandEmpty>

@@ -20,7 +20,7 @@ const NavbarItem: FC<NavbarItemProps> = ({ href, label, icon: Icon }) => {
   const pathname = usePathname();
   const router = useRouter();
   const isActive = pathname === href || pathname.startsWith(href);
-  const isSmallScreen = useMediaQuery("(max-width: 1280px)");
+  const isSmallScreen = useMediaQuery("(max-width: 1279px)");
 
   return (
     <Tooltip>
