@@ -5,8 +5,8 @@ import java.util.Date;
 import lombok.Data;
 @Data
 public class ChatMessageDTO {
-    private String senderId;
-    private String recipientId;
+    private Long senderId;
+    private Long recipientId;
     private String content;
     private Date timestamp;//to datete
     

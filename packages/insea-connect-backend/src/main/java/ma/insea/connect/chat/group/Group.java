@@ -34,8 +34,12 @@ public class Group {
 
     @OneToMany(mappedBy = "group",cascade = CascadeType.ALL)
     @JsonIgnore
-    List<Membership> memberships;
+    private List<Membership> memberships;
 
     private Long creator;
+
+    public void addMembership(Membership membership){
+        this.memberships.add(membership);
+    }
 
 }
