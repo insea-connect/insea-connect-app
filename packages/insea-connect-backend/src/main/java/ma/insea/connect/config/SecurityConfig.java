@@ -33,7 +33,7 @@ public class SecurityConfig {
                         .disable())
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("/login/**","/register/**","/*","/css/**")
+                        req->req.requestMatchers("/login/**","/register/**","/*")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
