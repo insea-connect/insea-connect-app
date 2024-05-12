@@ -58,8 +58,9 @@ public class GroupService {
     public void deleteGroup(Long groupId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(authentication.getName()).orElse(null);
-        if (user.getId() == groupRepository.findById(groupId).get().getCreator()){
-            Group group = groupRepository.findById(groupId).get();
+
+        Group group = groupRepository.findById(groupId).get();
+        if (user.getId() == group.getCreator()){
             groupRepository.delete(group);    
         }
     }
