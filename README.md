@@ -25,6 +25,8 @@
   <a href="#roadmap">Roadmap</a>
   &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#contributing">Contributing</a>
+  &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#authors">Authors</a>
 
 </p>
 
@@ -74,7 +76,7 @@ Work in progress
 
 #### DevOps
 
-- [ ] Implement CI/CD w/ github actions
+- [ ] Implement CI/CD w/ github actions]
 - [ ] Deploy the application on AWS
 
 #### Documentation
@@ -92,5 +94,16 @@ We enthusiastically welcome contributions from the INSEA community to help enhan
 3. Commit your Changes (`git commit -m 'feat: add some new feature'`)
 4. Push to the Branch (`git push origin feat/new-feature-name`)
 5. Open a Pull Request
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+## Authors
+
+- [@AmimiHamza](https://github.com/AmimiHamza)
+- [@Soulayman77](https://github.com/orgs/insea-connect/people/Soulayman77)
+- [@anasMokhannate](https://github.com/anasMokhannate)
+- [@ihassis](https://github.com/ihassis)
+- [@Earthyy](https://github.com/Earthyyy)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
