@@ -1,0 +1,28 @@
+name: Build NextJS 
+
+on:
+  push:
+    paths:
+      - "packages/insea-connect-ui"
+    branches: [ "main" ]
+  pull_request:
+    paths:
+      - "packages/insea-connect-ui"
+    branches: [ "main" ]
+  workflow_dispatch:
+    
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "./packages/insea-connect-ui" 
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        cache: 'npm'
+    - run: npm run build --if-present
