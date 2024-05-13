@@ -9,6 +9,8 @@ on:
     paths: 
       - "packages/insea-connect-backend"
     branches: [ "main" ]
+  workflow_dispatch:
+    
   
 
 jobs:
