@@ -1,5 +1,5 @@
 "use client";
-import { Bot, Folder, MessageSquareText, Moon } from "lucide-react";
+import { Bot, Folder, ListTodo, MessageSquareText, Moon } from "lucide-react";
 
 import Image from "next/image";
 import {
@@ -37,8 +37,8 @@ const Navbar = () => {
           <NavbarItem href="/assistant" label="Assistant" icon={Bot} />
 
           <NavbarItem href="/chat" label="Chat" icon={MessageSquareText} />
-
           <NavbarItem href="/drive" label="Drive" icon={Folder} />
+          <NavbarItem href="/assignments" label="Assignments" icon={ListTodo} />
         </nav>
         <LowerNav />
       </aside>
