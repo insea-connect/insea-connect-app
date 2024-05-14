@@ -76,7 +76,7 @@ Work in progress
 
 #### DevOps
 
-- [ ] Implement CI/CD w/ github actions]
+- [ ] Implement CI/CD w/ github actions
 - [ ] Deploy the application on AWS
 
 #### Documentation
