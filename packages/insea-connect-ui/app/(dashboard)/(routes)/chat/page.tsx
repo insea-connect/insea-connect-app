@@ -1,11 +1,11 @@
-import ChatArea from "../../_components/chat-area";
-import ChatAside from "../../_components/chat-aside";
+import ChatAreaBlank from "../../_components/chat-area-blank";
+import ChatAsideBis from "../../_components/chat-aside-bis";
 
 const MainPage = () => {
   return (
     <main className="flex flex-1 overflow-hidden">
-      <ChatArea />
-      <ChatAside />
+      <ChatAsideBis />
+      <ChatAreaBlank />
     </main>
   );
 };
