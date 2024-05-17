@@ -10,7 +10,7 @@ const ChatAreaBlank = () => {
         <p>
           Choose a conversation to get started with your chat. Engage in
           discussions, ask questions, and collaborate with your peers to enhance
-          your learning experience.
+          your learning experience
         </p>
       </div>
     </section>
