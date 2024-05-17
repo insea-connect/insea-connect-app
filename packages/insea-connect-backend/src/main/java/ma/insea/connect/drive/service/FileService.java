@@ -5,7 +5,7 @@ import ma.insea.connect.drive.model.File;
 import java.util.Optional;
 
 public interface FileService {
-    public Optional<File> getFolderById(Long id);
-    public void updateFolder(Long id, File file);
-    public void deleteFolder(Long id);
+    public File getFileById(Long id);
+    public File updateFile(Long id, File file);
+    public boolean deleteFile(Long id);
 }

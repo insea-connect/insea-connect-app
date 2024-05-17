@@ -1,30 +1,32 @@
-// package ma.insea.connect.user;
+ package ma.insea.connect.user;
 
-// import jakarta.persistence.*;
-// import lombok.*;
-// import ma.insea.connect.drive.model.DriveItem;
+ import com.fasterxml.jackson.annotation.JsonIgnore;
+ import jakarta.persistence.*;
+ import lombok.*;
+ import ma.insea.connect.drive.model.DriveItem;
 
-// import java.util.List;
+ import java.util.List;
 
-// @Entity
-// @Getter
-// @Setter
-// @AllArgsConstructor
-// @NoArgsConstructor
-// @Builder
-// public class DegreePath {
+ @Entity
+ @Getter
+ @Setter
+ @AllArgsConstructor
+ @NoArgsConstructor
+ @Builder
+ public class DegreePath {
 
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     private Long id;
-//     private String cycle;
-//     private String major;
-//     private int pathYear;
+     @Id
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
+     private Long id;
+     private String cycle;
+     private String major;
+     private int pathYear;
 
-//     @OneToMany(mappedBy = "degreePath")
-//     private List<User> students;
+     @OneToMany(mappedBy = "degreePath")
+     private List<User> students;
 
 
-//     @OneToMany(mappedBy = "degreePath")
-//     private List<DriveItem> driveItems;
-// }
+     @OneToMany(mappedBy = "degreePath")
+     @JsonIgnore
+     private List<DriveItem> driveItems;
+ }
