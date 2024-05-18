@@ -122,6 +122,14 @@ public class UserController {
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userRepository.findById(id).get());
     }
+    @GetMapping("/users/me")
+    public ResponseEntity<User> getUserById(@AuthenticationPrincipal Jwt jwt) {
+        if (jwt == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        String email = jwt.getClaimAsString("email");
+        return ResponseEntity.ok(userRepository.findByEmail(email));
+    }
 
     @GetMapping("/users/me/conversations")
     public ResponseEntity<List<ConversationDTO>> getUserConversations(@AuthenticationPrincipal Jwt jwt) {
