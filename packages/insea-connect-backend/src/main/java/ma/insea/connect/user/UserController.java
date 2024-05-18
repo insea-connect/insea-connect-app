@@ -5,8 +5,9 @@ import ma.insea.connect.chat.conversation.ConversationDTO;
 import ma.insea.connect.chat.conversation.ConversationService;
 import ma.insea.connect.chat.group.Group;
 import ma.insea.connect.chat.group.GroupService;
-import ma.insea.connect.keycloak.DTO.UserDTO;
+import ma.insea.connect.keycloak.DTO.AddKeycloakDTO;
 import ma.insea.connect.keycloak.service.KeyCloakService;
+import ma.insea.connect.user.DTO.AddUserDTO;
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.KeycloakSecurityContext;
 import org.springframework.http.ResponseEntity;
@@ -34,20 +35,22 @@ public class UserController {
 
     @MessageMapping("/users.addUser")
     @SendTo("/user/public")
-    public User addUser(@Payload User user) {
-        User existingUser = userRepository.findByEmail(user.getEmail());
+    public AddUserDTO addUser(@Payload AddUserDTO addUserDTO) {
+        User existingUser = userRepository.findByEmail(addUserDTO.getEmail());
         if (existingUser == null) {
-            user.setStatus(Status.ONLINE);
+
+            addUserDTO.setStatus(Status.ONLINE);
+            User user = AddUserDTO.mapToUser(addUserDTO);
             userService.saveUser(user);
-            UserDTO userDTO = UserDTO.mapToUserDTO(user);
-            keyCloakService.addUser(userDTO);
+            AddKeycloakDTO addKeycloakDTO = AddKeycloakDTO.mapToUserDTO(addUserDTO);
+            keyCloakService.addUser(addKeycloakDTO);
         } else {
             existingUser.setStatus(Status.ONLINE);
-            UserDTO userDTO = UserDTO.mapToUserDTO(existingUser);
-            keyCloakService.addUser(userDTO);
+            AddKeycloakDTO addKeycloakDTO = AddKeycloakDTO.mapToUserDTO(addUserDTO);
+            keyCloakService.addUser(addKeycloakDTO);
             userService.saveUser(existingUser);
         }
-        return user;
+        return addUserDTO;
     }
 
     @MessageMapping("/users.disconnectUser")

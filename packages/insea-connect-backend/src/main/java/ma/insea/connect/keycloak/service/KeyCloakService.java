@@ -3,7 +3,7 @@ package ma.insea.connect.keycloak.service;
 
 import lombok.AllArgsConstructor;
 import ma.insea.connect.keycloak.Credentials;
-import ma.insea.connect.keycloak.DTO.UserDTO;
+import ma.insea.connect.keycloak.DTO.AddKeycloakDTO;
 import ma.insea.connect.keycloak.KeycloakConfig;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -23,16 +23,16 @@ import java.util.List;
 public class KeyCloakService {
 
     // Method to add a new user to Keycloak.
-    public void addUser(UserDTO userDTO){
+    public void addUser(AddKeycloakDTO addKeycloakDTO){
         // Create password credential from userDTO's password.
-        CredentialRepresentation credential = Credentials.createPasswordCredentials(userDTO.getPassword());
+        CredentialRepresentation credential = Credentials.createPasswordCredentials(addKeycloakDTO.getPassword());
 
         // Create a new user representation with userDTO's details.
         UserRepresentation user = new UserRepresentation();
-        user.setUsername(userDTO.getUsername());
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setEmail(userDTO.getEmail());
+        user.setUsername(addKeycloakDTO.getUsername());
+        user.setFirstName(addKeycloakDTO.getFirstName());
+        user.setLastName(addKeycloakDTO.getLastName());
+        user.setEmail(addKeycloakDTO.getEmail());
         user.setCredentials(Collections.singletonList(credential)); // Set user's credentials.
         user.setEnabled(true); // Enable the user.
 
@@ -50,16 +50,16 @@ public class KeyCloakService {
     }
 
     // Method to update a user's details in Keycloak.
-    public void updateUser(String userId, UserDTO userDTO){
+    public void updateUser(String userId, AddKeycloakDTO addKeycloakDTO){
         // Create password credential from userDTO's password.
-        CredentialRepresentation credential = Credentials.createPasswordCredentials(userDTO.getPassword());
+        CredentialRepresentation credential = Credentials.createPasswordCredentials(addKeycloakDTO.getPassword());
 
         // Create a new user representation with userDTO's details.
         UserRepresentation user = new UserRepresentation();
-        user.setUsername(userDTO.getUsername());
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setEmail(userDTO.getEmail());
+        user.setUsername(addKeycloakDTO.getUsername());
+        user.setFirstName(addKeycloakDTO.getFirstName());
+        user.setLastName(addKeycloakDTO.getLastName());
+        user.setEmail(addKeycloakDTO.getEmail());
         user.setCredentials(Collections.singletonList(credential)); // Set user's credentials.
 
         // Get an instance of UsersResource and update the user.

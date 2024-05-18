@@ -1,7 +1,7 @@
 package ma.insea.connect.keycloak.controller;
 
 
-import ma.insea.connect.keycloak.DTO.UserDTO;
+import ma.insea.connect.keycloak.DTO.AddKeycloakDTO;
 import ma.insea.connect.keycloak.service.KeyCloakService;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 // Annotates this class as a REST controller to handle incoming HTTP requests.
 // Maps the base path of this controller to "api/user".
@@ -29,10 +25,10 @@ public class KeyCloakController {
 
     // Handles POST requests to "/addUser" to add a new user.
     @PostMapping(path = "/addUser")
-    public ResponseEntity<String> addUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> addUser(@RequestBody AddKeycloakDTO addKeycloakDTO) {
         try {
             // Calls the service method to add a new user.
-            service.addUser(userDTO);
+            service.addUser(addKeycloakDTO);
             // Returns a 201 Created status on success.
             return ResponseEntity.status(HttpStatus.CREATED).body("User Added Successfully.");
         } catch (Exception e) {
@@ -61,10 +57,10 @@ public class KeyCloakController {
 
     // Handles PUT requests to "/update/{userId}" to update user details by user ID.
     @PutMapping(path = "/update/{userId}")
-    public ResponseEntity<String> updateUser(@PathVariable("userId") String userId, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> updateUser(@PathVariable("userId") String userId, @RequestBody AddKeycloakDTO addKeycloakDTO) {
         try {
             // Calls the service method to update the user details.
-            service.updateUser(userId, userDTO);
+            service.updateUser(userId, addKeycloakDTO);
             // Returns a 200 OK status on successful update.
             return ResponseEntity.ok("User Details Updated Successfully.");
         } catch (Exception e) {
