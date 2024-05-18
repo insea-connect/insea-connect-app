@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, SquarePen } from "lucide-react";
 import ChatList from "./chat-list";
+import NewChatButton from "@/components/new-chat-button";
 
 const ChatAside = () => {
   return (
@@ -13,14 +14,7 @@ const ChatAside = () => {
             <h2 className="text-2xl font-semibold tracking-tight first:mt-0">
               Chats
             </h2>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-lg"
-              aria-label="New chat"
-            >
-              <SquarePen className="w-5 h-5" />
-            </Button>
+            <NewChatButton />
           </div>
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
