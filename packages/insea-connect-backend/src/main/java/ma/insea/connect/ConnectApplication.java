@@ -23,22 +23,22 @@ public class ConnectApplication {
 		SpringApplication.run(ConnectApplication.class, args);
 	}
 
-	/*@Profile("dev")
+	@Profile("dev")
 	@Bean
 	public CommandLineRunner addAdmin(UserController userController, KeyCloakController keyCloakController) {
 		return args -> {
 			AddUserDTO user = AddUserDTO.builder()
-					.username("admin3")
-					.email("admin3")
-					.firstName("admin3")
-					.lastName("admin3")
+					.username("admin")
+					.email("admin@example.com")
+					.firstName("admin")
+					.lastName("admin")
 					.role(Role.ADMIN)
-					.password("admin3")
+					.password("admin")
 					.build();
 			System.out.println("here it is "+AddKeycloakDTO.mapToAddKeycloakDTO(user).toString());
 			userController.addUser1(user);
 
 
 		};
-	}*/
+	}
 }
