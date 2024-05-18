@@ -24,10 +24,42 @@ public class ConversationService {
     private final ChatMessageService chatMessageService;
     private final ChatMessageRepository chatMessageRepository;
 
-    public List<ConversationDTO> findConversationsByEmail(Long myId) {
-        User user2=userRepository.findById(myId).get();
+    public List<ConversationDTO> findConversationsByEmail(String email) {
+        User user2=userRepository.findByEmail(email);
         List<Conversation> conversations = conversationRepository.findAllByMember1OrMember2(user2,user2);
         
+
+        List<ConversationDTO> conversationDTOs = new ArrayList<>();
+        for(Conversation conversation:conversations)
+        {
+            ChatMessageDTO chatMessage=chatMessageService.findLastMessage(conversation.getChatId());
+
+            Long member1=conversation.getMember1().getId();
+            Long member2=conversation.getMember2().getId();
+            Long recepientId=member1.equals(email)?member2:member1;
+            User user=userRepository.findById(recepientId).get();
+
+            ConversationDTO conversationDTO=new ConversationDTO();
+
+            conversationDTO.setChatId(conversation.getChatId());
+            conversationDTO.setRecipientId(recepientId);
+            conversationDTO.setUsername(user.getUsername());
+            conversationDTO.setLastLogin(user.getLastLogin());
+            conversationDTO.setStatus(user.getStatus());
+            conversationDTO.setLastMessage(chatMessage);
+
+            
+            conversationDTOs.add(conversationDTO);
+        }
+        return conversationDTOs;
+    
+
+    }
+
+    public List<ConversationDTO> findConversationsByID(Long myId) {
+        User user2=userRepository.findById(myId).get();
+        List<Conversation> conversations = conversationRepository.findAllByMember1OrMember2(user2,user2);
+
 
         List<ConversationDTO> conversationDTOs = new ArrayList<>();
         for(Conversation conversation:conversations)
@@ -48,11 +80,11 @@ public class ConversationService {
             conversationDTO.setStatus(user.getStatus());
             conversationDTO.setLastMessage(chatMessage);
 
-            
+
             conversationDTOs.add(conversationDTO);
         }
         return conversationDTOs;
-    
+
 
     }
 

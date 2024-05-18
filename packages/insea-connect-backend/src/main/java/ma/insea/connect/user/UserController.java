@@ -11,11 +11,14 @@ import ma.insea.connect.keycloak.service.KeyCloakService;
 import ma.insea.connect.user.DTO.AddUserDTO;
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.KeycloakSecurityContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -100,7 +103,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/users/me/groups")
+   /* @GetMapping("/users/me/groups")
     public ResponseEntity<List<Group>> getGroupsByEmail() {
         KeycloakPrincipal<?> principal = (KeycloakPrincipal<?>) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         KeycloakSecurityContext keycloakSecurityContext = principal.getKeycloakSecurityContext();
@@ -112,7 +115,7 @@ public class UserController {
         }
 
         return ResponseEntity.ok(groupService.findallgroupsofemail(user.getId()));
-    }
+    }*/
 
     @GetMapping("/users/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
@@ -120,17 +123,12 @@ public class UserController {
     }
 
     @GetMapping("/users/me/conversations")
-    public ResponseEntity<List<ConversationDTO>> getUserConversations() {
-        KeycloakPrincipal<?> principal = (KeycloakPrincipal<?>) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        KeycloakSecurityContext keycloakSecurityContext = principal.getKeycloakSecurityContext();
-        String email = keycloakSecurityContext.getToken().getEmail();
-        User user = userRepository.findByEmail(email);
-
-        if (user == null) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<List<ConversationDTO>> getUserConversations(@AuthenticationPrincipal Jwt jwt) {
+        if (jwt == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-
-        List<ConversationDTO> conversations = conversationService.findConversationsByEmail(user.getId());
+        String email = jwt.getClaimAsString("email");
+        List<ConversationDTO> conversations = conversationService.findConversationsByEmail(email);
         return ResponseEntity.ok(conversations);
     }
 }
