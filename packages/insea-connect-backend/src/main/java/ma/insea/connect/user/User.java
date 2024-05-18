@@ -7,7 +7,6 @@ import ma.insea.connect.chat.conversation.Conversation;
 import ma.insea.connect.chat.group.Group;
 import ma.insea.connect.chat.group.Membership;
 
-import ma.insea.connect.user.DTO.AddUserDTO;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -39,7 +38,7 @@ public class User implements UserDetails
     private String email;
     @Column(unique = true)
     private String username;
-    private String imagrUrl;
+    private String imageUrl;
     private String firstName;
     private String lastName;
     private String dateOfBirth;

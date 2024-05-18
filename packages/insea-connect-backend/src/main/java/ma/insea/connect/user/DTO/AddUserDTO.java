@@ -34,7 +34,7 @@ public class AddUserDTO {
         return User.builder()
                 .email(addUserDTO.getEmail())
                 .username(addUserDTO.getUsername())
-                .imagrUrl(addUserDTO.getImageUrl())
+                .imageUrl(addUserDTO.getImageUrl())
                 .firstName(addUserDTO.getFirstName())
                 .lastName(addUserDTO.getLastName())
                 .dateOfBirth(addUserDTO.getDateOfBirth())

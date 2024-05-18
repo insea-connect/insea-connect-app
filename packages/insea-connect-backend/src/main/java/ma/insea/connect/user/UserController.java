@@ -9,6 +9,7 @@ import ma.insea.connect.keycloak.DTO.AddKeycloakDTO;
 import ma.insea.connect.keycloak.controller.KeyCloakController;
 import ma.insea.connect.keycloak.service.KeyCloakService;
 import ma.insea.connect.user.DTO.AddUserDTO;
+import ma.insea.connect.user.DTO.UserInfoResponseDTO;
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.KeycloakSecurityContext;
 import org.springframework.http.HttpStatus;
@@ -123,12 +124,13 @@ public class UserController {
         return ResponseEntity.ok(userRepository.findById(id).get());
     }
     @GetMapping("/users/me")
-    public ResponseEntity<User> getUserById(@AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<UserInfoResponseDTO> getUserById(@AuthenticationPrincipal Jwt jwt) {
         if (jwt == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         String email = jwt.getClaimAsString("email");
-        return ResponseEntity.ok(userRepository.findByEmail(email));
+        UserInfoResponseDTO userInfoResponseDTO = UserInfoResponseDTO.mapToUserInfoDTO(userRepository.findByEmail(email)) ;
+        return ResponseEntity.ok(userInfoResponseDTO);
     }
 
     @GetMapping("/users/me/conversations")
