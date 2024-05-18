@@ -123,4 +123,39 @@ public class KeycloakLoginController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error: " + e.getMessage(), e);
         }
     }
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, Object>> logout(@RequestBody RefreshTokenDTO refreshTokenDTO) {
+
+        // Construct the token URL dynamically
+        String tokenUrl = issuerUri + "/protocol/openid-connect/logout";
+
+        // Set headers to form-url-encoded
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        // Prepare form data
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("client_id", clientId);
+        formData.add("client_secret", clientSecret);
+        formData.add("refresh_token", refreshTokenDTO.getRefreshToken());
+        // Prepare the HTTP request entity
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(formData, headers);
+
+        try {
+            // Make the request to the Keycloak token endpoint
+            ResponseEntity<Map> response = restTemplate.exchange(
+                    tokenUrl, HttpMethod.POST, requestEntity, Map.class);
+
+            // Return the response containing the token
+            return ResponseEntity.ok(response.getBody());
+        }
+        catch (HttpClientErrorException | HttpServerErrorException e) {
+            // Handle client and server errors specifically
+            throw new ResponseStatusException(e.getStatusCode(), "Error requesting logging out from Keycloak: " + e.getMessage(), e);
+        }
+        catch (RestClientException e) {
+            // Catch other REST client errors
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error: " + e.getMessage(), e);
+        }
+    }
 }
