@@ -6,6 +6,7 @@ import { Plus, Search } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import DriveItemList from "./_components/drive-item-list";
+import NewDriveItemButton from "@/components/new-drive-item-button";
 
 const DrivePage = () => {
   return (
@@ -20,10 +21,7 @@ const DrivePage = () => {
       <main className="px-4 flex flex-col gap-3 pt-8 py-0">
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-semibold">All files</h3>
-          <Button>
-            <Plus className="size-4 mr-2" />
-            Upload
-          </Button>
+          <NewDriveItemButton />
         </div>
         <div className="flex flex-col gap-2 md:flex-row md:justify-between items-center">
           <Tabs defaultValue="view-all">
