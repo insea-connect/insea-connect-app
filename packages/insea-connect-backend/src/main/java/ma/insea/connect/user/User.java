@@ -86,6 +86,8 @@ public class User implements UserDetails
     @JsonIgnore
     private List<Group> createdGroups;
 
+    @ManyToOne
+    private DegreePath degreePath;
 
     
 

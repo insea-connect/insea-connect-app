@@ -3,9 +3,9 @@ package ma.insea.connect.drive.controller;
 
 import lombok.RequiredArgsConstructor;
 import ma.insea.connect.drive.model.File;
-import ma.insea.connect.drive.model.Folder;
+import ma.insea.connect.drive.repository.FileRepository;
 import ma.insea.connect.drive.service.FileService;
-import org.springframework.beans.factory.annotation.Autowired;
+import ma.insea.connect.drive.service.FileServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,22 +14,32 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class FileController {
 
-    private final FileService fileService;
+    private final FileServiceImpl fileService;
+    private final FileRepository fileRepository;
 
     @GetMapping("/{fileId}")
     public ResponseEntity<File> getFile(@PathVariable Long fileId) {
-        return fileService.getFolderById(fileId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        if (fileRepository.existsById(fileId)) {
+            return ResponseEntity.notFound().build();
+        }
+        File file = fileService.getFileById(fileId);
+        return ResponseEntity.ok(file);
     }
 
     @PutMapping("/{fileId}")
-    public void updateFile(@PathVariable Long fileId, File file) {
-
+    public ResponseEntity<File> updateFile(@PathVariable Long fileId, File file) {
+        if(fileRepository.existsById(fileId)){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(fileService.updateFile(fileId, file));
     }
 
     @DeleteMapping("/{fileId}")
-    public void deleteFile(@PathVariable Long fileId, File file) {
+    public ResponseEntity<File> deleteFile(@PathVariable Long fileId) {
+        if (!fileService.deleteFile(fileId)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.noContent().build();
     }
 
 }
