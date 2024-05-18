@@ -6,6 +6,7 @@ import ma.insea.connect.chat.conversation.ConversationService;
 import ma.insea.connect.chat.group.Group;
 import ma.insea.connect.chat.group.GroupService;
 import ma.insea.connect.keycloak.DTO.AddKeycloakDTO;
+import ma.insea.connect.keycloak.controller.KeyCloakController;
 import ma.insea.connect.keycloak.service.KeyCloakService;
 import ma.insea.connect.user.DTO.AddUserDTO;
 import org.keycloak.KeycloakPrincipal;
@@ -16,14 +17,14 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.logging.LoggingPermission;
 
 @Controller
 @RequiredArgsConstructor
+@RestController
 @RequestMapping("/api/v1")
 public class UserController {
 
@@ -32,6 +33,7 @@ public class UserController {
     private final GroupService groupService;
     private final UserRepository userRepository;
     private final ConversationService conversationService;
+    private  final KeyCloakController keyCloakController;
 
     @MessageMapping("/users.addUser")
     @SendTo("/user/public")
@@ -42,16 +44,37 @@ public class UserController {
             addUserDTO.setStatus(Status.ONLINE);
             User user = AddUserDTO.mapToUser(addUserDTO);
             userService.saveUser(user);
-            AddKeycloakDTO addKeycloakDTO = AddKeycloakDTO.mapToUserDTO(addUserDTO);
+            AddKeycloakDTO addKeycloakDTO = AddKeycloakDTO.mapToAddKeycloakDTO(addUserDTO);
             keyCloakService.addUser(addKeycloakDTO);
+
         } else {
             existingUser.setStatus(Status.ONLINE);
-            AddKeycloakDTO addKeycloakDTO = AddKeycloakDTO.mapToUserDTO(addUserDTO);
+            AddKeycloakDTO addKeycloakDTO = AddKeycloakDTO.mapToAddKeycloakDTO(addUserDTO);
             keyCloakService.addUser(addKeycloakDTO);
             userService.saveUser(existingUser);
         }
         return addUserDTO;
     }
+
+    @PostMapping("/user/addUser")
+    public AddKeycloakDTO addUser1(@RequestBody AddUserDTO addUserDTO) {
+        keyCloakController.addUser(AddKeycloakDTO.mapToAddKeycloakDTO(addUserDTO));
+
+        User existingUser = userRepository.findByEmail(addUserDTO.getEmail());
+        if (existingUser == null) {
+
+            addUserDTO.setStatus(Status.ONLINE);
+            User user = AddUserDTO.mapToUser(addUserDTO);
+            userService.saveUser(user);
+
+
+        } else {
+            existingUser.setStatus(Status.ONLINE);
+            userService.saveUser(existingUser);
+        }
+        return AddKeycloakDTO.mapToAddKeycloakDTO(addUserDTO);
+    }
+
 
     @MessageMapping("/users.disconnectUser")
     @SendTo("/users/public")

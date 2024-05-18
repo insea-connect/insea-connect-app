@@ -1,6 +1,10 @@
 package ma.insea.connect;
 
+import ma.insea.connect.keycloak.DTO.AddKeycloakDTO;
+import ma.insea.connect.keycloak.controller.KeyCloakController;
+import ma.insea.connect.user.DTO.AddUserDTO;
 import ma.insea.connect.user.Role;
+import ma.insea.connect.user.UserController;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,14 +25,20 @@ public class ConnectApplication {
 
 	/*@Profile("dev")
 	@Bean
-	public CommandLineRunner addAdmin(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	public CommandLineRunner addAdmin(UserController userController, KeyCloakController keyCloakController) {
 		return args -> {
-			User user = User.builder()
-					.username("admin")
-					.role(Role.STUDENT)
-					.passwordHash(passwordEncoder.encode("admin"))
+			AddUserDTO user = AddUserDTO.builder()
+					.username("admin3")
+					.email("admin3")
+					.firstName("admin3")
+					.lastName("admin3")
+					.role(Role.ADMIN)
+					.password("admin3")
 					.build();
-			userRepository.save(user);
+			System.out.println("here it is "+AddKeycloakDTO.mapToAddKeycloakDTO(user).toString());
+			userController.addUser1(user);
+
+
 		};
 	}*/
 }
