@@ -7,7 +7,7 @@ const ChatArea = () => {
   return (
     <section
       aria-labelledby="primary-heading"
-      className="bg-white flex h-full min-w-0 flex-1 flex-col overflow-y-auto lg:order-last"
+      className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto lg:order-last"
     >
       <header className="h-14 w-full border-b py-2 px-4 flex items-center justify-between">
         <div className="flex items-center gap-2">

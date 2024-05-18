@@ -10,7 +10,7 @@ const ChatItem = () => {
       <div className="flex flex-col flex-1">
         <div className="flex justify-between">
           <span className="font-semibold">John Doe</span>
-          <span className="text-gray-700 text-[0.75rem] font-normal">
+          <span className="text-gray-700 dark:text-gray-500 text-[0.75rem] font-normal">
             Yesterday
           </span>
         </div>

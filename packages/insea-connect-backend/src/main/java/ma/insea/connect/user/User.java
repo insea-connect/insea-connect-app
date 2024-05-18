@@ -4,16 +4,21 @@ import jakarta.persistence.*;
 import lombok.*;
 import ma.insea.connect.chat.common.chatMessage.ChatMessage;
 import ma.insea.connect.chat.conversation.Conversation;
+import ma.insea.connect.chat.group.Group;
+import ma.insea.connect.chat.group.Membership;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-// import org.springframework.security.core.GrantedAuthority;
-// import org.springframework.security.core.authority.SimpleGrantedAuthority;
-// import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -23,17 +28,17 @@ import java.util.List;
 @Setter
 @Builder
 @NoArgsConstructor
-@Table(name="chat_user",schema = "testo")
+@Table(name="_user")
 @EntityListeners(AuditingEntityListener.class)
-public class User 
-// implements UserDetails
+public class User implements UserDetails
  {
         @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
+    @Column(unique = true)
     private String username;
-    private String password;
+    private String passwordHash;
     private String imagrUrl;
     private String firstName;
     private String lastName;
@@ -54,10 +59,17 @@ public class User
     private Status status;
     private Date lastLogin;
 
+
     @ElementCollection
     private List<Long> groups = new ArrayList<>();
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Membership> membership;
+    
+
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "sender")
+    @JsonIgnore
     private List<ChatMessage> sentMessages;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "recipient")
@@ -70,70 +82,51 @@ public class User
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "member2")
     private List<Conversation> member2conversations;
 
+    @OneToMany(mappedBy = "creator")
+    @JsonIgnore
+    private List<Group> createdGroups;
+
+
     
 
-
-
-    public void addGroup(Long group){
-            List<Long> groups = this.getGroups();
-            if (groups == null) 
-            {
-                groups = new ArrayList<Long>();
-                
-            }
-            groups.add(group);
-
-        }
-
-
-    public void removeGroup(Long groupId) {
-        List<Long> groups = this.getGroups();
-        if (groups == null) {
-            groups = new ArrayList<Long>();
-        }
-        groups.remove(groupId);
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+       return List.of(new SimpleGrantedAuthority(role.name()));
     }
-
-    
-
-    // @Override
-    // public Collection<? extends GrantedAuthority> getAuthorities() {
-    //    return List.of(new SimpleGrantedAuthority(role.name()));
-    // }
 
    
 
-    // @Override
-    // public boolean isAccountNonExpired() {
-    //     return true;
-    // }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
-    // @Override
-    // public boolean isAccountNonLocked() {
-    //     return true;
-    // }
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
-    // @Override
-    // public boolean isCredentialsNonExpired() {
-    //     return true;
-    // }
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
-    // @Override
-    // public boolean isEnabled() {
-    //     return true;
-    // }
-
-
-    // @Override
-    // public String getUsername() {
-    //     return username;
-    // }
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
 
-    // @Override
-    // public String getPassword() {
-    //     return passwordHash;
-    // }
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+
+    @Override
+    public String getPassword() {
+        return passwordHash;
+    }
 
 
   
