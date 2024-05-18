@@ -103,19 +103,20 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-   /* @GetMapping("/users/me/groups")
-    public ResponseEntity<List<Group>> getGroupsByEmail() {
-        KeycloakPrincipal<?> principal = (KeycloakPrincipal<?>) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        KeycloakSecurityContext keycloakSecurityContext = principal.getKeycloakSecurityContext();
-        String email = keycloakSecurityContext.getToken().getEmail();
-        User user = userRepository.findByEmail(email);
+   @GetMapping("/users/me/groups")
+    public ResponseEntity<List<Group>> getGroupsByEmail(@AuthenticationPrincipal Jwt jwt) {
+       if (jwt == null) {
+           return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+       }
+       String email = jwt.getClaimAsString("email");
+       User user = userRepository.findByEmail(email);
 
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok(groupService.findallgroupsofemail(user.getId()));
-    }*/
+    }
 
     @GetMapping("/users/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
