@@ -5,6 +5,9 @@ import ma.insea.connect.keycloak.controller.KeyCloakController;
 import ma.insea.connect.user.DTO.AddUserDTO;
 import ma.insea.connect.user.Role;
 import ma.insea.connect.user.UserController;
+
+
+import org.hibernate.mapping.List;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,22 +26,23 @@ public class ConnectApplication {
 		SpringApplication.run(ConnectApplication.class, args);
 	}
 
-	@Profile("dev")
-	@Bean
-	public CommandLineRunner addAdmin(UserController userController, KeyCloakController keyCloakController) {
-		return args -> {
-			AddUserDTO user = AddUserDTO.builder()
-					.username("admin")
-					.email("admin@example.com")
-					.firstName("admin")
-					.lastName("admin")
-					.role(Role.ADMIN)
-					.password("admin")
-					.build();
-			System.out.println("here it is "+AddKeycloakDTO.mapToAddKeycloakDTO(user).toString());
-			userController.addUser1(user);
+	// @Profile("dev")
+	// @Bean
+	// public CommandLineRunner addAdmin(UserController userController, KeyCloakController keyCloakController) {
+	// 	return args -> {
+	// 		AddUserDTO user = AddUserDTO.builder()
+	// 				.username("admin")
+	// 				.email("admin@example.com")
+	// 				.firstName("admin")
+	// 				.lastName("admin")
+	// 				.role(Role.ADMIN)
+	// 				.password("admin")
+					
+	// 				.build();
+	// 		System.out.println("here it is "+AddKeycloakDTO.mapToAddKeycloakDTO(user).toString());
+	// 		userController.addUser1(user);
 
 
-		};
-	}
+	// 	};
+	// }
 }
