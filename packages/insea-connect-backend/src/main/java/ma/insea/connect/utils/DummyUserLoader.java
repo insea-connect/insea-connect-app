@@ -53,7 +53,7 @@ public class DummyUserLoader implements CommandLineRunner {
     private void loadDummyUsers(UserRepository userRepository,GroupRepository groupRepository, MembershipRepository membershipRepository,GroupMessageRepository groupMessageRepository , ChatMessageRepository chatMessageRepository,ConversationRepository conversationRepository) {
         AddUserDTO user = AddUserDTO.builder()
 					.username("anas")
-					.email("anas")
+					.email("anas@gmail.com")
 					.firstName("anas")
 					.lastName("anas")
 					.role(Role.ADMIN)
