@@ -72,6 +72,8 @@ public class KeycloakLoginController {
             ResponseEntity<Map> response = restTemplate.exchange(
                     tokenUrl, HttpMethod.POST, requestEntity, Map.class);
 
+
+
             // Return the response containing the token
             return ResponseEntity.ok(response.getBody());
         }

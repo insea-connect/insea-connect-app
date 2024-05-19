@@ -1,6 +1,7 @@
 package ma.insea.connect.config.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -8,7 +9,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-
+import org.springframework.web.cors.CorsConfiguration;
+//org.springframework.beans.factory.annotation
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
@@ -18,9 +20,25 @@ public class SecurityConfig {
     public static final String USER = "USER";
     public static final String CLASS_REP = "CLASS-REP";
     private final JwtConverter jwtConverter;
+    @Value("${allowedserver}")
+    private String allowedserver;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authz ->
+        http
+                .cors(httpSecurityCorsConfigurer ->
+                        httpSecurityCorsConfigurer
+                                .configurationSource(request -> {
+                                    CorsConfiguration configuration = new CorsConfiguration();
+                                    configuration.addAllowedOrigin(allowedserver);
+                                    // Allow credentials for secure requests with cookies/authentication
+                                    configuration.setAllowCredentials(true);
+                                    // Set other CORS headers as needed
+                                    configuration.addAllowedHeader("*");
+                                    configuration.addAllowedMethod("*");
+                                    return configuration;
+                                })
+                )
+                .authorizeHttpRequests(authz ->
                         authz
                                 //Add the api endpoints and the permissions required for them here
                                 .requestMatchers(HttpMethod.POST, "/api/v1/keyCloakUser/addUser").permitAll()
