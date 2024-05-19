@@ -1,14 +1,21 @@
-import { Button } from "@/components/ui/button";
+"use client";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, SquarePen } from "lucide-react";
 import ChatList from "./chat-list";
 import NewChatButton from "@/components/new-chat-button";
+import { useState } from "react";
 
-const ChatAside = () => {
+interface ChatAsideProps {
+  asideClassName?: string;
+  divClassName?: string;
+}
+
+const ChatAside = ({ asideClassName, divClassName }: ChatAsideProps) => {
+  const [searchTerm, setSearchTerm] = useState("");
   return (
-    <aside className="hidden lg:order-first lg:block lg:flex-shrink-0">
-      <div className="gap-3 pt-2 relative flex h-full w-96 flex-col border-r ">
+    <aside className={`${asideClassName}`}>
+      <div className={`${divClassName}`}>
         <div className="flex flex-col px-4 gap-2">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-semibold tracking-tight first:mt-0">
@@ -21,6 +28,8 @@ const ChatAside = () => {
             <Input
               type="search"
               placeholder="Search..."
+              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchTerm}
               className="w-full bg-background pl-8 "
             />
           </div>

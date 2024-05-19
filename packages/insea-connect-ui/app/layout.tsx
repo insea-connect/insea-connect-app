@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/provider/theme-provider";
 import { SessionProvider } from "next-auth/react";
 import { ModalProvider } from "@/components/provider/modal-provider";
 import { Toaster } from "@/components/ui/toaster";
+import QueryProvider from "@/components/provider/query-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -27,9 +28,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SessionProvider>
-            <ModalProvider />
-            {children}
-            <Toaster />
+            <QueryProvider>
+              <ModalProvider />
+              {children}
+              <Toaster />
+            </QueryProvider>
           </SessionProvider>
         </ThemeProvider>
       </body>
