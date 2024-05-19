@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -37,10 +38,9 @@ public class User implements UserDetails
     private String email;
     @Column(unique = true)
     private String username;
-    private String passwordHash;
-    private String imagrUrl;
-    private String firstname;
-    private String lastname;
+    private String imageUrl;
+    private String firstName;
+    private String lastName;
     private String dateOfBirth;
     private String bio;
 
@@ -58,10 +58,14 @@ public class User implements UserDetails
     private Status status;
     private Date lastLogin;
 
+
+    @ElementCollection
+    private List<Long> groups = new ArrayList<>();
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Membership> membership;
     
+
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "sender")
     @JsonIgnore
@@ -69,6 +73,7 @@ public class User implements UserDetails
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "recipient")
     private List<ChatMessage> receivedMessages;
+
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "member1")
     private List<Conversation> member1conversations;
@@ -84,14 +89,20 @@ public class User implements UserDetails
     private DegreePath degreePath;
 
 
-    
+
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-   
+    @Override
+    public String getPassword() {
+       return null;
+    }
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -120,15 +131,9 @@ public class User implements UserDetails
     }
 
 
-    @Override
-    public String getPassword() {
-        return passwordHash;
-    }
 
 
-  
 
-     
 
 
 }

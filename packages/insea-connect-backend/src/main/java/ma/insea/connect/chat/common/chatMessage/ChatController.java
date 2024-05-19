@@ -39,18 +39,18 @@ public class ChatController {
     @MessageMapping("/chat.sendgroupmessage")
     @SendTo("/user/public")
     public GroupMessage processGroupMessage(@Payload GroupMessageDTO groupMessage) {
-        GroupMessage groupMessage2=chatMessageService.savegroupmessage(groupMessage);   
+        GroupMessage groupMessage2=chatMessageService.savegroupmessage(groupMessage);
         return groupMessage2;
     }
 
 
     @GetMapping("/messages/{senderId}/{recipientId}")
     public ResponseEntity<List<ChatMessage>> findUserChatMessages(@PathVariable String senderId,
-                                                 @PathVariable String recipientId) {
+                                                                  @PathVariable String recipientId) {
         return ResponseEntity
                 .ok(chatMessageService.findChatMessages(senderId, recipientId));
     }
-    
-    
-    
+
+
+
 }

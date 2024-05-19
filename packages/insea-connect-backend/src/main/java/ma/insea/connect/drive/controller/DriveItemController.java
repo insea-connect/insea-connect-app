@@ -16,7 +16,7 @@ public class DriveItemController {
     @Autowired
     private DriveItemServiceImpl driveItemService;
 
-    
+
 
     @GetMapping("/degreePaths/{degreePathCode}/items")
     public ResponseEntity<List<DriveItem>> getDriveItems(@PathVariable Long degreePathCode) {

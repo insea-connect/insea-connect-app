@@ -1,0 +1,4 @@
+const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+const BACKEND_API_VERSION = "api/v1";
+export const USER_INFO_ENDPOINT = `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/users/me`;
+export const CONVERSATIONS_ENDPOINT = `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/users/me/conversations`;

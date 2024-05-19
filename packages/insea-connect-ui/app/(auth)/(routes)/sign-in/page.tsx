@@ -17,16 +17,21 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { signIn, useSession } from "next-auth/react";
+import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string().regex(passwordRegex, {
-    message:
-      "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.",
-  }),
+  username: z.string().min(3, "Username must be at least 3 characters long."),
+  // password: z.string().regex(passwordRegex, {
+  //   message:
+  //     "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.",
+  // }),
+
+  password: z.string().min(3, "Password must be at least 3 characters long."),
 });
 
 const SignInPage = () => {
@@ -34,9 +39,33 @@ const SignInPage = () => {
     resolver: zodResolver(formSchema),
   });
 
+  const router = useRouter();
+
+  const { toast } = useToast();
+
   const { isSubmitting, isValid } = form.formState;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("Values : " + values);
+    const result = await signIn("credentials", {
+      username: values.username,
+      password: values.password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      // TODO: Find a better way to handle incoming errors
+      toast({
+        title: "Invalid username or password",
+        description:
+          "If the problem persists, Please contact the administrator.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Welcome back!",
+        description: "You have successfully signed in.",
+      });
+      router.push("/chat");
+    }
   };
   return (
     <main className="w-full lg:grid lg:h-full lg:grid-cols-2">
@@ -64,14 +93,14 @@ const SignInPage = () => {
             >
               <FormField
                 control={form.control}
-                name="email"
+                name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input
                         disabled={isSubmitting}
-                        placeholder="Email"
+                        placeholder="Username"
                         {...field}
                       />
                     </FormControl>

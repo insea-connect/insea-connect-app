@@ -8,5 +8,5 @@ public class GroupMessageDTO {
     private Long senderId;
     private Long groupId;
     private String content;
-    
+
 }

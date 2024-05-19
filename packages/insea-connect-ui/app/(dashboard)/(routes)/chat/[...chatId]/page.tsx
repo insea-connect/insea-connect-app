@@ -5,7 +5,10 @@ const ConversationPage = () => {
   return (
     <main className="flex flex-1 overflow-hidden">
       <ChatArea />
-      <ChatAside />
+      <ChatAside
+        asideClassName="hidden lg:order-first lg:block lg:flex-shrink-0"
+        divClassName="gap-3 pt-2 relative flex h-full w-96 flex-col border-r"
+      />
     </main>
   );
 };

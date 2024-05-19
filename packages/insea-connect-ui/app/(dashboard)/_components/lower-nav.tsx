@@ -9,10 +9,13 @@ import {
 import { Paintbrush2 } from "lucide-react";
 import { useMediaQuery } from "usehooks-ts";
 import { useTheme } from "next-themes";
+import { useSession } from "next-auth/react";
+import UserProfile from "@/components/user-profile";
 
 const LowerNav = () => {
   const isSmallScreen = useMediaQuery("(max-width: 1279px)");
   const { setTheme, theme } = useTheme();
+  const { data } = useSession();
 
   return (
     <nav className="mt-auto flex flex-col items-center xl:items-start gap-2  p-2">
@@ -37,12 +40,8 @@ const LowerNav = () => {
           Theme
         </TooltipContent>
       </Tooltip>
-      <div className="xl:flex xl:gap-2 xl:px-3 xl:items-center">
-        <Avatar className="h-7 w-7">
-          <AvatarImage src="/avatar.jpg" alt="John Doe" />
-          <AvatarFallback>JD</AvatarFallback>
-        </Avatar>
-        <span className="hidden xl:inline text-base font-medium">John Doe</span>
+      <div className="xl:flex xl:gap-2 xl:px-3 xl:items-center relative w-full">
+        <UserProfile />
       </div>
     </nav>
   );
