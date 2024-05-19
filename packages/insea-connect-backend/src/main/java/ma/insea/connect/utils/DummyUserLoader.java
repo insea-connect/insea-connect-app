@@ -102,7 +102,9 @@ public class DummyUserLoader implements CommandLineRunner {
             List<Membership> memberships = new ArrayList<Membership>();
             memberships.add(m1);
             memberships.add(m2);
+            groupRepository.save(group);
             group.addMembership(m1);
+            group.addMembership(m2);
             // group.setMemberships(memberships);
             // membershipRepository.saveAll(memberships);
             groupRepository.save(group);
