@@ -11,7 +11,7 @@ import lombok.*;
 @Builder
 public class File extends DriveItem {
 
-    private String size;
+    private Long size;
     private String mimeType;
     private String fileUrl;
 }
