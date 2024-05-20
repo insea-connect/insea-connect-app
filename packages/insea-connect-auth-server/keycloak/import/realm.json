@@ -595,7 +595,7 @@
       "enabled": true,
       "firstName": "anas",
       "lastName": "El Ardi",
-      "email": "anas@gmail.com",
+      "email": "anas@example.com",
       "credentials": [
         {
           "type": "password",

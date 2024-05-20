@@ -1,15 +1,13 @@
 package ma.insea.connect.chat.common.chatMessage;
 
-
-
 import java.util.Date;
 
 import lombok.Data;
 @Data
-public class GroupMessageDTO {
+public class ChatMessageDTO2 {
     private Long senderId;
     private String content;
-    private String senderName;
     private Date timestamp;
-
+    private String senderName;
+    
 }

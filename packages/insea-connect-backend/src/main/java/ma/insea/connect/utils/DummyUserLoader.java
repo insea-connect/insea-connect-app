@@ -53,7 +53,7 @@ public class DummyUserLoader implements CommandLineRunner {
     private void loadDummyUsers(UserRepository userRepository,GroupRepository groupRepository, MembershipRepository membershipRepository,GroupMessageRepository groupMessageRepository , ChatMessageRepository chatMessageRepository,ConversationRepository conversationRepository) {
         AddUserDTO user = AddUserDTO.builder()
 					.username("anas")
-					.email("anas")
+					.email("anas@example.com")
 					.firstName("anas")
 					.lastName("anas")
 					.role(Role.ADMIN)
@@ -133,6 +133,13 @@ public class DummyUserLoader implements CommandLineRunner {
             groupMessage2.setSender(soulayman);
             groupMessageRepository.save(groupMessage2);
 
+            GroupMessage groupMessage3=new GroupMessage();
+            groupMessage3.setGroupId(group.getId());
+            groupMessage3.setContent("this is a nce group");
+            groupMessage3.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
+            groupMessage3.setSender(anas);
+            groupMessageRepository.save(groupMessage3);
+
 
 
 
@@ -142,7 +149,7 @@ public class DummyUserLoader implements CommandLineRunner {
         chatMessage1.setSender(anas);
         chatMessage1.setRecipient(soulayman);
         chatMessage1.setContent("hello soulayman , my name is anas");
-        chatMessage1.setTimestamp(new Date());
+        chatMessage1.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
         chatMessageRepository.save(chatMessage1);
 
         Conversation conversation = new Conversation();
@@ -157,8 +164,17 @@ public class DummyUserLoader implements CommandLineRunner {
         chatMessage2.setSender(soulayman);
         chatMessage2.setRecipient(anas);
         chatMessage2.setContent("nice to meet you anas , my name is soulayman");
-        chatMessage2.setTimestamp(new Date());
+        chatMessage2.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
         chatMessageRepository.save(chatMessage2);
+
+
+        ChatMessage chatMessage3 = new ChatMessage();
+        chatMessage3.setChatId(chatId);
+        chatMessage3.setSender(anas);
+        chatMessage3.setRecipient(soulayman);
+        chatMessage3.setContent("nice to meet you too soulayman");
+        chatMessage3.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
+        chatMessageRepository.save(chatMessage3);
         
     }
     public String getChatRoomId(String senderId,String recipientId,boolean createNewRoomIfNotExists)

@@ -9,7 +9,8 @@ import ma.insea.connect.chat.conversation.ConversationRepository;
 import ma.insea.connect.user.User;
 import ma.insea.connect.user.UserRepository;
 
-import java.util.Date;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,7 +32,7 @@ public class ChatMessageService {
         chatMessage1.setSender(sender);
         chatMessage1.setRecipient(recipient);
         chatMessage1.setContent(chatMessage.getContent());
-        chatMessage1.setTimestamp(new Date());
+        chatMessage1.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
 
         chatMessageRepository.save(chatMessage1);
 
@@ -45,10 +46,9 @@ public class ChatMessageService {
     public GroupMessage savegroupmessage(GroupMessageDTO groupMessageDTO) {
         User sender = userRepository.findById(groupMessageDTO.getSenderId()).get();
         GroupMessage groupMessage = new GroupMessage();
-        groupMessage.setGroupId(groupMessageDTO.getGroupId());
         groupMessage.setSender(sender);
         groupMessage.setContent(groupMessageDTO.getContent());
-        groupMessage.setTimestamp(new Date());
+        groupMessage.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
         groupMessageRepository.save(groupMessage);
         return groupMessage;
     }
@@ -89,8 +89,30 @@ public class ChatMessageService {
         }
         return null;
     }
-    public List<GroupMessage> findGroupMessages(Long groupId) {
-        return groupMessageRepository.findByGroupId(groupId);
+    public List<GroupMessageDTO> findGroupMessages(Long groupId) {
+        List<GroupMessage> groupMessages = groupMessageRepository.findByGroupId(groupId);
+        List<GroupMessageDTO> groupMessages2 = new ArrayList<GroupMessageDTO>();
+        for (GroupMessage groupMessage : groupMessages) {
+            GroupMessageDTO groupMessageDTO = new GroupMessageDTO();
+            groupMessageDTO.setContent(groupMessage.getContent());
+            groupMessageDTO.setTimestamp(groupMessage.getTimestamp());
+            groupMessageDTO.setSenderId(groupMessage.getSender().getId());
+            groupMessageDTO.setSenderName(groupMessage.getSender().getUsername());
+            groupMessages2.add(groupMessageDTO);
+        }
+        return groupMessages2;
     }
+    public GroupMessageDTO findLastGroupMessage(Long groupId) {
+        List<GroupMessage> groupMessages = groupMessageRepository.findByGroupId(groupId);
+        if (groupMessages.size() > 0) {
+            GroupMessage  groupMessage2=groupMessages.get(groupMessages.size() - 1);
+            GroupMessageDTO groupMessageDTO=new GroupMessageDTO();
+            groupMessageDTO.setContent(groupMessage2.getContent());
+            groupMessageDTO.setTimestamp(new java.util.Date(System.currentTimeMillis()));
+            groupMessageDTO.setSenderId(groupMessage2.getSender().getId());
+            groupMessageDTO.setSenderName(groupMessage2.getSender().getUsername());
+            return groupMessageDTO;
+        }
+        return null;}
     
 }
