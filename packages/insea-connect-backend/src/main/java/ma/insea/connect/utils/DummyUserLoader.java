@@ -140,6 +140,8 @@ public class DummyUserLoader implements CommandLineRunner {
             group.setName("1A dse");
             group.setCreator(anas);
             group.setDescription("group for 1A dse students");
+            group.setCreatedDate(new java.util.Date(System.currentTimeMillis()));
+
             Membership m1 = new Membership();
             m1.setId(new MembershipKey(anas.getId(),group.getId()));
             m1.setGroup(group);
@@ -162,14 +164,21 @@ public class DummyUserLoader implements CommandLineRunner {
             group2.setName("2A DSE");
             group2.setCreator(ahmed);
             group2.setDescription("group for 2A dse students");
+            group2.setCreatedDate(new java.util.Date(System.currentTimeMillis()));
             Membership m11 = new Membership();
-            m11.setId(new MembershipKey(ahmed.getId(),group.getId()));
+            m11.setId(new MembershipKey(ahmed.getId(),group2.getId()));
             m11.setGroup(group2);
             m11.setUser(ahmed);
             m11.setIsAdmin(true);
             m11.setJoiningDate(new java.sql.Date(System.currentTimeMillis()));
+            Membership m33 = new Membership();
+            m33.setId(new MembershipKey(anas.getId(),group2.getId()));
+            m33.setGroup(group2);
+            m33.setUser(anas);
+            m33.setIsAdmin(false);
+            m33.setJoiningDate(new java.sql.Date(System.currentTimeMillis()));
             Membership m22 = new Membership();
-            m22.setId(new MembershipKey(mohammed.getId(),group.getId()));
+            m22.setId(new MembershipKey(mohammed.getId(),group2.getId()));
             m22.setGroup(group2);
             m22.setUser(mohammed);
             m22.setIsAdmin(false);
@@ -177,7 +186,15 @@ public class DummyUserLoader implements CommandLineRunner {
             groupRepository.save(group2);
             group2.addMembership(m11);
             group2.addMembership(m22);
+            group2.addMembership(m33);
             groupRepository.save(group2);
+
+            GroupMessage groupMessage0=new GroupMessage();
+            groupMessage0.setGroupId(group2.getId());
+            groupMessage0.setContent("this is anas from the group2");
+            groupMessage0.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
+            groupMessage0.setSender(anas);
+            groupMessageRepository.save(groupMessage0);
 
 
             GroupMessage groupMessage1=new GroupMessage();
