@@ -108,7 +108,7 @@ public class ChatMessageService {
             GroupMessage  groupMessage2=groupMessages.get(groupMessages.size() - 1);
             GroupMessageDTO groupMessageDTO=new GroupMessageDTO();
             groupMessageDTO.setContent(groupMessage2.getContent());
-            groupMessageDTO.setTimestamp(new java.util.Date(System.currentTimeMillis()));
+            groupMessageDTO.setTimestamp(groupMessage2.getTimestamp());
             groupMessageDTO.setSenderId(groupMessage2.getSender().getId());
             groupMessageDTO.setSenderName(groupMessage2.getSender().getUsername());
             return groupMessageDTO;

@@ -5,6 +5,8 @@ import { Search, SquarePen } from "lucide-react";
 import ChatList from "./chat-list";
 import NewChatButton from "@/components/new-chat-button";
 import { useState } from "react";
+import ConversationList from "./conversation-list";
+import GroupList from "./group-list";
 
 interface ChatAsideProps {
   asideClassName?: string;
@@ -42,10 +44,10 @@ const ChatAside = ({ asideClassName, divClassName }: ChatAsideProps) => {
             </TabsList>
           </div>
           <TabsContent value="conversations" className="relative">
-            <ChatList />
+            <ConversationList search={searchTerm} />
           </TabsContent>
           <TabsContent value="groups">
-            <ChatList />
+            <GroupList search={searchTerm} />
           </TabsContent>
         </Tabs>
       </div>

@@ -5,12 +5,15 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { CONVERSATIONS_ENDPOINT } from "@/lib/constants";
 import ChatListSkeleton from "./chat-list-skeleton";
+import useUserProfile from "@/hooks/use-user-profile";
 
-interface ChatListProps {
+interface ConversationListProps {
   search?: string;
 }
 
-const ChatList = ({ search }: ChatListProps) => {
+const ConversationList = ({ search }: ConversationListProps) => {
+  const { isPending: isUserProfilePending, data: userProfile } =
+    useUserProfile();
   const { data } = useSession();
   const { isPending, data: conversations } = useQuery({
     queryKey: ["conversations"],
@@ -24,33 +27,27 @@ const ChatList = ({ search }: ChatListProps) => {
     },
   });
 
-  if (isPending) {
+  if (isPending && isUserProfilePending) {
     return <ChatListSkeleton />;
   }
 
   return (
     <ScrollArea className="h-full mt-2 pt-2">
       <div className="flex flex-col gap-2 px-4 h-full">
-        <ChatItem
-          username="John Doe"
-          message="Hey, how are you?"
-          date="2 hours ago"
-        />
-
-        <ChatItem
-          username="Sara Miller"
-          message="I'm good, thanks for asking!"
-          date="1 hour ago"
-        />
-
-        <ChatItem
-          username="Paul Doe"
-          message="Can you help me with this?"
-          date="30 mins ago"
-        />
+        {conversations?.map((conversation: any) => (
+          <ChatItem
+            key={conversation.chatId}
+            username={conversation.username}
+            message={conversation?.lastMessage?.content}
+            date={conversation?.lastMessage?.timestamp}
+            isCurrentUser={
+              userProfile.id === conversation?.lastMessage?.senderId
+            }
+          />
+        ))}
       </div>
     </ScrollArea>
   );
 };
 
-export default ChatList;
+export default ConversationList;

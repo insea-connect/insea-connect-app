@@ -27,6 +27,8 @@ import { Input } from "@/components/ui/input";
 
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
+import { CREATE_GROUP_ENDPOINT } from "@/lib/constants";
+import { useSession } from "next-auth/react";
 
 const schema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -34,6 +36,7 @@ const schema = z.object({
 });
 
 const NewGroupModal = () => {
+  const { data: session } = useSession();
   const { toast } = useToast();
   const router = useRouter();
   const { isOpen, onClose, type } = useModal();
@@ -49,9 +52,21 @@ const NewGroupModal = () => {
   const isLoading = form.formState.isSubmitting;
   const onSubmit = async (values: z.infer<typeof schema>) => {
     try {
-      const { data } = await axios.post("/api/groups", values);
+      const { data } = await axios.post(
+        CREATE_GROUP_ENDPOINT,
+        {
+          name: values.name,
+          description: values.description,
+          members: [],
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session?.tokens.access_token}`,
+          },
+        }
+      );
       form.reset();
-      router.push(`/groups/${data.id}`);
+      router.push(`/chat/group-${data.id}`);
       onClose();
     } catch (error) {
       toast({
