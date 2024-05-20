@@ -25,5 +25,12 @@ public class ConversatonController {
         return ResponseEntity
                 .ok(conversationService.findConversationMessages(conversationId));
     }
+
+    @GetMapping("/conversations/{conversationId}")
+    public ResponseEntity<ConversationDTO2> getConversationInfo(@PathVariable String conversationId
+                                                 ) {
+        return ResponseEntity
+                .ok(conversationService.getConversation(conversationId));
+    }
     
 }

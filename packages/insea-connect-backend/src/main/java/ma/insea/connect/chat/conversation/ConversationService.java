@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
 import ma.insea.connect.user.User;
+import ma.insea.connect.user.UserDTO2;
 import ma.insea.connect.user.UserRepository;
 import ma.insea.connect.chat.common.chatMessage.ChatMessage;
 import ma.insea.connect.chat.common.chatMessage.ChatMessageDTO;
@@ -103,5 +104,18 @@ public class ConversationService {
             chatMessageDTOs.add(chatMessageDTO);
         }
         return chatMessageDTOs;}
+
+    public ConversationDTO2 getConversation(String conversationId) {
+        Conversation conversation = conversationRepository.findByChatId(conversationId);
+        User user1=conversation.getMember1();
+        User user2=conversation.getMember2();
+
+        UserDTO2 userDTO1=new UserDTO2(user1.getId(), user1.getUsername(), user1.getEmail());
+        UserDTO2 userDTO2=new UserDTO2(user2.getId(), user2.getUsername(), user2.getEmail());
+
+        return new ConversationDTO2(userDTO1, userDTO2);
+
+        
+    }
     
 }

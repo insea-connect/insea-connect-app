@@ -15,6 +15,7 @@ import ma.insea.connect.chat.common.chatMessage.ChatMessageDTO2;
 import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
 import ma.insea.connect.chat.common.chatMessage.GroupMessageDTO;
 import ma.insea.connect.user.User;
+import ma.insea.connect.user.UserDTO2;
 import ma.insea.connect.user.UserRepository;
 
 
@@ -36,7 +37,7 @@ public class GroupService {
         group.setCreator(connectedUser);
         group.setIsOfficial(false);
         group.setDescription(groupDTO.getDescription());
-        group.setCreatedDate(new java.sql.Date(System.currentTimeMillis()));
+        group.setCreatedDate(new java.util.Date(System.currentTimeMillis()));
         groupRepository.save(group);
         List<Long> mem = groupDTO.getMembers();
         mem.add(connectedUser.getId());
@@ -47,7 +48,7 @@ public class GroupService {
             m.setGroup(group);
             m.setUser(userRepository.findById(user).get());
             m.setIsAdmin(false);
-            m.setJoiningDate(new java.sql.Date(System.currentTimeMillis()));
+            m.setJoiningDate(new java.util.Date(System.currentTimeMillis()));
             group.addMembership(m);
         }
         groupRepository.save(group);
@@ -86,15 +87,18 @@ public class GroupService {
         Group group=groupRepository.findById(groupId).get();
         return group;
     }
-    public List<User> findUsers(Long groupId) {
+    public List<UserDTO2> findUsers(Long groupId) {
         List<Membership> membership = membershipRepository.findAllByGroupId(groupId);
-        List<User> users = new ArrayList<User>();
+        List<UserDTO2> groupMembersDTOs = new ArrayList<UserDTO2>();
         for (Membership m : membership) {
-            users.add(m.getUser());
+            User user = m.getUser();
+            UserDTO2 userDTO = new UserDTO2(user.getId(), user.getUsername(), user.getEmail());
+            groupMembersDTOs.add(userDTO);
         }
 
+
         
-        return users;
+        return groupMembersDTOs;
 
     }
     public String addGroupMembers(Long groupId, List<Long> users) {
@@ -111,7 +115,7 @@ public class GroupService {
             m.setGroup(groupRepository.findById(groupId).get());
             m.setUser(userRepository.findById(user).get());
             m.setIsAdmin(false);
-            m.setJoiningDate(new java.sql.Date(System.currentTimeMillis()));
+            m.setJoiningDate(new java.util.Date(System.currentTimeMillis()));
             membershipRepository.save(m);
         }
         return "Group members added successfully";
@@ -129,6 +133,19 @@ public class GroupService {
         }else{
         membershipRepository.deleteByGroupIdAndUserId(groupId, memberId);
         return "Group member removed successfully";}
+    }
+    public GroupDTO3 getGroup(Long groupId) {
+        Group group = groupRepository.findById(groupId).get();
+        User creator = group.getCreator();
+        UserDTO2 creatorDTO = new UserDTO2(creator.getId(), creator.getUsername(), creator.getEmail());
+        List <UserDTO2> admins= new ArrayList<UserDTO2>();
+        List <Membership> adminsmem=membershipRepository.findByGroupIdAndIsAdmin(groupId, true);
+        for (Membership admin : adminsmem) {
+            UserDTO2 adminDTO = new UserDTO2(admin.getUser().getId(), admin.getUser().getUsername(), admin.getUser().getEmail());
+            admins.add(adminDTO);
+        }
+        return new GroupDTO3(group.getId(), group.getImagrUrl(), group.getName(), group.getDescription(), group.getIsOfficial(), group.getCreatedDate(), creatorDTO, admins);
+        
     }
     
 }

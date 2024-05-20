@@ -89,16 +89,10 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> findConnectedUsers() {
+    public ResponseEntity<List<UserDTO>> findConnectedUsers() {
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
-
-    @GetMapping("/user/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-        User user = userRepository.findByEmail(email);
-        return ResponseEntity.ok(user);
-    }
 
    @GetMapping("/users/me/groups")
     public ResponseEntity<List<GroupDTO2>> getGroupsByEmail(@AuthenticationPrincipal Jwt jwt) {
