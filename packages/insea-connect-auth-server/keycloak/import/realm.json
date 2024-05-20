@@ -643,6 +643,57 @@
       "clientRoles": {
         "realm-management": ["manage-users", "view-users"]
       }
+    },{
+      "username": "mohammed",
+      "enabled": true,
+      "firstName": "mohammed",
+      "lastName": "Barday",
+      "email": "mohammed@example.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["CLASS_REP", "management"],
+      "clientRoles": {
+        "realm-management": ["manage-users", "view-users"]
+      }
+    },{
+      "username": "ahmed",
+      "enabled": true,
+      "firstName": "ahmed",
+      "lastName": "Barday",
+      "email": "ahmed@example.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["CLASS_REP", "management"],
+      "clientRoles": {
+        "realm-management": ["manage-users", "view-users"]
+      }
+    },{
+      "username": "saad",
+      "enabled": true,
+      "firstName": "saad",
+      "lastName": "Barday",
+      "email": "saad@example.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["CLASS_REP", "management"],
+      "clientRoles": {
+        "realm-management": ["manage-users", "view-users"]
+      }
     }
     ],
   "scopeMappings": [
