@@ -94,9 +94,11 @@ public class DummyUserLoader implements CommandLineRunner {
             User hamza =userRepository.findByUsername("hamza").get();
             User soulayman =userRepository.findByUsername("soulayman").get();
             Group group = new Group();
-            group.setName("group1");
+            group.setName("1DSE");
             group.setCreator(anas);
-            group.setDescription("group1");
+            group.setDescription("group for DSE first year students");
+            group.setCreatedDate(new java.util.Date(System.currentTimeMillis()));
+            group.setIsOfficial(true);
             Membership m1 = new Membership();
             m1.setId(new MembershipKey(anas.getId(),group.getId()));
             m1.setGroup(group);

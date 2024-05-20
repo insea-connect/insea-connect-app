@@ -24,7 +24,7 @@ public class UserService {
         var storedUser = userRepository.findByEmail(user.getEmail());
         if (storedUser != null) {
             storedUser.setStatus(Status.OFFLINE);
-            storedUser.setLastLogin(new java.sql.Date(System.currentTimeMillis()));
+            storedUser.setLastLogin(new java.util.Date(System.currentTimeMillis()));
             userRepository.save(storedUser);
         }
     }

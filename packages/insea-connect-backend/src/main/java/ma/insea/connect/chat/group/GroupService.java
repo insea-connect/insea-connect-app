@@ -37,7 +37,7 @@ public class GroupService {
         group.setCreator(connectedUser);
         group.setIsOfficial(false);
         group.setDescription(groupDTO.getDescription());
-        group.setCreatedDate(new java.sql.Date(System.currentTimeMillis()));
+        group.setCreatedDate(new java.util.Date(System.currentTimeMillis()));
         groupRepository.save(group);
         List<Long> mem = groupDTO.getMembers();
         mem.add(connectedUser.getId());
@@ -48,7 +48,7 @@ public class GroupService {
             m.setGroup(group);
             m.setUser(userRepository.findById(user).get());
             m.setIsAdmin(false);
-            m.setJoiningDate(new java.sql.Date(System.currentTimeMillis()));
+            m.setJoiningDate(new java.util.Date(System.currentTimeMillis()));
             group.addMembership(m);
         }
         groupRepository.save(group);
@@ -115,7 +115,7 @@ public class GroupService {
             m.setGroup(groupRepository.findById(groupId).get());
             m.setUser(userRepository.findById(user).get());
             m.setIsAdmin(false);
-            m.setJoiningDate(new java.sql.Date(System.currentTimeMillis()));
+            m.setJoiningDate(new java.util.Date(System.currentTimeMillis()));
             membershipRepository.save(m);
         }
         return "Group members added successfully";
