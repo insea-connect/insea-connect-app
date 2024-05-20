@@ -3,7 +3,6 @@ package ma.insea.connect.user;
 import lombok.RequiredArgsConstructor;
 import ma.insea.connect.chat.conversation.ConversationDTO;
 import ma.insea.connect.chat.conversation.ConversationService;
-import ma.insea.connect.chat.group.Group;
 import ma.insea.connect.chat.group.GroupDTO2;
 import ma.insea.connect.chat.group.GroupService;
 import ma.insea.connect.keycloak.DTO.AddKeycloakDTO;
@@ -11,21 +10,17 @@ import ma.insea.connect.keycloak.controller.KeyCloakController;
 import ma.insea.connect.keycloak.service.KeyCloakService;
 import ma.insea.connect.user.DTO.AddUserDTO;
 import ma.insea.connect.user.DTO.UserInfoResponseDTO;
-import org.keycloak.KeycloakPrincipal;
-import org.keycloak.KeycloakSecurityContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.logging.LoggingPermission;
 
 @Controller
 @RequiredArgsConstructor
@@ -95,18 +90,8 @@ public class UserController {
 
 
    @GetMapping("/users/me/groups")
-    public ResponseEntity<List<GroupDTO2>> getGroupsByEmail(@AuthenticationPrincipal Jwt jwt) {
-       if (jwt == null) {
-           return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-       }
-       String email = jwt.getClaimAsString("email");
-       User user = userRepository.findByEmail(email);
-
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(groupService.findallgroupsofemail(user.getId()));
+    public ResponseEntity<List<GroupDTO2>> getGroupsByEmail() {
+        return ResponseEntity.ok(groupService.findallgroupsofemail());
     }
 
     @GetMapping("/users/{id}")
@@ -124,9 +109,8 @@ public class UserController {
     }
 
     @GetMapping("/users/me/conversations")
-    public ResponseEntity<List<ConversationDTO>> getUserConversations(@AuthenticationPrincipal Jwt jwt) {
-        String email = jwt.getClaimAsString("email");
-        List<ConversationDTO> conversations = conversationService.findConversationsByEmail(email);
+    public ResponseEntity<List<ConversationDTO>> getUserConversations() {
+        List<ConversationDTO> conversations = conversationService.findConversationsByEmail();
         return ResponseEntity.ok(conversations);
     }
 }
