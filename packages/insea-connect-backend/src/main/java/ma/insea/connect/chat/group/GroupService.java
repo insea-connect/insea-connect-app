@@ -15,6 +15,7 @@ import ma.insea.connect.chat.common.chatMessage.ChatMessageDTO2;
 import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
 import ma.insea.connect.chat.common.chatMessage.GroupMessageDTO;
 import ma.insea.connect.user.User;
+import ma.insea.connect.user.UserDTO2;
 import ma.insea.connect.user.UserRepository;
 
 
@@ -86,15 +87,18 @@ public class GroupService {
         Group group=groupRepository.findById(groupId).get();
         return group;
     }
-    public List<User> findUsers(Long groupId) {
+    public List<UserDTO2> findUsers(Long groupId) {
         List<Membership> membership = membershipRepository.findAllByGroupId(groupId);
-        List<User> users = new ArrayList<User>();
+        List<UserDTO2> groupMembersDTOs = new ArrayList<UserDTO2>();
         for (Membership m : membership) {
-            users.add(m.getUser());
+            User user = m.getUser();
+            UserDTO2 userDTO = new UserDTO2(user.getId(), user.getUsername(), user.getEmail());
+            groupMembersDTOs.add(userDTO);
         }
 
+
         
-        return users;
+        return groupMembersDTOs;
 
     }
     public String addGroupMembers(Long groupId, List<Long> users) {
