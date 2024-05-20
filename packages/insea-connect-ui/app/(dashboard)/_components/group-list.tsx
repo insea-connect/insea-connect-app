@@ -38,6 +38,7 @@ const GroupList = ({ search }: GroupListProps) => {
         {groups?.map((group: any) => (
           <ChatItem
             key={group.id}
+            id={group.id}
             username={group.name}
             message={group?.lastMessage?.content}
             date={group?.lastMessage?.timestamp}

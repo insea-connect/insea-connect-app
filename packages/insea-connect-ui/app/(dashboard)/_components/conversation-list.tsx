@@ -37,6 +37,7 @@ const ConversationList = ({ search }: ConversationListProps) => {
         {conversations?.map((conversation: any) => (
           <ChatItem
             key={conversation.chatId}
+            id={conversation.chatId}
             username={conversation.username}
             message={conversation?.lastMessage?.content}
             date={conversation?.lastMessage?.timestamp}
