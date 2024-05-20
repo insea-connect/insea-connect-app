@@ -57,7 +57,7 @@ public class DummyUserLoader implements CommandLineRunner {
 					.firstName("anas")
 					.lastName("anas")
 					.role(Role.ADMIN)
-					.password("anas")
+					.password("admin")
 					.build();
 			System.out.println("here it is "+AddKeycloakDTO.mapToAddKeycloakDTO(user).toString());
 			userController.addUser1(user);

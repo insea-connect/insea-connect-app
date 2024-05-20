@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ma.insea.connect.chat.common.chatMessage.ChatMessage;
-import ma.insea.connect.chat.common.chatMessage.ChatMessageDTO;
 import ma.insea.connect.chat.common.chatMessage.ChatMessageDTO2;
 import lombok.RequiredArgsConstructor;
 

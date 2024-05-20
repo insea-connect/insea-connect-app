@@ -5,18 +5,15 @@ import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ma.insea.connect.chat.common.chatMessage.ChatMessageDTO;
-import ma.insea.connect.chat.common.chatMessage.ChatMessageDTO2;
 import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
 import ma.insea.connect.chat.common.chatMessage.GroupMessageDTO;
 import ma.insea.connect.user.User;
 import ma.insea.connect.user.UserDTO2;
 import ma.insea.connect.user.UserRepository;
+import ma.insea.connect.utils.Functions;
 
 
 @Service
@@ -26,11 +23,10 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final MembershipRepository membershipRepository;
     private final ChatMessageService chatMessageService;
+    private final Functions functions;
 
     public Group saveGroup(GroupDTO groupDTO) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User connectedUser = userRepository.findByUsername(authentication.getName()).orElse(null);
-        
+        User connectedUser = functions.getConnectedUser();        
         Group group = new Group();
         
         group.setName(groupDTO.getName());
@@ -57,8 +53,9 @@ public class GroupService {
         membershipRepository.save(m);
         return group;
     }
-    public List<GroupDTO2> findallgroupsofemail(Long myId) {
-        List<Membership> memberships = membershipRepository.findByUserId(myId);
+    public List<GroupDTO2> findallgroupsofemail() {
+        User connectedUser = functions.getConnectedUser();
+        List<Membership> memberships = membershipRepository.findByUserId(connectedUser.getId());
         List<Group> groups = new ArrayList<Group>();
         for (Membership membership : memberships) {
             groups.add(membership.getGroup());
@@ -74,14 +71,15 @@ public class GroupService {
         }
         return groupDTOs;
     }
-    public void deleteGroup(Long groupId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName()).orElse(null);
+    public String deleteGroup(Long groupId) {
+        User connectedUser = functions.getConnectedUser();
 
         Group group = groupRepository.findById(groupId).get();
-        if (user == group.getCreator()){
-            groupRepository.delete(group);    
+        if (connectedUser == group.getCreator()){
+            groupRepository.delete(group);  
+            return "Group deleted successfully";  
         }
+        return "You are not allowed to delete this group";
     }
     public Group findById(Long groupId) {
         Group group=groupRepository.findById(groupId).get();
@@ -95,15 +93,16 @@ public class GroupService {
             UserDTO2 userDTO = new UserDTO2(user.getId(), user.getUsername(), user.getEmail());
             groupMembersDTOs.add(userDTO);
         }
-
-
-        
+        User connectedUser = functions.getConnectedUser();
+        Membership membership2 = membershipRepository.findByUserIdAndGroupId(connectedUser.getId(), groupId);
+        if (membership2 == null) {
+            return null;
+        }
         return groupMembersDTOs;
 
     }
     public String addGroupMembers(Long groupId, List<Long> users) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User connectedUser = userRepository.findByUsername(authentication.getName()).orElse(null);
+        User connectedUser = functions.getConnectedUser();
         Membership membership = membershipRepository.findByUserIdAndGroupId(connectedUser.getId(), groupId);
         
         if(membership == null || !membership.getIsAdmin()) {
@@ -124,8 +123,7 @@ public class GroupService {
     }
     @Transactional
     public String removeGroupMember(Long groupId, Long memberId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User connectedUser = userRepository.findByUsername(authentication.getName()).orElse(null);
+        User connectedUser = functions.getConnectedUser();
         Membership membership = membershipRepository.findByUserIdAndGroupId(connectedUser.getId(), groupId);
         
         if(membership == null || !membership.getIsAdmin()) {
@@ -143,6 +141,11 @@ public class GroupService {
         for (Membership admin : adminsmem) {
             UserDTO2 adminDTO = new UserDTO2(admin.getUser().getId(), admin.getUser().getUsername(), admin.getUser().getEmail());
             admins.add(adminDTO);
+        }
+        User connectedUser = functions.getConnectedUser();
+        Membership membership = membershipRepository.findByUserIdAndGroupId(connectedUser.getId(), groupId);
+        if(membership == null) {
+            return null;
         }
         return new GroupDTO3(group.getId(), group.getImagrUrl(), group.getName(), group.getDescription(), group.getIsOfficial(), group.getCreatedDate(), creatorDTO, admins);
         

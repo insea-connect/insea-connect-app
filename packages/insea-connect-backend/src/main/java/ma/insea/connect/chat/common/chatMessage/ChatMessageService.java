@@ -6,8 +6,11 @@ import org.springframework.stereotype.Service;
 
 import ma.insea.connect.chat.conversation.Conversation;
 import ma.insea.connect.chat.conversation.ConversationRepository;
+import ma.insea.connect.chat.group.Membership;
+import ma.insea.connect.chat.group.MembershipRepository;
 import ma.insea.connect.user.User;
 import ma.insea.connect.user.UserRepository;
+import ma.insea.connect.utils.Functions;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -20,6 +23,8 @@ public class ChatMessageService {
     private final ConversationRepository conversationRepository;
     private final UserRepository userRepository;
     private final GroupMessageRepository groupMessageRepository;
+    private final Functions functions;
+    private final MembershipRepository membershipRepository;
 
     public ChatMessage saveusermessage(ChatMessageDTO chatMessage) {
         ChatMessage chatMessage1 = new ChatMessage();
@@ -100,7 +105,12 @@ public class ChatMessageService {
             groupMessageDTO.setSenderName(groupMessage.getSender().getUsername());
             groupMessages2.add(groupMessageDTO);
         }
-        return groupMessages2;
+        User connectedUser = functions.getConnectedUser();
+        Membership membership = membershipRepository.findByUserIdAndGroupId(connectedUser.getId(), groupId);
+        if (membership != null) {
+            return groupMessages2;
+        }
+        return null;
     }
     public GroupMessageDTO findLastGroupMessage(Long groupId) {
         List<GroupMessage> groupMessages = groupMessageRepository.findByGroupId(groupId);
