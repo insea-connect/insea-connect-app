@@ -18,7 +18,7 @@ public class SecurityConfig {
 
     public static final String ADMIN = "ADMIN";
     public static final String USER = "USER";
-    public static final String CLASS_REP = "CLASS-REP";
+    public static final String CLASS_REP = "CLASS_REP";
     private final JwtConverter jwtConverter;
     @Value("${allowedserver}")
     private String allowedserver;
