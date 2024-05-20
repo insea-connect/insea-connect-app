@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import ma.insea.connect.user.User;
 import lombok.AllArgsConstructor;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 

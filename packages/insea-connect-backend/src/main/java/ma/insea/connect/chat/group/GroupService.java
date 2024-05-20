@@ -134,5 +134,18 @@ public class GroupService {
         membershipRepository.deleteByGroupIdAndUserId(groupId, memberId);
         return "Group member removed successfully";}
     }
+    public GroupDTO3 getGroup(Long groupId) {
+        Group group = groupRepository.findById(groupId).get();
+        User creator = group.getCreator();
+        UserDTO2 creatorDTO = new UserDTO2(creator.getId(), creator.getUsername(), creator.getEmail());
+        List <UserDTO2> admins= new ArrayList<UserDTO2>();
+        List <Membership> adminsmem=membershipRepository.findByGroupIdAndIsAdmin(groupId, true);
+        for (Membership admin : adminsmem) {
+            UserDTO2 adminDTO = new UserDTO2(admin.getUser().getId(), admin.getUser().getUsername(), admin.getUser().getEmail());
+            admins.add(adminDTO);
+        }
+        return new GroupDTO3(group.getId(), group.getImagrUrl(), group.getName(), group.getDescription(), group.getIsOfficial(), group.getCreatedDate(), creatorDTO, admins);
+        
+    }
     
 }

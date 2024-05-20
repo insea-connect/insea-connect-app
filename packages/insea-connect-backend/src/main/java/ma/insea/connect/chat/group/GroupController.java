@@ -38,7 +38,12 @@ public class GroupController {
     public ResponseEntity<String> deleteGroup(@PathVariable("groupid") Long groupId) {
             groupService.deleteGroup(groupId);
             return ResponseEntity.ok("Group deleted successfully");//cases for response ent
-    
+    }
+
+    @GetMapping("/groups/{groupid}")
+    public ResponseEntity<Object> getGroupInfo(@PathVariable("groupid") Long groupId) {
+            
+            return ResponseEntity.ok(groupService.getGroup(groupId));//cases for response ent
     }
 
     @GetMapping("/groups/{groupId}/messages")
