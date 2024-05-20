@@ -2,9 +2,7 @@ package ma.insea.connect.chat.group;
 
 import lombok.AllArgsConstructor;
 import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
-import ma.insea.connect.chat.common.chatMessage.GroupMessage;
 import ma.insea.connect.chat.common.chatMessage.GroupMessageDTO;
-import ma.insea.connect.user.User;
 import ma.insea.connect.user.UserDTO2;
 
 import java.util.List;
@@ -36,12 +34,11 @@ public class GroupController {
     }
     @DeleteMapping("/groups/{groupid}")
     public ResponseEntity<String> deleteGroup(@PathVariable("groupid") Long groupId) {
-            groupService.deleteGroup(groupId);
-            return ResponseEntity.ok("Group deleted successfully");//cases for response ent
+            return ResponseEntity.ok(groupService.deleteGroup(groupId));//cases for response ent
     }
 
     @GetMapping("/groups/{groupid}")
-    public ResponseEntity<Object> getGroupInfo(@PathVariable("groupid") Long groupId) {
+    public ResponseEntity<GroupDTO3> getGroupInfo(@PathVariable("groupid") Long groupId) {
             
             return ResponseEntity.ok(groupService.getGroup(groupId));//cases for response ent
     }
@@ -55,8 +52,7 @@ public class GroupController {
 
     @GetMapping("/groups/{groupid}/members")
     public ResponseEntity<List<UserDTO2>> findGroupUsers(@PathVariable("groupid") Long groupId) {
-        List<UserDTO2> users = groupService.findUsers(groupId);
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(groupService.findUsers(groupId));
     }
     
     @PostMapping("/groups/{groupid}/members")
