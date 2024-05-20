@@ -3,6 +3,7 @@ package ma.insea.connect.chat.group;
 import lombok.AllArgsConstructor;
 import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
 import ma.insea.connect.chat.common.chatMessage.GroupMessage;
+import ma.insea.connect.chat.common.chatMessage.GroupMessageDTO;
 import ma.insea.connect.user.User;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class GroupController {
     }
 
     @GetMapping("/groups/{groupId}/messages")
-    public ResponseEntity<List<GroupMessage>> findGroupChatMessages(@PathVariable Long groupId) {
+    public ResponseEntity<List<GroupMessageDTO>> findGroupChatMessages(@PathVariable Long groupId) {
         
         return ResponseEntity
                 .ok(chatMessageService.findGroupMessages(groupId));

@@ -10,6 +10,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ma.insea.connect.chat.common.chatMessage.ChatMessageDTO;
+import ma.insea.connect.chat.common.chatMessage.ChatMessageDTO2;
+import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
+import ma.insea.connect.chat.common.chatMessage.GroupMessageDTO;
 import ma.insea.connect.user.User;
 import ma.insea.connect.user.UserRepository;
 
@@ -20,6 +24,7 @@ public class GroupService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final MembershipRepository membershipRepository;
+    private final ChatMessageService chatMessageService;
 
     public Group saveGroup(GroupDTO groupDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -51,13 +56,22 @@ public class GroupService {
         membershipRepository.save(m);
         return group;
     }
-    public List<Group> findallgroupsofemail(Long myId) {
+    public List<GroupDTO2> findallgroupsofemail(Long myId) {
         List<Membership> memberships = membershipRepository.findByUserId(myId);
         List<Group> groups = new ArrayList<Group>();
         for (Membership membership : memberships) {
             groups.add(membership.getGroup());
         }
-        return groups;
+        List<GroupDTO2> groupDTOs = new ArrayList<GroupDTO2>();
+        for (Group group : groups) {
+            GroupDTO2 groupDTO = new GroupDTO2();
+            groupDTO.setId(group.getId());
+            groupDTO.setName(group.getName());
+            GroupMessageDTO chatMessage=chatMessageService.findLastGroupMessage(group.getId());
+            groupDTO.setLastMessage(chatMessage);
+            groupDTOs.add(groupDTO);
+        }
+        return groupDTOs;
     }
     public void deleteGroup(Long groupId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import ma.insea.connect.chat.conversation.ConversationDTO;
 import ma.insea.connect.chat.conversation.ConversationService;
 import ma.insea.connect.chat.group.Group;
+import ma.insea.connect.chat.group.GroupDTO2;
 import ma.insea.connect.chat.group.GroupService;
 import ma.insea.connect.keycloak.DTO.AddKeycloakDTO;
 import ma.insea.connect.keycloak.controller.KeyCloakController;
@@ -92,11 +93,6 @@ public class UserController {
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
-    @GetMapping("/user/{myId}/groups")
-    public ResponseEntity<List<Group>> getGroupsByEmail(@PathVariable Long myId) {
-        List<Group> groups = groupService.findallgroupsofemail(myId);
-        return ResponseEntity.ok(groups);
-    }
 
     @GetMapping("/user/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
@@ -105,7 +101,7 @@ public class UserController {
     }
 
    @GetMapping("/users/me/groups")
-    public ResponseEntity<List<Group>> getGroupsByEmail(@AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<List<GroupDTO2>> getGroupsByEmail(@AuthenticationPrincipal Jwt jwt) {
        if (jwt == null) {
            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
        }
@@ -135,9 +131,6 @@ public class UserController {
 
     @GetMapping("/users/me/conversations")
     public ResponseEntity<List<ConversationDTO>> getUserConversations(@AuthenticationPrincipal Jwt jwt) {
-        if (jwt == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
         String email = jwt.getClaimAsString("email");
         List<ConversationDTO> conversations = conversationService.findConversationsByEmail(email);
         return ResponseEntity.ok(conversations);

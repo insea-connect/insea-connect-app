@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ma.insea.connect.user.DegreePath;
 import ma.insea.connect.user.Role;
 import ma.insea.connect.user.Status;
 import ma.insea.connect.user.User;
@@ -29,6 +30,7 @@ public class AddUserDTO {
     private Date lastLogin;
     private List<Long> groups;
     private String password;
+    private DegreePath degreePath;
 
     public static User mapToUser(AddUserDTO addUserDTO) {
         return User.builder()
@@ -40,6 +42,7 @@ public class AddUserDTO {
                 .dateOfBirth(addUserDTO.getDateOfBirth())
                 .bio(addUserDTO.getBio())
                 .role(addUserDTO.getRole() != null ? addUserDTO.getRole() : Role.STUDENT)
+                .degreePath(addUserDTO.getDegreePath() != null ? addUserDTO.getDegreePath() : null)
                 .status(addUserDTO.getStatus())
                 .lastLogin(addUserDTO.getLastLogin())
                 .groups(addUserDTO.getGroups() != null ? addUserDTO.getGroups() : new ArrayList<>())

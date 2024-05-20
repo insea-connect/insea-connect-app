@@ -14,11 +14,11 @@ public class MembershipKey implements Serializable {
     @Column(name = "group_id")
     Long groupId;
 
-    protected MembershipKey(Long userId, Long groupId) {
+    public MembershipKey(Long userId, Long groupId) {
         this.userId = userId;
         this.groupId = groupId;
     }
-    protected MembershipKey() {
+    public MembershipKey() {
     }
 
 }

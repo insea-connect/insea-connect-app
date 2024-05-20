@@ -6,6 +6,7 @@ import ma.insea.connect.user.User;
 import lombok.AllArgsConstructor;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -37,10 +38,11 @@ public class Group {
 
     @OneToMany(mappedBy = "group",cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Membership> memberships;
+    private List<Membership> memberships=new ArrayList<>();
 
 
     public void addMembership(Membership membership){
+        
         this.memberships.add(membership);
     }
 
