@@ -3,6 +3,7 @@ package ma.insea.connect.user;
 
 import lombok.AllArgsConstructor;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,5 +38,11 @@ public class UserService {
             userDTOs.add(userDTO);
         }
         return userDTOs;
+    }
+
+    public User findByUsername(String username){
+        User user = userRepository.findByUsername(username).orElse(null);
+        return user;
+
     }
 }
