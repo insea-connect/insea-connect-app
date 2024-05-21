@@ -31,10 +31,17 @@ const ConversationList = ({ search }: ConversationListProps) => {
     return <ChatListSkeleton />;
   }
 
+  let filteredConversations =
+    conversations && search
+      ? conversations.filter((conversation: any) =>
+          conversation.username.toLowerCase().includes(search.toLowerCase())
+        )
+      : conversations;
+
   return (
     <ScrollArea className="h-full mt-2 pt-2">
       <div className="flex flex-col gap-2 px-4 h-full">
-        {conversations?.map((conversation: any) => (
+        {filteredConversations?.map((conversation: any) => (
           <ChatItem
             key={conversation.chatId}
             id={conversation.chatId}
