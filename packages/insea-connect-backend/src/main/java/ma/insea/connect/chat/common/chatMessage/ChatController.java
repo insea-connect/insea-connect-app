@@ -7,19 +7,21 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+// @RequestMapping("/api/v1")
 public class ChatController {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatMessageService chatMessageService;
 
-    @MessageMapping("/chat.sendmessage")
-    public void processMessage(@Payload ChatMessageDTO chatMessage) {
+    @MessageMapping("/sendmessage")
+    public void processMessage(@RequestBody ChatMessageDTO chatMessage) {
+        System.out.println("hehoy"+chatMessage);
         ChatMessage savedMsg = chatMessageService.saveusermessage(chatMessage);
 
         messagingTemplate.convertAndSendToUser(
