@@ -2,9 +2,7 @@
 
 import { BACKEND_BASE_URL } from "@/lib/constants";
 import { createContext, useContext, useEffect, useState } from "react";
-import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
-// import Stomp from "stompjs";
 import { useSession } from "next-auth/react";
 
 type SocketContextType = {
@@ -29,24 +27,22 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocket] = useState<any | null>(null);
   const [isConnected, setIsConnected] = useState(false);
 
-  console.log(isConnected);
-
   useEffect(() => {
     console.log(BACKEND_BASE_URL);
     if (access_token) {
       const stompClient = new Client({
-        webSocketFactory: () => new SockJS(`${BACKEND_BASE_URL}/ws`),
         debug: (str) => console.log(str),
-        connectHeaders: {
-          Authorization: `Bearer ${access_token}`,
-        },
         reconnectDelay: 5000,
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
-        brokerURL: `${BACKEND_BASE_URL}/ws`,
+        brokerURL: `ws://localhost:8081/ws`,
+        connectHeaders: {
+          Authorization: `Bearer ${access_token}`,
+        },
       });
 
       stompClient.onConnect = () => {
+        console.log("Connected to the server");
         setIsConnected(true);
       };
 
@@ -54,10 +50,16 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         setIsConnected(false);
       };
 
+      stompClient.activate();
       setSocket(stompClient);
 
       return () => {
-        stompClient.deactivate();
+        if (stompClient) {
+          stompClient.deactivate();
+        }
+
+        setSocket(null);
+        setIsConnected(false);
       };
     }
   }, [access_token]);

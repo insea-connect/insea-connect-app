@@ -42,12 +42,12 @@ const ChatItem = ({
             {capitalize(username ?? "Unknown User")}
           </span>
           <span className="text-gray-700 dark:text-gray-500 text-[0.75rem] font-normal">
-            {formatToTimeAgo(date)}
+            {date ? formatToTimeAgo(date) : ""}
           </span>
         </div>
         <span className="text-gray-500 text-sm truncate">
           <span className="font-bold">
-            {isGroup
+            {message && isGroup
               ? !isCurrentUser
                 ? `${senderName}: `
                 : "You: "
@@ -55,7 +55,7 @@ const ChatItem = ({
               ? ""
               : "You: "}
           </span>
-          {message}
+          {message ?? "No message"}
         </span>
       </div>
     </div>
