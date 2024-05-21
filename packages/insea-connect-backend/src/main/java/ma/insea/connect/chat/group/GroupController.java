@@ -29,8 +29,8 @@ public class GroupController {
     // @SendTo("/user/public")     //for realtime
     @PostMapping("/groups")       //for rest anotations
     public GroupDTO addGroup(@RequestBody GroupDTO groupDTO) {
-        groupService.saveGroup(groupDTO);
-        return groupDTO;
+        
+        return groupService.saveGroup(groupDTO);
     }
     @DeleteMapping("/groups/{groupid}")
     public ResponseEntity<String> deleteGroup(@PathVariable("groupid") Long groupId) {

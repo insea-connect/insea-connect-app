@@ -25,7 +25,7 @@ public class GroupService {
     private final ChatMessageService chatMessageService;
     private final Functions functions;
 
-    public Group saveGroup(GroupDTO groupDTO) {
+    public GroupDTO saveGroup(GroupDTO groupDTO) {
         User connectedUser = functions.getConnectedUser();        
         Group group = new Group();
         
@@ -51,7 +51,8 @@ public class GroupService {
         Membership m=membershipRepository.findById(new MembershipKey(group.getCreator().getId(), group.getId())).get();
         m.setIsAdmin(true);
         membershipRepository.save(m);
-        return group;
+        groupDTO.setId(group.getId());
+        return groupDTO;
     }
     public List<GroupDTO2> findallgroupsofemail() {
         User connectedUser = functions.getConnectedUser();
