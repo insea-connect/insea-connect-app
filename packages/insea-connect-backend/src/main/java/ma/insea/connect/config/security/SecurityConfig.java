@@ -45,6 +45,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/api/v1/user/addUser").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/refreshToken").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/ws/**").permitAll()
 
                                 .requestMatchers(HttpMethod.GET, "/api/user/*").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/user.addUser").hasRole("ADMIN")
