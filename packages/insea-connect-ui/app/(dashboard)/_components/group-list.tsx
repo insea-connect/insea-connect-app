@@ -32,17 +32,10 @@ const GroupList = ({ search }: GroupListProps) => {
     return <ChatListSkeleton />;
   }
 
-  let filteredGroups =
-    groups && search
-      ? groups.filter((group: any) =>
-          group.name.toLowerCase().includes(search.toLowerCase())
-        )
-      : groups;
-
   return (
     <ScrollArea className="h-full mt-2 pt-2">
       <div className="flex flex-col gap-2 px-4 h-full">
-        {filteredGroups?.map((group: any) => (
+        {groups?.map((group: any) => (
           <ChatItem
             key={group.id}
             id={group.id}

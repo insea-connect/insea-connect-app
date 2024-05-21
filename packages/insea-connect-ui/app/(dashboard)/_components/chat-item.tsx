@@ -55,7 +55,7 @@ const ChatItem = ({
               ? ""
               : "You: "}
           </span>
-          {message ?? "No message"}
+          {message ?? ""}
         </span>
       </div>
     </div>
