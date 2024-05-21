@@ -1,6 +1,5 @@
 package ma.insea.connect.chat.common.chatMessage;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;

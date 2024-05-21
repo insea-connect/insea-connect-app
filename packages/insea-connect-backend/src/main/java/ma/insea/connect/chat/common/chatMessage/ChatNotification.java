@@ -1,6 +1,5 @@
 package ma.insea.connect.chat.common.chatMessage;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -14,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ChatNotification {
-    private String ConversationId;
+    private String conversationId;
     private Long senderId;
     private String content;
     private Date timestamp;
