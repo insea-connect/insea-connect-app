@@ -9,12 +9,7 @@ import GroupList from "./group-list";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-interface ChatAsideProps {
-  asideClassName?: string;
-  divClassName?: string;
-}
-
-const ChatAside = ({ asideClassName, divClassName }: ChatAsideProps) => {
+const ChatAside = () => {
   const pathname = usePathname();
   const isRootChatPage = pathname === "/chat";
   const [searchTerm, setSearchTerm] = useState("");

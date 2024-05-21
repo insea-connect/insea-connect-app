@@ -49,3 +49,17 @@ export const getIsTokenValid = (token: string) => {
 
   return true;
 };
+
+/**
+ * Extract chat id from path
+ * IMPORTANT: We are assuming that the conversation id and group id can never be the same
+ * @param path - string
+ * @returns string
+ */
+export const extractSelectedChatId = (path: string) => {
+  const splittedPath = path.split("/");
+  if (splittedPath.length < 3) return null;
+  const chatId = path.split("/")[2];
+
+  return chatId.split("-")[1];
+};
