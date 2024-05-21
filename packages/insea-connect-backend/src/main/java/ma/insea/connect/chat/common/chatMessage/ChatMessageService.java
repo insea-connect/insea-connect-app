@@ -13,7 +13,7 @@ import ma.insea.connect.user.User;
 import ma.insea.connect.user.UserRepository;
 import ma.insea.connect.utils.Functions;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,10 +53,10 @@ public class ChatMessageService {
         messagingTemplate.convertAndSendToUser(
                 Long.toString(chatMessage.getRecipientId()), "/queue/messages",
                 new ChatNotification(
-                        chatMessage1.getId(),
+                        chatId,
                         chatMessage1.getSender().getId(),
-                        chatMessage1.getRecipient().getId(),
                         chatMessage1.getContent(),
+                        new Date(System.currentTimeMillis()),
                         false
                 )
         );
@@ -79,11 +79,11 @@ public class ChatMessageService {
         for (User user:users){
             messagingTemplate.convertAndSendToUser(
                 Long.toString(user.getId()), "/queue/messages",
-                new ChatNotification(
-                        groupMessage.getId(),
-                        groupMessage.getSender().getId(),
+                new GroupNotification(
                         groupMessage.getGroupId(),
+                        groupMessage.getSender().getId(),
                         groupMessage.getContent(),
+                        new Date(System.currentTimeMillis()),
                         true
                 )
         );

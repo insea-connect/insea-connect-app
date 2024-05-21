@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ChatNotification {
-    private String ConversationId;
+public class GroupNotification {
+    private Long groupId;
     private Long senderId;
     private String content;
     private Date timestamp;
