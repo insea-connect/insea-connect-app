@@ -5,8 +5,6 @@ import en from "javascript-time-ago/locale/en";
 TimeAgo.addDefaultLocale(en);
 
 export function formatToTimeAgo(date: string) {
-  console.log("date", date);
-  console.log("new Date(date)", new Date(date).toDateString());
   return new TimeAgo("en-US").format(new Date(date));
 }
 

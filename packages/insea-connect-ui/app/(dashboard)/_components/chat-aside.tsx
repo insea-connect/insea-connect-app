@@ -2,11 +2,12 @@
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, SquarePen } from "lucide-react";
-import ChatList from "./chat-list";
 import NewChatButton from "@/components/new-chat-button";
 import { useState } from "react";
 import ConversationList from "./conversation-list";
 import GroupList from "./group-list";
+import { usePathname, useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 interface ChatAsideProps {
   asideClassName?: string;
@@ -14,10 +15,24 @@ interface ChatAsideProps {
 }
 
 const ChatAside = ({ asideClassName, divClassName }: ChatAsideProps) => {
+  const pathname = usePathname();
+  const isRootChatPage = pathname === "/chat";
   const [searchTerm, setSearchTerm] = useState("");
   return (
-    <aside className={`${asideClassName}`}>
-      <div className={`${divClassName}`}>
+    <aside
+      className={cn(
+        isRootChatPage
+          ? "sm:block flex-1 lg:flex-shrink-0"
+          : "hidden lg:order-first lg:block lg:flex-shrink-0"
+      )}
+    >
+      <div
+        className={cn(
+          isRootChatPage
+            ? "gap-3 pt-2 relative flex h-full w-full lg:w-96 flex-col border-r"
+            : "gap-3 pt-2 relative flex h-full w-96 flex-col border-r"
+        )}
+      >
         <div className="flex flex-col px-4 gap-2">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-semibold tracking-tight first:mt-0">
