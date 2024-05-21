@@ -6,11 +6,8 @@ import java.util.Date;
 
 import lombok.Data;
 @Data
-public class GroupMessageDTO {
+public class GroupMessageDTO2 {
     private Long groupId;
     private Long senderId;
     private String content;
-    private String senderName;
-    private Date timestamp;
-
 }

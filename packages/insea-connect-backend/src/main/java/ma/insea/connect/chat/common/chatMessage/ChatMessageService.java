@@ -12,7 +12,6 @@ import ma.insea.connect.user.User;
 import ma.insea.connect.user.UserRepository;
 import ma.insea.connect.utils.Functions;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +32,12 @@ public class ChatMessageService {
 
         User recipient = userRepository.findById(chatMessage.getRecipientId()).get();
         User sender = userRepository.findById(chatMessage.getSenderId()).get();
+        // User sender = functions.getConnectedUser();
 
         chatMessage1.setSender(sender);
         chatMessage1.setRecipient(recipient);
         chatMessage1.setContent(chatMessage.getContent());
-        chatMessage1.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
+        chatMessage1.setTimestamp(new java.util.Date(System.currentTimeMillis()));
 
         chatMessageRepository.save(chatMessage1);
 
@@ -48,12 +48,13 @@ public class ChatMessageService {
         conversationRepository.save(conversation);
         return chatMessage1;
     }
-    public GroupMessage savegroupmessage(GroupMessageDTO groupMessageDTO) {
+    public GroupMessage savegroupmessage(GroupMessageDTO2 groupMessageDTO) {
         User sender = userRepository.findById(groupMessageDTO.getSenderId()).get();
         GroupMessage groupMessage = new GroupMessage();
         groupMessage.setSender(sender);
+        groupMessage.setGroupId(groupMessageDTO.getGroupId());
         groupMessage.setContent(groupMessageDTO.getContent());
-        groupMessage.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
+        groupMessage.setTimestamp(new java.util.Date(System.currentTimeMillis()));
         groupMessageRepository.save(groupMessage);
         return groupMessage;
     }
@@ -81,15 +82,16 @@ public class ChatMessageService {
     var chatId = String.format("%s_%s",first, second);
             return chatId;
 }
-    public ChatMessageDTO findLastMessage(String chatId) {
+    public ChatMessageDTO2 findLastMessage(String chatId) {
         List<ChatMessage> chatMessages = chatMessageRepository.findByChatId(chatId);
         if (chatMessages.size() > 0) {
             ChatMessage c=chatMessages.get(chatMessages.size() - 1);
-            ChatMessageDTO chatMessageDTO=new ChatMessageDTO();
+            ChatMessageDTO2 chatMessageDTO=new ChatMessageDTO2();
             chatMessageDTO.setContent(c.getContent());
             chatMessageDTO.setTimestamp(c.getTimestamp());
             chatMessageDTO.setSenderId(c.getSender().getId());
-            chatMessageDTO.setRecipientId(c.getRecipient().getId());
+            chatMessageDTO.setSenderName(c.getSender().getUsername());
+            // chatMessageDTO.setRecipientId(c.getRecipient().getId());
             return chatMessageDTO;
         }
         return null;

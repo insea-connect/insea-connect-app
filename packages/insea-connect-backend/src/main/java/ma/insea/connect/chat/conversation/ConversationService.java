@@ -40,7 +40,7 @@ public class ConversationService {
         List<ConversationDTO> conversationDTOs = new ArrayList<>();
         for(Conversation conversation:conversations)
         {
-            ChatMessageDTO chatMessage=chatMessageService.findLastMessage(conversation.getChatId());
+            ChatMessageDTO2 chatMessage=chatMessageService.findLastMessage(conversation.getChatId());
 
             String member1=conversation.getMember1().getEmail();
             String member2=conversation.getMember2().getEmail();
@@ -73,7 +73,7 @@ public class ConversationService {
         List<ConversationDTO> conversationDTOs = new ArrayList<>();
         for(Conversation conversation:conversations)
         {
-            ChatMessageDTO chatMessage=chatMessageService.findLastMessage(conversation.getChatId());
+            ChatMessageDTO2 chatMessage=chatMessageService.findLastMessage(conversation.getChatId());
 
             Long member1=conversation.getMember1().getId();
             Long member2=conversation.getMember2().getId();

@@ -7,10 +7,13 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 public class ChatController {
@@ -18,8 +21,8 @@ public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatMessageService chatMessageService;
 
-    @MessageMapping("/chat.sendmessage")
-    public void processMessage(@Payload ChatMessageDTO chatMessage) {
+    @PostMapping("/sendmessage")
+    public ChatMessage processMessage(@RequestBody ChatMessageDTO chatMessage) {
         ChatMessage savedMsg = chatMessageService.saveusermessage(chatMessage);
 
         messagingTemplate.convertAndSendToUser(
@@ -31,11 +34,12 @@ public class ChatController {
                         savedMsg.getContent()
                 )
         );
+        return savedMsg;
     }
-    @MessageMapping("/chat.sendgroupmessage")
-    @SendTo("/user/public")
-    public GroupMessage processGroupMessage(@Payload GroupMessageDTO groupMessage) {
-        GroupMessage groupMessage2=chatMessageService.savegroupmessage(groupMessage);
-        return groupMessage2;
+    @PostMapping("/sendgroupmessage")
+    // @SendTo("/user/public")
+    public GroupMessage processGroupMessage(@RequestBody GroupMessageDTO2 groupMessage) {
+        return chatMessageService.savegroupmessage(groupMessage);//add send only to ur grp
+        
     }
 }
