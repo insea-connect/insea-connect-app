@@ -1,7 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { capitalize, getInitials } from "@/lib/utils";
+import {
+  capitalize,
+  cn,
+  extractSelectedChatId,
+  getInitials,
+} from "@/lib/utils";
 import { formatToTimeAgo } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface ChatItemProps {
   username: string;
@@ -23,10 +28,17 @@ const ChatItem = ({
   id,
 }: ChatItemProps) => {
   const router = useRouter();
+  const path = usePathname();
   const chatId = isGroup ? `group-${id}` : `conv-${id}`;
+
+  const selectedChatId = extractSelectedChatId(path);
+  const isSelected = selectedChatId && selectedChatId === `${id}`;
   return (
     <div
-      className="flex items-center py-3 px-4 rounded-md hover:bg-muted/80 cursor-pointer gap-4"
+      className={cn(
+        "flex items-center py-3 px-4 rounded-md dark:hover:bg-muted/40 cursor-pointer gap-4 hover:bg-muted/80",
+        isSelected ? "dark:bg-muted/60 bg-muted" : ""
+      )}
       onClick={() => {
         router.push(`/chat/${chatId}`);
       }}
