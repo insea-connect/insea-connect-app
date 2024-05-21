@@ -40,9 +40,7 @@ const LowerNav = () => {
           Theme
         </TooltipContent>
       </Tooltip>
-      <div className="xl:flex xl:gap-2 xl:px-3 xl:items-center relative w-full">
-        <UserProfile />
-      </div>
+      <UserProfile />
     </nav>
   );
 };
