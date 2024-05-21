@@ -16,28 +16,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 // @RequestMapping("/api/v1")
 public class ChatController {
 
-    private final SimpMessagingTemplate messagingTemplate;
     private final ChatMessageService chatMessageService;
 
     @MessageMapping("/sendmessage")
-    public void processMessage(@RequestBody ChatMessageDTO chatMessage) {
+    public ChatMessage processMessage(@RequestBody ChatMessageDTO chatMessage) {
         System.out.println("hehoy"+chatMessage);
-        ChatMessage savedMsg = chatMessageService.saveusermessage(chatMessage);
-
-        messagingTemplate.convertAndSendToUser(
-                Long.toString(chatMessage.getRecipientId()), "/queue/messages",
-                new ChatNotification(
-                        savedMsg.getId(),
-                        savedMsg.getSender().getEmail(),
-                        savedMsg.getRecipient().getEmail(),
-                        savedMsg.getContent()
-                )
-        );
+        return chatMessageService.saveusermessage(chatMessage);
     }
-    @MessageMapping("/chat.sendgroupmessage")
-    @SendTo("/user/public")
+    @MessageMapping("/sendgroupmessage")
+    // @SendTo("/user/public")
     public GroupMessage processGroupMessage(@Payload GroupMessageDTO groupMessage) {
-        GroupMessage groupMessage2=chatMessageService.savegroupmessage(groupMessage);
-        return groupMessage2;
+        return chatMessageService.savegroupmessage(groupMessage);
+         
     }
 }
