@@ -13,6 +13,7 @@ import {
 } from "@/lib/constants";
 import { cn, getInitials } from "@/lib/utils";
 import ChatBubble from "./chat-bubble";
+import ChatMessagesListSkeleton from "./chat-messages-list-skeleton";
 
 interface ChatMessagesListProps {
   chatId: string;
@@ -58,12 +59,13 @@ const ChatMessagesList = ({
     }
   }, [messages]);
 
-  if (isMessagesPending && isUserProfilePending) return <span>Loading...</span>;
+  if (isMessagesPending && isUserProfilePending)
+    return <ChatMessagesListSkeleton />;
 
   return (
     <div
       ref={messagesContainerRef}
-      className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col justify-end"
+      className="w-full overflow-y-hidden overflow-x-hidden h-full flex flex-col justify-end"
     >
       <AnimatePresence>
         {messages?.map((message: any, index: number) => (
