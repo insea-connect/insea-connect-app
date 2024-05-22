@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;
@@ -34,6 +35,8 @@ public class UserController {
     private final UserRepository userRepository;
     private final ConversationService conversationService;
     private  final KeyCloakController keyCloakController;
+
+
 
     @MessageMapping("/users.addUser")
     @SendTo("/user/public")
@@ -82,6 +85,7 @@ public class UserController {
         userService.disconnect(user);
         return user;
     }
+
 
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> findConnectedUsers() {

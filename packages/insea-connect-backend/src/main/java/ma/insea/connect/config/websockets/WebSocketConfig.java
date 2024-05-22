@@ -1,6 +1,7 @@
-package ma.insea.connect.config;
+package ma.insea.connect.config.websockets;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ma.insea.connect.config.websockets.TokenExtractorInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.DefaultContentTypeResolver;

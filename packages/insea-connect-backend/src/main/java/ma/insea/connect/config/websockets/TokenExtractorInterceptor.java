@@ -1,4 +1,4 @@
-package ma.insea.connect.config;
+package ma.insea.connect.config.websockets;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +30,7 @@ public class TokenExtractorInterceptor implements HandshakeInterceptor {
         this.restTemplate = new RestTemplate();
         // Add a logging interceptor for debugging requests and responses
         this.restTemplate.getInterceptors().add((ClientHttpRequestInterceptor) (request, body, execution) -> {
-            log.info("Request URI: {}", request.getURI());
-            log.info("Request Method: {}", request.getMethod());
-            log.info("Request Headers: {}", request.getHeaders());
+
             return execution.execute(request, body);
         });
     }
@@ -41,7 +39,6 @@ public class TokenExtractorInterceptor implements HandshakeInterceptor {
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         // Extract the query parameter "token" from the request URI
         String token = UriComponentsBuilder.fromUri(request.getURI()).build().getQueryParams().getFirst("token");
-        log.info("Extracted token: {}", token);
 
         if (token != null && !token.isEmpty() && validateTokenWithKeycloak(token)) {
             attributes.put("token", token);
@@ -65,18 +62,16 @@ public class TokenExtractorInterceptor implements HandshakeInterceptor {
         map.add("token", token);
         map.add("client_id", "INSEA-CONNECT-API");
         map.add("client_secret", "**********"); // Replace with your actual client secret
-        log.info("Validating token with Keycloak: {}", token);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(
-                    "http://localhost:8081/auth/realms/INSEA-CONNECT/protocol/openid-connect/token/introspect",
+                    "http://localhost:8088/realms/INSEA-CONNECT/protocol/openid-connect/token/introspect",
                     HttpMethod.POST,
                     request,
                     String.class);
 
-            log.info("Response from Keycloak: {}", response.getBody());
 
             // Parse the response body to determine if the token is active
             return response.getBody() != null && response.getBody().contains("\"active\":true");
