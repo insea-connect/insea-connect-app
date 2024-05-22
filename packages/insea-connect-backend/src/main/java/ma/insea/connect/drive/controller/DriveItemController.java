@@ -20,7 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DriveItemController {
 
-    private static final String UPLOAD_DIR = "uploads";
     private final Functions functions;
 
     @Autowired
