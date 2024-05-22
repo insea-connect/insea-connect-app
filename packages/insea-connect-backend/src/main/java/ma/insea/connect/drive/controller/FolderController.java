@@ -5,11 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.util.StringUtils;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import ma.insea.connect.drive.model.DriveItem;
 import ma.insea.connect.drive.model.File;
@@ -18,12 +13,8 @@ import ma.insea.connect.drive.service.FolderServiceImpl;
 import ma.insea.connect.utils.Functions;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -31,7 +22,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FolderController {
 
-    private static final String UPLOAD_DIR = "uploads";
     private final Functions functions;
 
 
