@@ -53,6 +53,7 @@ public class DriveItemController {
         fileObj.setSize(file.getSize());
         fileObj.setMimeType(file.getContentType());
         fileObj.setCreatedAt(LocalDateTime.now());
+        fileObj.setParent(null);
 
         return fileObj;
 
