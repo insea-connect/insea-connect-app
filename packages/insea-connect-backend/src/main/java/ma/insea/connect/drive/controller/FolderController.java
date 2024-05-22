@@ -1,29 +1,17 @@
 package ma.insea.connect.drive.controller;
 
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.util.StringUtils;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import ma.insea.connect.drive.model.DriveItem;
-import ma.insea.connect.drive.model.File;
 import ma.insea.connect.drive.model.Folder;
 import ma.insea.connect.drive.service.FolderServiceImpl;
-import ma.insea.connect.utils.Functions;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -31,23 +19,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FolderController {
 
-    private static final String UPLOAD_DIR = "uploads";
-    private final Functions functions;
-
 
     @Autowired
     private FolderServiceImpl folderService;
-
-    @PostMapping("/upload")
-    public File handleFileUpload(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {return null;}
-
-            // String fileName = file.getOriginalFilename();
-            String fileType = file.getContentType();
-            Long fileSize = file.getSize();
-            String filePath = functions.uploadFile(file);
-            return new File(fileSize,fileType, filePath); 
-    }
 
 
     @GetMapping("/{folderId}/items")
@@ -63,7 +37,7 @@ public class FolderController {
         if (folderService.getFolderById(folderId) == null) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(driveItem);
+        return ResponseEntity.ok(folderService.createFolderItem(folderId, driveItem));
     }
 
     @GetMapping("/{folderId}")

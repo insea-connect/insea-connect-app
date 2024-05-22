@@ -28,7 +28,7 @@ public class DriveItemServiceImpl implements DriveItemService {
         }
         DegreePath degreePath = degreePathRepository.findById(degreePathCode).get();
         driveItem.setDegreePath(degreePath);
-        degreePath.getDriveItems().add(driveItem);
+        // degreePath.getDriveItems().add(driveItem);
         return driveItemRepository.save(driveItem);
     }
 
