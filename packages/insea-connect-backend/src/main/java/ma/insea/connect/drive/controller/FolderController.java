@@ -7,10 +7,8 @@ import lombok.RequiredArgsConstructor;
 
 
 import ma.insea.connect.drive.model.DriveItem;
-import ma.insea.connect.drive.model.File;
 import ma.insea.connect.drive.model.Folder;
 import ma.insea.connect.drive.service.FolderServiceImpl;
-import ma.insea.connect.utils.Functions;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,22 +20,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FolderController {
 
-    private final Functions functions;
-
 
     @Autowired
     private FolderServiceImpl folderService;
-
-    @PostMapping("/upload")
-    public File handleFileUpload(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {return null;}
-
-            // String fileName = file.getOriginalFilename();
-            String fileType = file.getContentType();
-            Long fileSize = file.getSize();
-            String filePath = functions.uploadFile(file);
-            return new File(fileSize,fileType, filePath); 
-    }
 
 
     @GetMapping("/{folderId}/items")
