@@ -24,6 +24,8 @@ public class DriveItemController {
 
     @Autowired
     private DriveItemServiceImpl driveItemService;
+    @Autowired
+    private ma.insea.connect.drive.service.FolderServiceImpl folderService;
 
 
 
@@ -55,6 +57,21 @@ public class DriveItemController {
         fileObj.setCreatedAt(LocalDateTime.now());
         fileObj.setParent(null);
 
+        return fileObj;
+
+    }
+    @PostMapping("/{folderId}/upload")
+    public File handleFileUploadOnFolder(@RequestParam("file") MultipartFile file, @PathVariable Long folderId) {
+        if (file.isEmpty()) {return null;}
+
+        File fileObj = new File();
+        fileObj.setFileUrl(functions.uploadFile(file));
+        fileObj.setName(file.getOriginalFilename());
+        fileObj.setSize(file.getSize());
+        fileObj.setMimeType(file.getContentType());
+        fileObj.setCreatedAt(LocalDateTime.now());
+        Folder folder = folderService.getFolderById(folderId);
+        fileObj.setParent(folder);
         return fileObj;
 
     }
