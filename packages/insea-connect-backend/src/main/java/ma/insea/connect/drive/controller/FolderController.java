@@ -63,7 +63,7 @@ public class FolderController {
         if (folderService.getFolderById(folderId) == null) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(driveItem);
+        return ResponseEntity.ok(folderService.createFolderItem(folderId, driveItem));
     }
 
     @GetMapping("/{folderId}")
