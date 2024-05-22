@@ -139,5 +139,17 @@ public class ConversationService {
 
         
     }
+
+    public Conversation createConversation(Long long1) {
+        User connectedUser = functions.getConnectedUser();
+        User user2=userRepository.findById(long1).get();
+        String chatId=chatMessageService.getChatRoomId(connectedUser.getId().toString(), user2.getId().toString(), true);
+        Conversation conversation = new Conversation();
+        conversation.setChatId(chatId);
+        conversation.setMember1(connectedUser);
+        conversation.setMember2(user2);
+        conversationRepository.save(conversation);
+        return conversation;
+    }
     
 }
