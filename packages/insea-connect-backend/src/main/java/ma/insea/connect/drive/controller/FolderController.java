@@ -11,6 +11,7 @@ import ma.insea.connect.drive.service.FolderServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class FolderController {
         return ResponseEntity.ok(folderService.getFolderItems(folderId));
     }
 
+    @PreAuthorize("hasRole('CLASS_REP')")
     @PostMapping("/{folderId}/items")
     public ResponseEntity<DriveItem> createItem(@PathVariable Long folderId, @RequestBody DriveItem driveItem) {
         if (folderService.getFolderById(folderId) == null) {
@@ -48,6 +50,7 @@ public class FolderController {
         return ResponseEntity.ok(folderService.getFolderById(folderId));
     }
 
+    @PreAuthorize("hasRole('CLASS_REP')")
     @PutMapping("/{folderId}")
     public ResponseEntity<Folder> updateFolder(@PathVariable Long folderId, Folder folder) {
         if(folderService.getFolderById(folderId) == null){
@@ -56,6 +59,7 @@ public class FolderController {
         return ResponseEntity.ok(folderService.updateFolder(folderId, folder));
     }
 
+    @PreAuthorize("hasRole('CLASS_REP')")
     @DeleteMapping("/{folderId}")
     public ResponseEntity<Boolean> deleteFolder(@PathVariable Long folderId, Folder folder) {
 

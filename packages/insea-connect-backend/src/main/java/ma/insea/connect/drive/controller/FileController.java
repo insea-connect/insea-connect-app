@@ -6,6 +6,7 @@ import ma.insea.connect.drive.model.File;
 import ma.insea.connect.drive.repository.FileRepository;
 import ma.insea.connect.drive.service.FileServiceImpl;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,7 +16,7 @@ public class FileController {
 
     private final FileServiceImpl fileService;
     private final FileRepository fileRepository;
-
+    
     @GetMapping("/{fileId}")
     public ResponseEntity<File> getFile(@PathVariable Long fileId) {
         if (fileRepository.existsById(fileId)) {
@@ -25,6 +26,7 @@ public class FileController {
         return ResponseEntity.ok(file);
     }
 
+    @PreAuthorize("hasRole('CLASS_REP')")
     @PutMapping("/{fileId}")
     public ResponseEntity<File> updateFile(@PathVariable Long fileId, File file) {
         if(fileRepository.existsById(fileId)){
@@ -33,6 +35,7 @@ public class FileController {
         return ResponseEntity.ok(fileService.updateFile(fileId, file));
     }
 
+    @PreAuthorize("hasRole('CLASS_REP')")
     @DeleteMapping("/{fileId}")
     public ResponseEntity<File> deleteFile(@PathVariable Long fileId) {
         if (!fileService.deleteFile(fileId)) {
