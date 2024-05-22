@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import ma.insea.connect.chat.conversation.Conversation;
 import ma.insea.connect.chat.conversation.ConversationRepository;
 import ma.insea.connect.chat.group.Membership;
 import ma.insea.connect.chat.group.MembershipRepository;
@@ -44,14 +43,8 @@ public class ChatMessageService {
 
         chatMessageRepository.save(chatMessage1);
 
-        Conversation conversation = new Conversation();
-        conversation.setChatId(chatId);
-        conversation.setMember1(chatMessage1.getSender());
-        conversation.setMember2(chatMessage1.getRecipient());
-        conversationRepository.save(conversation);
-
         messagingTemplate.convertAndSendToUser(
-                Long.toString(chatMessage.getRecipientId()), "/queue/messages",
+                chatId, "/queue/messages",
                 new ChatNotification(
                         chatId,
                         chatMessage1.getSender().getId(),
@@ -71,23 +64,17 @@ public class ChatMessageService {
         groupMessage.setGroupId(groupMessageDTO.getGroupId());
         groupMessage.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
         groupMessageRepository.save(groupMessage);
-        List<Membership> memberships=membershipRepository.findByGroupId(groupMessageDTO.getGroupId());
-        List<User> users=new ArrayList<User>();
-        for (Membership membership : memberships) {
-            users.add(membership.getUser());
-        }
-        for (User user:users){
-            messagingTemplate.convertAndSendToUser(
-                Long.toString(user.getId()), "/queue/messages",
-                new GroupNotification(
-                        groupMessage.getGroupId(),
-                        groupMessage.getSender().getId(),
-                        groupMessage.getContent(),
-                        new Date(System.currentTimeMillis()),
-                        true
-                )
+
+        messagingTemplate.convertAndSendToUser(
+            Long.toString(groupMessageDTO.getGroupId()), "/queue/messages",
+            new GroupNotification(
+                    groupMessage.getGroupId(),
+                    groupMessage.getSender().getId(),
+                    groupMessage.getContent(),
+                    new Date(System.currentTimeMillis()),
+                    true
+            )
         );
-        }
         return groupMessage;
     }
     public List<ChatMessage> findChatMessages(String senderId, String recipientId) {
