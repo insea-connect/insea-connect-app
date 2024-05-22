@@ -9,6 +9,7 @@ import lombok.Data;
 public class GroupMessageDTO {
     private Long senderId;
     private String content;
+    private Long groupId;
     private String senderName;
     private Date timestamp;
 

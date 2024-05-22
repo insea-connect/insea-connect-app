@@ -2,9 +2,9 @@ package ma.insea.connect.chat.common.chatMessage;
 
 import lombok.AllArgsConstructor;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import ma.insea.connect.chat.conversation.Conversation;
 import ma.insea.connect.chat.conversation.ConversationRepository;
 import ma.insea.connect.chat.group.Membership;
 import ma.insea.connect.chat.group.MembershipRepository;
@@ -12,7 +12,7 @@ import ma.insea.connect.user.User;
 import ma.insea.connect.user.UserRepository;
 import ma.insea.connect.utils.Functions;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +25,10 @@ public class ChatMessageService {
     private final GroupMessageRepository groupMessageRepository;
     private final Functions functions;
     private final MembershipRepository membershipRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public ChatMessage saveusermessage(ChatMessageDTO chatMessage) {
+
         ChatMessage chatMessage1 = new ChatMessage();
         var chatId = getChatRoomId(Long.toString(chatMessage.getSenderId()),Long.toString(chatMessage.getRecipientId()), true);
         chatMessage1.setChatId(chatId);
@@ -41,20 +43,38 @@ public class ChatMessageService {
 
         chatMessageRepository.save(chatMessage1);
 
-        Conversation conversation = new Conversation();
-        conversation.setChatId(chatId);
-        conversation.setMember1(chatMessage1.getSender());
-        conversation.setMember2(chatMessage1.getRecipient());
-        conversationRepository.save(conversation);
+        messagingTemplate.convertAndSendToUser(
+                chatId, "/queue/messages",
+                new ChatNotification(
+                        chatId,
+                        chatMessage1.getSender().getId(),
+                        chatMessage1.getContent(),
+                        new Date(System.currentTimeMillis()),
+                        false
+                )
+        );
         return chatMessage1;
+
     }
     public GroupMessage savegroupmessage(GroupMessageDTO groupMessageDTO) {
         User sender = userRepository.findById(groupMessageDTO.getSenderId()).get();
         GroupMessage groupMessage = new GroupMessage();
         groupMessage.setSender(sender);
         groupMessage.setContent(groupMessageDTO.getContent());
+        groupMessage.setGroupId(groupMessageDTO.getGroupId());
         groupMessage.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
         groupMessageRepository.save(groupMessage);
+
+        messagingTemplate.convertAndSendToUser(
+            Long.toString(groupMessageDTO.getGroupId()), "/queue/messages",
+            new GroupNotification(
+                    groupMessage.getGroupId(),
+                    groupMessage.getSender().getId(),
+                    groupMessage.getContent(),
+                    new Date(System.currentTimeMillis()),
+                    true
+            )
+        );
         return groupMessage;
     }
     public List<ChatMessage> findChatMessages(String senderId, String recipientId) {
