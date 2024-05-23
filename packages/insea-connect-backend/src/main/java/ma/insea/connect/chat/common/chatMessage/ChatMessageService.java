@@ -20,7 +20,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
-    private final ConversationRepository conversationRepository;
     private final UserRepository userRepository;
     private final GroupMessageRepository groupMessageRepository;
     private final Functions functions;
@@ -45,13 +44,11 @@ public class ChatMessageService {
 
         messagingTemplate.convertAndSendToUser(
                 chatId, "/queue/messages",
-                new ChatNotification(
-                        chatId,
+                new ChatMessageDTO2(
                         chatMessage1.getSender().getId(),
                         chatMessage1.getContent(),
-                        new Date(System.currentTimeMillis()),
-                        false
-                )
+                        new java.util.Date(System.currentTimeMillis()),
+                        chatMessage1.getSender().getUsername())
         );
         return chatMessage1;
 
@@ -67,12 +64,12 @@ public class ChatMessageService {
 
         messagingTemplate.convertAndSendToUser(
             Long.toString(groupMessageDTO.getGroupId()), "/queue/messages",
-            new GroupNotification(
-                    groupMessage.getGroupId(),
+            new GroupMessageDTO(
                     groupMessage.getSender().getId(),
                     groupMessage.getContent(),
-                    new Date(System.currentTimeMillis()),
-                    true
+                    groupMessage.getGroupId(),
+                    groupMessage.getSender().getUsername(),
+                    new Date(System.currentTimeMillis())
             )
         );
         return groupMessage;
@@ -123,6 +120,7 @@ public class ChatMessageService {
             groupMessageDTO.setTimestamp(groupMessage.getTimestamp());
             groupMessageDTO.setSenderId(groupMessage.getSender().getId());
             groupMessageDTO.setSenderName(groupMessage.getSender().getUsername());
+            groupMessageDTO.setGroupId(groupMessage.getGroupId());
             groupMessages2.add(groupMessageDTO);
         }
         User connectedUser = functions.getConnectedUser();
