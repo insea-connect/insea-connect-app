@@ -573,6 +573,24 @@
       "groups": []
     },
     {
+      "username": "bot",
+      "enabled": true,
+      "firstName": "bot",
+      "lastName": "bot",
+      "email": "bot@example.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["ADMIN", "management"],
+      "clientRoles": {
+        "realm-management": ["manage-users", "view-users"]
+      }
+    },
+    {
       "username": "admin",
       "enabled": true,
       "firstName": "Admin",

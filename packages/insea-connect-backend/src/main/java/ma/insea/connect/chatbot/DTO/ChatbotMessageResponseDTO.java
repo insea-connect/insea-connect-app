@@ -1,4 +1,4 @@
-package ma.insea.connect.keycloak.DTO;
+package ma.insea.connect.chatbot.DTO;
 
 import lombok.*;
 

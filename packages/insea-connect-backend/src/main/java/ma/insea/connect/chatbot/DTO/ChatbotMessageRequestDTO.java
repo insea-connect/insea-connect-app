@@ -1,4 +1,4 @@
-package ma.insea.connect.chatbot;
+package ma.insea.connect.chatbot.DTO;
 
 import lombok.*;
 import ma.insea.connect.chat.common.chatMessage.ChatMessageDTO;
@@ -8,6 +8,6 @@ import ma.insea.connect.chat.common.chatMessage.ChatMessageDTO;
 @ToString
 @Setter
 @Getter
-public class ChatbotMessageDTO extends ChatMessageDTO {
+public class ChatbotMessageRequestDTO extends ChatMessageDTO {
     private String threadId;
 }

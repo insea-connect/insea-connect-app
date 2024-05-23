@@ -20,4 +20,6 @@ public interface MembershipRepository  extends JpaRepository<Membership,Membersh
     Membership findByUserIdAndGroupId(Long id, Long groupId);
 
     List<Membership> findByGroupIdAndIsAdmin(Long groupId, boolean b);
+
+    List<Membership> findByGroupId(Long groupId);
 }

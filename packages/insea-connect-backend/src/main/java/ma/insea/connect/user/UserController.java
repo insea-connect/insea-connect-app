@@ -1,6 +1,7 @@
 package ma.insea.connect.user;
 
 import lombok.RequiredArgsConstructor;
+import ma.insea.connect.chat.conversation.Conversation;
 import ma.insea.connect.chat.conversation.ConversationDTO;
 import ma.insea.connect.chat.conversation.ConversationService;
 import ma.insea.connect.chat.group.GroupDTO2;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -116,5 +118,11 @@ public class UserController {
     public ResponseEntity<List<ConversationDTO>> getUserConversations() {
         List<ConversationDTO> conversations = conversationService.findConversationsByEmail();
         return ResponseEntity.ok(conversations);
+    }
+
+    @PostMapping("/user/me/conversations")
+    public ResponseEntity<Conversation> createConversation(@RequestBody Map<String,Long> recipientId) {
+        return ResponseEntity.ok(conversationService.createConversation(recipientId.get("recipientId")));
+
     }
 }

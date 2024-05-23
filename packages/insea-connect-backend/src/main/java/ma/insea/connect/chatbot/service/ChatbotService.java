@@ -1,13 +1,14 @@
-package ma.insea.connect.chatbot;
+package ma.insea.connect.chatbot.service;
 
 
 import lombok.extern.slf4j.Slf4j;
 import ma.insea.connect.chat.common.chatMessage.ChatMessageDTO;
 import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
-import ma.insea.connect.keycloak.DTO.ChatbotApiResponseDTO;
-import ma.insea.connect.keycloak.DTO.ChatbotApiRequestDTO;
-import ma.insea.connect.keycloak.DTO.ChatbotMessageResponseDTO;
-import ma.insea.connect.keycloak.DTO.CreateThreadDTO;
+import ma.insea.connect.chatbot.DTO.ChatbotMessageRequestDTO;
+import ma.insea.connect.chatbot.DTO.ChatbotApiResponseDTO;
+import ma.insea.connect.chatbot.DTO.ChatbotApiRequestDTO;
+import ma.insea.connect.chatbot.DTO.ChatbotMessageResponseDTO;
+import ma.insea.connect.chatbot.DTO.CreateThreadDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -26,17 +27,17 @@ public class ChatbotService {
     private String chatbotServer;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public ChatbotMessageResponseDTO addInteraction(ChatbotMessageDTO chatbotMessageDTO, String responseContent){
+    public ChatbotMessageResponseDTO addInteraction(ChatbotMessageRequestDTO chatbotMessageRequestDTO, String responseContent){
 
             Date date = new Date();
             ChatMessageDTO userRequest = new ChatMessageDTO();
-            userRequest.setContent(chatbotMessageDTO.getContent());
-            userRequest.setTimestamp(chatbotMessageDTO.getTimestamp());
-            userRequest.setSenderId(chatbotMessageDTO.getSenderId());
-            userRequest.setRecipientId(chatbotMessageDTO.getRecipientId());
+            userRequest.setContent(chatbotMessageRequestDTO.getContent());
+            userRequest.setTimestamp(chatbotMessageRequestDTO.getTimestamp());
+            userRequest.setSenderId(chatbotMessageRequestDTO.getSenderId());
+            userRequest.setRecipientId(chatbotMessageRequestDTO.getRecipientId());
             ChatMessageDTO botResponse = new ChatMessageDTO();
-            botResponse.setRecipientId(chatbotMessageDTO.getSenderId());
-            botResponse.setSenderId(chatbotMessageDTO.getRecipientId());
+            botResponse.setRecipientId(chatbotMessageRequestDTO.getSenderId());
+            botResponse.setSenderId(chatbotMessageRequestDTO.getRecipientId());
             botResponse.setContent(responseContent);
             botResponse.setTimestamp(date);
             chatMessageService.saveusermessage(userRequest);
@@ -86,11 +87,11 @@ public class ChatbotService {
     }
 
 
-    public ChatbotMessageResponseDTO sendToBot(ChatbotMessageDTO chatbotMessageDTO){
+    public ChatbotMessageResponseDTO sendToBot(ChatbotMessageRequestDTO chatbotMessageRequestDTO){
 
-        ChatbotApiRequestDTO  chatbotApiRequestDTO= new ChatbotApiRequestDTO(chatbotMessageDTO.getThreadId(), chatbotMessageDTO.getContent());
+        ChatbotApiRequestDTO  chatbotApiRequestDTO= new ChatbotApiRequestDTO(chatbotMessageRequestDTO.getThreadId(), chatbotMessageRequestDTO.getContent());
         ChatbotApiResponseDTO responseFromApi = redirect(chatbotApiRequestDTO);
-        ChatbotMessageResponseDTO chatbotMessageResponseDTO = addInteraction(chatbotMessageDTO, responseFromApi.getMessage());
+        ChatbotMessageResponseDTO chatbotMessageResponseDTO = addInteraction(chatbotMessageRequestDTO, responseFromApi.getMessage());
         return chatbotMessageResponseDTO;
 
     }

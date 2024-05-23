@@ -1,9 +1,9 @@
-package ma.insea.connect.chatbot;
+package ma.insea.connect.chatbot.controller;
 
 
-import ma.insea.connect.keycloak.DTO.ChatbotApiResponseDTO;
-import ma.insea.connect.keycloak.DTO.ChatbotApiRequestDTO;
-import ma.insea.connect.keycloak.DTO.ChatbotMessageResponseDTO;
+import ma.insea.connect.chatbot.service.ChatbotService;
+import ma.insea.connect.chatbot.DTO.ChatbotMessageRequestDTO;
+import ma.insea.connect.chatbot.DTO.ChatbotMessageResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -22,10 +22,10 @@ public class ChatbotController {
 
     private final RestTemplate restTemplate = new RestTemplate() ;
     @Autowired
-    private  ChatbotService chatbotService;
+    private ChatbotService chatbotService;
 
-    @PostMapping("/redirect")
-    public ResponseEntity<ChatbotMessageResponseDTO> redirect(@RequestBody ChatbotMessageDTO requestDTO) {
+    @PostMapping("/sendMessage")
+    public ResponseEntity<ChatbotMessageResponseDTO> redirect(@RequestBody ChatbotMessageRequestDTO requestDTO) {
         try {
             ChatbotMessageResponseDTO chatbotMessageResponseDTO= chatbotService.sendToBot(requestDTO);
             return ResponseEntity.ok(chatbotMessageResponseDTO);

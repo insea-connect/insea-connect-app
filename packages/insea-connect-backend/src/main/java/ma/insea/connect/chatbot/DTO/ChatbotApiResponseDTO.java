@@ -1,4 +1,4 @@
-package ma.insea.connect.keycloak.DTO;
+package ma.insea.connect.chatbot.DTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

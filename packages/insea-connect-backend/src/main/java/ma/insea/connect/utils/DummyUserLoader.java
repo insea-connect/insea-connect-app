@@ -1,15 +1,11 @@
 package ma.insea.connect.utils;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import ma.insea.connect.chat.common.chatMessage.ChatMessage;
 import ma.insea.connect.chat.common.chatMessage.ChatMessageRepository;
 import ma.insea.connect.chat.common.chatMessage.GroupMessage;
@@ -22,12 +18,10 @@ import ma.insea.connect.chat.group.Membership;
 import ma.insea.connect.chat.group.MembershipKey;
 import ma.insea.connect.chat.group.MembershipRepository;
 import ma.insea.connect.keycloak.DTO.AddKeycloakDTO;
-import ma.insea.connect.user.DegreePath;
 import ma.insea.connect.user.Role;
 import ma.insea.connect.user.User;
 import ma.insea.connect.user.UserController;
 import ma.insea.connect.user.UserRepository;
-import ma.insea.connect.user.UserService;
 import ma.insea.connect.user.DTO.AddUserDTO;
 
 @Component
@@ -36,7 +30,6 @@ import ma.insea.connect.user.DTO.AddUserDTO;
 public class DummyUserLoader implements CommandLineRunner {
 
     private final UserController userController;
-    private final UserService userService;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final MembershipRepository membershipRepository;
@@ -51,6 +44,17 @@ public class DummyUserLoader implements CommandLineRunner {
     }
 
     private void loadDummyUsers(UserRepository userRepository,GroupRepository groupRepository, MembershipRepository membershipRepository,GroupMessageRepository groupMessageRepository , ChatMessageRepository chatMessageRepository,ConversationRepository conversationRepository) {
+        AddUserDTO bot = AddUserDTO.builder()
+                .username("bot")
+                .email("bot@example.com")
+                .firstName("bot")
+                .lastName("bot")
+                .role(Role.ADMIN)
+                .password("admin")
+
+                .build();
+        userController.addUser1(bot);
+
         AddUserDTO user = AddUserDTO.builder()
 					.username("anas")
 					.email("anas@example.com")
@@ -127,14 +131,26 @@ public class DummyUserLoader implements CommandLineRunner {
 
 
 
+
+
             User anas =userRepository.findByUsername("anas").get();
             User hamza =userRepository.findByUsername("hamza").get();
             User soulayman =userRepository.findByUsername("soulayman").get();
             User mohammed =userRepository.findByUsername("mohammed").get();
             User ahmed =userRepository.findByUsername("ahmed").get();
             User saad =userRepository.findByUsername("saad").get();
+            User the_bot =userRepository.findByUsername("bot").get();
 
-
+            List<User> users = List.of(anas,hamza,soulayman,mohammed,saad);
+            //initialize conversation with the bot
+            for(User u:users){
+                var chatId = getChatRoomId(Long.toString(u.getId()),Long.toString(the_bot.getId()), true);
+                Conversation conversation = new Conversation();
+                conversation.setChatId(chatId);
+                conversation.setMember1(u);
+                conversation.setMember2(the_bot);
+                conversationRepository.save(conversation);
+            }
 
             Group group = new Group();
             group.setName("1A dse");
