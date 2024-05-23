@@ -13,3 +13,5 @@ export const CONVERSATION_INFO_ENDPOINT = `${BACKEND_BASE_URL}/${BACKEND_API_VER
 export const LOGOUT_ENDPOINT = `${BACKEND_BASE_URL}/api/logout`;
 
 export const ALL_USERS_ENDPOINT = `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/users`;
+
+export const BOT_NAME = "bot";
