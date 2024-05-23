@@ -125,6 +125,17 @@ public class DummyUserLoader implements CommandLineRunner {
 			System.out.println("here it is "+AddKeycloakDTO.mapToAddKeycloakDTO(user6).toString());
 			userController.addUser1(user6);
 
+            AddUserDTO bot = AddUserDTO.builder()
+					.username("bot")
+					.email("bot@example.com")
+					.firstName("bot")
+					.lastName("bot")
+					.role(Role.ADMIN)
+					.password("admin")
+					
+					.build();
+			userController.addUser1(bot);
+
 
 
             User anas =userRepository.findByUsername("anas").get();
@@ -133,8 +144,18 @@ public class DummyUserLoader implements CommandLineRunner {
             User mohammed =userRepository.findByUsername("mohammed").get();
             User ahmed =userRepository.findByUsername("ahmed").get();
             User saad =userRepository.findByUsername("saad").get();
+            User the_bot =userRepository.findByUsername("bot").get();
 
-
+            List<User> users = List.of(anas,hamza,soulayman,mohammed,saad);
+            //initialize conversation with the bot
+            for(User u:users){
+                var chatId = getChatRoomId(Long.toString(u.getId()),Long.toString(the_bot.getId()), true);
+                Conversation conversation = new Conversation();
+                conversation.setChatId(chatId);
+                conversation.setMember1(u);
+                conversation.setMember2(the_bot);
+                conversationRepository.save(conversation);
+            }
 
             Group group = new Group();
             group.setName("1A dse");
