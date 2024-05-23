@@ -13,6 +13,7 @@ import { Info, Paperclip, SendHorizonal } from "lucide-react";
 import ChatAreaHeader from "./chat-area-header";
 import ChatMessagesList from "./chat-messages-list";
 import MessageInput from "./message-input";
+import { getOrCreateConversation } from "@/services/api";
 
 interface ChatAreaProps {
   chatId: string;
@@ -21,7 +22,6 @@ interface ChatAreaProps {
 const ChatArea = async ({ chatId }: ChatAreaProps) => {
   const {
     // @ts-ignore
-
     tokens: { access_token },
   } = await auth();
 
@@ -37,28 +37,25 @@ const ChatArea = async ({ chatId }: ChatAreaProps) => {
 
   const theChatId = chatId.split("-")[1];
 
-  const { data } = await axios.get(
-    `${
-      isGroupChat
-        ? `${GROUP_INFO_ENDPOINT}/${theChatId}`
-        : `${CONVERSATION_INFO_ENDPOINT}/${theChatId}`
-    }`,
-    {
+  let chatName = "";
+  let otherUser = null;
+  let groupId = null;
+  if (isGroupChat) {
+    const {
+      data: { id, name },
+    } = await axios.get(`${GROUP_INFO_ENDPOINT}/${theChatId}`, {
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
-    }
-  );
+    });
 
-  console.log(data);
-
-  let chatName = "";
-  let otherUser = null;
-  if (isGroupChat) {
-    chatName = data.name;
+    chatName = name;
+    groupId = id;
   } else {
-    otherUser = data.member1.id === id ? data.member2 : data.member1;
-    chatName = otherUser.username;
+    const result = await getOrCreateConversation(theChatId, id, access_token);
+
+    chatName = result.chatName;
+    otherUser = result.otherUser;
   }
 
   return (
@@ -76,7 +73,7 @@ const ChatArea = async ({ chatId }: ChatAreaProps) => {
         isGroup={isGroupChat}
         senderId={id}
         recipientId={isGroupChat ? null : otherUser.id}
-        groupId={isGroupChat && data.id}
+        groupId={isGroupChat && groupId}
       />
     </section>
   );

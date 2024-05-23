@@ -27,7 +27,7 @@ const ConversationList = ({ search }: ConversationListProps) => {
     },
   });
 
-  if (isPending && isUserProfilePending) {
+  if (isPending || isUserProfilePending) {
     return <ChatListSkeleton />;
   }
 

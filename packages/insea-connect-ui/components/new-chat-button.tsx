@@ -33,7 +33,7 @@ const NewChatButton = () => {
           <Users className={"w-4 h-4 mr-2"} />
           New Group
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onOpen("new-conversation")}>
           <MessageCirclePlus className={"w-4 h-4 mr-2"} />
           New Conversation
         </DropdownMenuItem>
