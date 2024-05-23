@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import ma.insea.connect.exception.UnauthorizedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -150,6 +151,36 @@ public class GroupService {
         }
         return new GroupDTO3(group.getId(), group.getImagrUrl(), group.getName(), group.getDescription(), group.getIsOfficial(), group.getCreatedDate(), creatorDTO, admins);
         
+    }
+    public void addAdmin(Long groupId, Long long1) {
+        User connectedUser = functions.getConnectedUser();
+        Membership membership = membershipRepository.findByUserIdAndGroupId(connectedUser.getId(), groupId);
+        Membership membership2 = membershipRepository.findByUserIdAndGroupId(long1, groupId);
+        if (membership2 == null) {
+            throw new UnauthorizedException("User is not a member of this group");
+        }
+        else if(membership == null || !membership.getIsAdmin()) {
+            throw new UnauthorizedException("You are not allowed to add admins to this group");
+        }else{
+            Membership m=membershipRepository.findById(new MembershipKey(long1, groupId)).get();
+            m.setIsAdmin(true);
+            membershipRepository.save(m);
+        }
+    }
+    public void removeAdmin(Long groupId, Long long1) {
+        User connectedUser = functions.getConnectedUser();
+        Membership membership = membershipRepository.findByUserIdAndGroupId(connectedUser.getId(), groupId);
+        Membership membership2 = membershipRepository.findByUserIdAndGroupId(long1, groupId);
+        if (membership2 == null) {
+            throw new UnauthorizedException("User is not a member of this group");
+        }
+        else if(membership == null || !membership.getIsAdmin()) {
+            throw new UnauthorizedException("You are not allowed to remove admins from this group");
+        }else{
+            Membership m=membershipRepository.findById(new MembershipKey(long1, groupId)).get();
+            m.setIsAdmin(false);
+            membershipRepository.save(m);
+        }
     }
     
 }
