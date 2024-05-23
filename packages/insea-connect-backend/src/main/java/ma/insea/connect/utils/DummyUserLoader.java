@@ -228,7 +228,7 @@ public class DummyUserLoader implements CommandLineRunner {
             GroupMessage groupMessage3=new GroupMessage();
             groupMessage3.setGroupId(group.getId());
             groupMessage3.setContent("this is a nce group");
-            groupMessage3.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
+            groupMessage3.setTimestamp(new java.sql.Date(System.currentTimeMillis()-1000000));
             groupMessage3.setSender(anas);
             groupMessageRepository.save(groupMessage3);
 
@@ -264,7 +264,7 @@ public class DummyUserLoader implements CommandLineRunner {
             chatMessage3.setSender(anas);
             chatMessage3.setRecipient(soulayman);
             chatMessage3.setContent("nice to meet you too soulayman");
-            chatMessage3.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
+            chatMessage3.setTimestamp(new java.sql.Date(System.currentTimeMillis()+1000000));
             chatMessageRepository.save(chatMessage3);
 
 
@@ -300,6 +300,13 @@ public class DummyUserLoader implements CommandLineRunner {
             chatMessage33.setContent("nice to meet you too ahmed");
             chatMessage33.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
             chatMessageRepository.save(chatMessage33);
+
+            var chatId4 = getChatRoomId(Long.toString(anas.getId()),Long.toString(saad.getId()), true);
+                Conversation conversation4 = new Conversation();
+                conversation4.setChatId(chatId4);
+                conversation4.setMember1(anas);
+                conversation4.setMember2(saad);
+                conversationRepository.save(conversation4);
         
     }
     public String getChatRoomId(String senderId,String recipientId,boolean createNewRoomIfNotExists)
