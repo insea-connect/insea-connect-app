@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { ALL_USERS_ENDPOINT } from "@/lib/constants";
 import { ScrollArea } from "../ui/scroll-area";
@@ -24,6 +24,7 @@ import { useState } from "react";
 import useUserProfile from "@/hooks/use-user-profile";
 
 const NewConversationModal = () => {
+  const queryClient = useQueryClient();
   const { data: session } = useSession();
   const { data: userProfile, isPending: isUserProfilePending } =
     useUserProfile();
@@ -90,6 +91,9 @@ const NewConversationModal = () => {
               onClick={() => {
                 const convId = generateConversationId(user.id, userProfile?.id);
                 router.push(`/chat/${convId}`);
+                queryClient.invalidateQueries({
+                  queryKey: ["conversations"],
+                });
                 setSearchTerm("");
                 onClose();
               }}
