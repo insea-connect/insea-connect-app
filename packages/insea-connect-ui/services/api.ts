@@ -17,11 +17,11 @@ export const getOrCreateConversation = async (
     throw new Error("Invalid chatId");
   }
 
-  const recipientId = chatIdParts.find((id) => id !== `${currentUserId}`);
+  const recipientId =
+    chatIdParts[0] === `${currentUserId}` ? chatIdParts[1] : chatIdParts[0];
 
-  let createdConversation = null;
   try {
-    let payload = await axios.post(
+    await axios.post(
       CONVERSATIONS_ENDPOINT,
       {
         recipientId,
@@ -29,12 +29,12 @@ export const getOrCreateConversation = async (
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
       }
     );
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 
   const { data: conversation } = await axios.get(
     `${CONVERSATION_INFO_ENDPOINT}/${chatId}`,
