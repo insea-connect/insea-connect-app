@@ -2,9 +2,9 @@ package ma.insea.connect.chatbot.service;
 
 
 import lombok.extern.slf4j.Slf4j;
-import ma.insea.connect.chat.common.chatMessage.ChatMessageDTO;
-import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
-import ma.insea.connect.chat.common.chatMessage.GroupMessageDTO;
+import ma.insea.connect.chat.common.chatMessage.DTO.ChatMessageDTO;
+import ma.insea.connect.chat.common.chatMessage.service.ChatMessageService;
+import ma.insea.connect.chat.common.chatMessage.DTO.GroupMessageDTO;
 import ma.insea.connect.chatbot.DTO.conversationDTO.ChatbotMessageRequestDTO;
 import ma.insea.connect.chatbot.DTO.conversationDTO.ChatbotApiResponseDTO;
 import ma.insea.connect.chatbot.DTO.conversationDTO.ChatbotApiRequestDTO;
@@ -15,7 +15,6 @@ import ma.insea.connect.chatbot.DTO.groupDTO.ChatbotGroupMessageResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

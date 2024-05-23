@@ -1,9 +1,12 @@
-package ma.insea.connect.user;
+package ma.insea.connect.user.service;
 
 
 import lombok.AllArgsConstructor;
 
-import org.springframework.http.ResponseEntity;
+import ma.insea.connect.user.DTO.UserDTO;
+import ma.insea.connect.user.model.Status;
+import ma.insea.connect.user.model.User;
+import ma.insea.connect.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

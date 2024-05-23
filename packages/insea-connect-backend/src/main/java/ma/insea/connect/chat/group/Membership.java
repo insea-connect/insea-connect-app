@@ -10,7 +10,7 @@ import jakarta.persistence.MapsId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ma.insea.connect.user.User;
+import ma.insea.connect.user.model.User;
 
 
 

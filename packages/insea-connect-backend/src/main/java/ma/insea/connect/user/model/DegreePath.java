@@ -1,4 +1,4 @@
-package ma.insea.connect.user;
+package ma.insea.connect.user.model;
 
 import jakarta.persistence.*;
 import lombok.*;

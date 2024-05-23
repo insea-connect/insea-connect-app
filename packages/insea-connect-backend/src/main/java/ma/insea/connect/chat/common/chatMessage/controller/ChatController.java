@@ -1,7 +1,12 @@
-package ma.insea.connect.chat.common.chatMessage;
+package ma.insea.connect.chat.common.chatMessage.controller;
 
 import lombok.RequiredArgsConstructor;
 
+import ma.insea.connect.chat.common.chatMessage.DTO.ChatMessageDTO;
+import ma.insea.connect.chat.common.chatMessage.DTO.GroupMessageDTO;
+import ma.insea.connect.chat.common.chatMessage.model.ChatMessage;
+import ma.insea.connect.chat.common.chatMessage.model.GroupMessage;
+import ma.insea.connect.chat.common.chatMessage.service.ChatMessageService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

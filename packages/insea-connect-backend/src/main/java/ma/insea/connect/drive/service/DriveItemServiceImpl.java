@@ -3,7 +3,7 @@ package ma.insea.connect.drive.service;
 import ma.insea.connect.drive.model.DriveItem;
 import ma.insea.connect.drive.repository.DegreePathRepository;
 import ma.insea.connect.drive.repository.DriveItemRepository;
-import ma.insea.connect.user.DegreePath;
+import ma.insea.connect.user.model.DegreePath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -3,7 +3,8 @@ package ma.insea.connect.keycloak.controller;
 import lombok.extern.slf4j.Slf4j;
 import ma.insea.connect.chatbot.service.ChatbotService;
 import ma.insea.connect.keycloak.DTO.*;
-import ma.insea.connect.user.UserService;
+import ma.insea.connect.keycloak.service.KeycloakApiService;
+import ma.insea.connect.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -44,125 +45,38 @@ public class KeycloakLoginController {
 
     @Autowired
     ChatbotService chatbotService;
-
+    @Autowired
+    KeycloakApiService keycloakApiService ;
     @PostMapping("/login")
     //Map<String, Object>
     public ResponseEntity<LoginResponseDTO > login(@RequestBody LoginRequestDTO loginRequestDTO) {
         String username = loginRequestDTO.getUsername();
         String password = loginRequestDTO.getPassword();
 
-        // Construct the token URL dynamically
-        String tokenUrl = issuerUri + "/protocol/openid-connect/token";
-
-        // Set headers to form-url-encoded
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-        // Prepare form data
-        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("client_id", clientId);
-        formData.add("client_secret", clientSecret);
-        formData.add("username", username);
-        formData.add("password", password);
-        formData.add("grant_type", "password");
-
-        // Prepare the HTTP request entity
-        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(formData, headers);
-
         try {
-            // Make the request to the Keycloak token endpoint
-            ResponseEntity<Map> response = restTemplate.exchange(
-                    tokenUrl, HttpMethod.POST, requestEntity, Map.class);
-
-            LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
-            loginResponseDTO.extractTokenInfo(response.getBody().toString());
-            loginResponseDTO.setUser(LoginResponseUserDTO.mapToLoginUserResponseDTO(userService.findByUsername(username)));
-            // Return the response containing the token
-            loginResponseDTO.setThreadId( chatbotService.getThreadIdString());
-
-            return ResponseEntity.ok(loginResponseDTO);
-        }
-        catch (HttpClientErrorException | HttpServerErrorException e) {
-            // Handle client and server errors specifically
-            throw new ResponseStatusException(e.getStatusCode(), "Error requesting token from Keycloak: " + e.getMessage(), e);
-        }
-        catch (RestClientException e) {
-            // Catch other REST client errors
+            LoginResponseDTO response = keycloakApiService.login(username, password);
+            return ResponseEntity.ok(response);
+        } catch (ResponseStatusException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error: " + e.getMessage(), e);
         }
     }
 
     @PostMapping("/refreshToken")
     public ResponseEntity<Map<String, Object>> refresh(@RequestBody RefreshTokenDTO refreshTokenDTO) {
-
-        // Construct the token URL dynamically
-        String tokenUrl = issuerUri + "/protocol/openid-connect/token";
-
-        // Set headers to form-url-encoded
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-        // Prepare form data
-        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("client_id", clientId);
-        formData.add("client_secret", clientSecret);
-        formData.add("refresh_token", refreshTokenDTO.getRefreshToken());
-        System.out.println(refreshTokenDTO.getRefreshToken());
-        formData.add("grant_type", "refresh_token");
-
-        // Prepare the HTTP request entity
-        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(formData, headers);
-
         try {
-            // Make the request to the Keycloak token endpoint
-            ResponseEntity<Map> response = restTemplate.exchange(
-                    tokenUrl, HttpMethod.POST, requestEntity, Map.class);
-
-            // Return the response containing the token
-            return ResponseEntity.ok(response.getBody());
-        }
-        catch (HttpClientErrorException | HttpServerErrorException e) {
-            // Handle client and server errors specifically
-            throw new ResponseStatusException(e.getStatusCode(), "Error requesting token from Keycloak: " + e.getMessage(), e);
-        }
-        catch (RestClientException e) {
-            // Catch other REST client errors
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error: " + e.getMessage(), e);
+            Map<String, Object> responseBody = keycloakApiService.refreshToken(refreshTokenDTO.getRefreshToken());
+            return ResponseEntity.ok(responseBody);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(Map.of("error", e.getMessage()));
         }
     }
     @PostMapping("/logout")
     public ResponseEntity<Map<String, Object>> logout(@RequestBody RefreshTokenDTO refreshTokenDTO) {
-
-        // Construct the token URL dynamically
-        String tokenUrl = issuerUri + "/protocol/openid-connect/logout";
-
-        // Set headers to form-url-encoded
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-        // Prepare form data
-        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("client_id", clientId);
-        formData.add("client_secret", clientSecret);
-        formData.add("refresh_token", refreshTokenDTO.getRefreshToken());
-        // Prepare the HTTP request entity
-        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(formData, headers);
-
         try {
-            // Make the request to the Keycloak token endpoint
-            ResponseEntity<Map> response = restTemplate.exchange(
-                    tokenUrl, HttpMethod.POST, requestEntity, Map.class);
-
-            // Return the response containing the token
-            return ResponseEntity.ok(response.getBody());
-        }
-        catch (HttpClientErrorException | HttpServerErrorException e) {
-            // Handle client and server errors specifically
-            throw new ResponseStatusException(e.getStatusCode(), "Error requesting logging out from Keycloak: " + e.getMessage(), e);
-        }
-        catch (RestClientException e) {
-            // Catch other REST client errors
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error: " + e.getMessage(), e);
+            Map<String, Object> responseBody = keycloakApiService.logout(refreshTokenDTO.getRefreshToken());
+            return ResponseEntity.ok(responseBody);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(Map.of("error", e.getMessage()));
         }
     }
 }

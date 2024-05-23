@@ -1,4 +1,4 @@
-package ma.insea.connect.chat.common.chatMessage;
+package ma.insea.connect.chat.common.chatMessage.DTO;
 
 import java.util.Date;
 

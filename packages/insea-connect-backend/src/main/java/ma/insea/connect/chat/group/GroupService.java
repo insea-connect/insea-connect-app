@@ -8,11 +8,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
-import ma.insea.connect.chat.common.chatMessage.GroupMessageDTO;
-import ma.insea.connect.user.User;
-import ma.insea.connect.user.UserDTO2;
-import ma.insea.connect.user.UserRepository;
+import ma.insea.connect.chat.common.chatMessage.service.ChatMessageService;
+import ma.insea.connect.chat.common.chatMessage.DTO.GroupMessageDTO;
+import ma.insea.connect.user.model.User;
+import ma.insea.connect.user.DTO.UserDTO2;
+import ma.insea.connect.user.repository.UserRepository;
 import ma.insea.connect.utils.Functions;
 
 

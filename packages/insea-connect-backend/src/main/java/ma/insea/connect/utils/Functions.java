@@ -12,8 +12,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
-import ma.insea.connect.user.User;
-import ma.insea.connect.user.UserRepository;
+import ma.insea.connect.user.model.User;
+import ma.insea.connect.user.repository.UserRepository;
 
 @Component
 @RequiredArgsConstructor

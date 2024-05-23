@@ -1,15 +1,21 @@
-package ma.insea.connect.chat.common.chatMessage;
+package ma.insea.connect.chat.common.chatMessage.service;
 
 import lombok.AllArgsConstructor;
 
+import ma.insea.connect.chat.common.chatMessage.DTO.ChatMessageDTO;
+import ma.insea.connect.chat.common.chatMessage.DTO.ChatMessageDTO2;
+import ma.insea.connect.chat.common.chatMessage.DTO.GroupMessageDTO;
+import ma.insea.connect.chat.common.chatMessage.model.ChatMessage;
+import ma.insea.connect.chat.common.chatMessage.model.GroupMessage;
+import ma.insea.connect.chat.common.chatMessage.repository.ChatMessageRepository;
+import ma.insea.connect.chat.common.chatMessage.repository.GroupMessageRepository;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import ma.insea.connect.chat.conversation.ConversationRepository;
 import ma.insea.connect.chat.group.Membership;
 import ma.insea.connect.chat.group.MembershipRepository;
-import ma.insea.connect.user.User;
-import ma.insea.connect.user.UserRepository;
+import ma.insea.connect.user.model.User;
+import ma.insea.connect.user.repository.UserRepository;
 import ma.insea.connect.utils.Functions;
 
 import java.util.Date;

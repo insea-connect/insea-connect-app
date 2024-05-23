@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
-import ma.insea.connect.chat.common.chatMessage.ChatMessage;
-import ma.insea.connect.chat.common.chatMessage.ChatMessageRepository;
-import ma.insea.connect.chat.common.chatMessage.GroupMessage;
-import ma.insea.connect.chat.common.chatMessage.GroupMessageRepository;
+import ma.insea.connect.chat.common.chatMessage.model.ChatMessage;
+import ma.insea.connect.chat.common.chatMessage.repository.ChatMessageRepository;
+import ma.insea.connect.chat.common.chatMessage.model.GroupMessage;
+import ma.insea.connect.chat.common.chatMessage.repository.GroupMessageRepository;
 import ma.insea.connect.chat.conversation.Conversation;
 import ma.insea.connect.chat.conversation.ConversationRepository;
 import ma.insea.connect.chat.group.Group;
@@ -18,10 +18,10 @@ import ma.insea.connect.chat.group.Membership;
 import ma.insea.connect.chat.group.MembershipKey;
 import ma.insea.connect.chat.group.MembershipRepository;
 import ma.insea.connect.keycloak.DTO.AddKeycloakDTO;
-import ma.insea.connect.user.Role;
-import ma.insea.connect.user.User;
-import ma.insea.connect.user.UserController;
-import ma.insea.connect.user.UserRepository;
+import ma.insea.connect.user.model.Role;
+import ma.insea.connect.user.model.User;
+import ma.insea.connect.user.controller.UserController;
+import ma.insea.connect.user.repository.UserRepository;
 import ma.insea.connect.user.DTO.AddUserDTO;
 
 @Component

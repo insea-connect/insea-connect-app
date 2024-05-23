@@ -1,4 +1,4 @@
-package ma.insea.connect.user;
+package ma.insea.connect.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import ma.insea.connect.chat.conversation.Conversation;
@@ -10,13 +10,17 @@ import ma.insea.connect.keycloak.DTO.AddKeycloakDTO;
 import ma.insea.connect.keycloak.controller.KeyCloakController;
 import ma.insea.connect.keycloak.service.KeyCloakService;
 import ma.insea.connect.user.DTO.AddUserDTO;
+import ma.insea.connect.user.DTO.UserDTO;
 import ma.insea.connect.user.DTO.UserInfoResponseDTO;
+import ma.insea.connect.user.model.Status;
+import ma.insea.connect.user.model.User;
+import ma.insea.connect.user.repository.UserRepository;
+import ma.insea.connect.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;

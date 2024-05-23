@@ -1,8 +1,8 @@
 package ma.insea.connect.keycloak.DTO;
 
 import lombok.*;
-import ma.insea.connect.user.Role;
-import ma.insea.connect.user.User;
+import ma.insea.connect.user.model.Role;
+import ma.insea.connect.user.model.User;
 
 @AllArgsConstructor
 @NoArgsConstructor

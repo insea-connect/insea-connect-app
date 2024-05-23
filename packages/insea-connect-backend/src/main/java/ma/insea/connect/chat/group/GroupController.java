@@ -1,9 +1,9 @@
 package ma.insea.connect.chat.group;
 
 import lombok.AllArgsConstructor;
-import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
-import ma.insea.connect.chat.common.chatMessage.GroupMessageDTO;
-import ma.insea.connect.user.UserDTO2;
+import ma.insea.connect.chat.common.chatMessage.service.ChatMessageService;
+import ma.insea.connect.chat.common.chatMessage.DTO.GroupMessageDTO;
+import ma.insea.connect.user.DTO.UserDTO2;
 
 import java.util.List;
 import java.util.Map;

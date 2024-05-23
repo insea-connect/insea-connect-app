@@ -1,8 +1,8 @@
 // package ma.insea.connect;
 
-// import ma.insea.connect.chat.common.chatMessage.ChatController;
-// import ma.insea.connect.chat.common.chatMessage.ChatMessage;
-// import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
+// import ma.insea.connect.chat.common.chatMessage.controller.ChatController;
+// import ma.insea.connect.chat.common.chatMessage.model.ChatMessage;
+// import ma.insea.connect.chat.common.chatMessage.service.ChatMessageService;
 // import org.junit.jupiter.api.Test;
 // import org.mockito.Mockito;
 // import org.springframework.boot.test.context.SpringBootTest;

@@ -1,7 +1,7 @@
 package ma.insea.connect.chatbot.DTO.conversationDTO;
 
 import lombok.*;
-import ma.insea.connect.chat.common.chatMessage.ChatMessageDTO;
+import ma.insea.connect.chat.common.chatMessage.DTO.ChatMessageDTO;
 
 @AllArgsConstructor
 @NoArgsConstructor

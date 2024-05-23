@@ -1,4 +1,4 @@
-package ma.insea.connect.user;
+package ma.insea.connect.user.DTO;
 
 import lombok.*;
 @Data

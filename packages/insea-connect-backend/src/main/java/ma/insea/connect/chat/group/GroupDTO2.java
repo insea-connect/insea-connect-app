@@ -2,7 +2,7 @@ package ma.insea.connect.chat.group;
 
 
 import lombok.Data;
-import ma.insea.connect.chat.common.chatMessage.GroupMessageDTO;
+import ma.insea.connect.chat.common.chatMessage.DTO.GroupMessageDTO;
 @Data
 public class GroupDTO2 {
     private Long id;

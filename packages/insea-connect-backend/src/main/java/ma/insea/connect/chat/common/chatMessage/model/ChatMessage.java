@@ -1,11 +1,11 @@
-package ma.insea.connect.chat.common.chatMessage;
+package ma.insea.connect.chat.common.chatMessage.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ma.insea.connect.user.User;
+import ma.insea.connect.user.model.User;
 
 import java.util.Date;
 

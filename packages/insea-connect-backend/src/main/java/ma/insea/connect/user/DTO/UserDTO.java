@@ -1,7 +1,9 @@
-package ma.insea.connect.user;
+package ma.insea.connect.user.DTO;
 import java.util.Date;
 
 import lombok.*;
+import ma.insea.connect.user.model.Status;
+
 @Data
 @AllArgsConstructor
 public class UserDTO {

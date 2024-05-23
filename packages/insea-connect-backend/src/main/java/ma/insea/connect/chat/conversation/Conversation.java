@@ -2,7 +2,7 @@ package ma.insea.connect.chat.conversation;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ma.insea.connect.user.User;
+import ma.insea.connect.user.model.User;
 import lombok.AllArgsConstructor;
 
 

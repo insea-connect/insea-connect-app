@@ -3,8 +3,8 @@ package ma.insea.connect.drive.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import ma.insea.connect.user.DegreePath;
-import ma.insea.connect.user.User;
+import ma.insea.connect.user.model.DegreePath;
+import ma.insea.connect.user.model.User;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

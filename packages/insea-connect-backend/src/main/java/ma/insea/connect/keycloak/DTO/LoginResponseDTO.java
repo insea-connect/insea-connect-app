@@ -1,20 +1,11 @@
 package ma.insea.connect.keycloak.DTO;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import ma.insea.connect.user.User;
-import ma.insea.connect.user.UserRepository;
-import ma.insea.connect.user.UserService;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @AllArgsConstructor
 @NoArgsConstructor

@@ -1,5 +1,6 @@
-package ma.insea.connect.chat.common.chatMessage;
+package ma.insea.connect.chat.common.chatMessage.repository;
 
+import ma.insea.connect.chat.common.chatMessage.model.GroupMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
