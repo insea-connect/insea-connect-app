@@ -116,7 +116,7 @@ public class UserController {
         return ResponseEntity.ok(conversations);
     }
 
-    @PostMapping("/user/me/conversations")
+    @PostMapping("/users/me/conversations")
     public ResponseEntity<Conversation> createConversation(@RequestBody Map<String,Long> recipientId) {
         return ResponseEntity.ok(conversationService.createConversation(recipientId.get("recipientId")));
 
