@@ -60,7 +60,7 @@ const ChatBubble = ({ connectedUserId, index, message }: ChatBubbleProps) => {
         </div>
         <div
           className={cn(
-            "flex flex-col leading-1.5 p-4",
+            "flex flex-col p-4",
 
             message.senderId === connectedUserId
               ? "rounded-ee-xl rounded-s-xl rounded-es-xl text-white bg-green-900"

@@ -54,38 +54,36 @@ const ChatMessagesList = ({
     refetchInterval: false,
   });
 
-  useSocketChat({ chatId });
-
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (messagesContainerRef.current) {
-      console.log("scrolling to bottom");
-
-      messagesContainerRef.current.scrollTop =
-        messagesContainerRef.current.scrollHeight;
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
+
+  useSocketChat({ chatId });
 
   if (isMessagesPending && isUserProfilePending)
     return <ChatMessagesListSkeleton />;
 
   return (
-    <div
-      ref={messagesContainerRef}
-      className="w-full flex-grow overflow-y-auto overflow-x-hidden flex flex-col justify-end"
-    >
-      <AnimatePresence>
-        {messages?.map((message: any, index: number) => (
-          <ChatBubble
-            connectedUserId={connectedUserId}
-            index={index}
-            key={index}
-            message={message}
-          />
-        ))}
-      </AnimatePresence>
-    </div>
+    <ScrollArea className="w-full flex-1">
+      <div className="mt-auto">
+        <AnimatePresence>
+          {messages?.map((message: any, index: number) => (
+            <ChatBubble
+              connectedUserId={connectedUserId}
+              index={index}
+              key={index}
+              message={message}
+            />
+          ))}
+        </AnimatePresence>
+      </div>
+
+      <div ref={bottomRef} />
+    </ScrollArea>
   );
 };
 
