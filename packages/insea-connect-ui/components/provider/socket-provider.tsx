@@ -6,7 +6,7 @@ import { Client } from "@stomp/stompjs";
 import { useSession } from "next-auth/react";
 
 type SocketContextType = {
-  socket: any | null;
+  socket: Client | null;
   isConnected: boolean;
 };
 
@@ -57,7 +57,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         if (stompClient) {
           stompClient.deactivate();
         }
-
+        console.log("Disconnected from the server");
         setSocket(null);
         setIsConnected(false);
       };

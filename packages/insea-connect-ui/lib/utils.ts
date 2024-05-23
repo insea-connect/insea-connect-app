@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
+import { min } from "date-fns";
 TimeAgo.addDefaultLocale(en);
 
 export function formatToTimeAgo(date: string) {
@@ -62,4 +63,10 @@ export const extractSelectedChatId = (path: string) => {
   const chatId = path.split("/")[2];
 
   return chatId.split("-")[1];
+};
+
+export const generateConversationId = (userId: number, otherUserId: number) => {
+  const minUserId = Math.min(userId, otherUserId);
+  const maxUserId = Math.max(userId, otherUserId);
+  return `conv-${minUserId}_${maxUserId}`;
 };

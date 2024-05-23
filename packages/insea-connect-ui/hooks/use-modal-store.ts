@@ -1,6 +1,10 @@
 import { create } from "zustand";
 
-export type ModalType = "new-file" | "new-folder" | "new-group";
+export type ModalType =
+  | "new-file"
+  | "new-folder"
+  | "new-group"
+  | "new-conversation";
 
 interface ModalStore {
   type: ModalType | null;

@@ -29,6 +29,7 @@ import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
 import { CREATE_GROUP_ENDPOINT } from "@/lib/constants";
 import { useSession } from "next-auth/react";
+import { useQueryClient } from "@tanstack/react-query";
 
 const schema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -37,6 +38,7 @@ const schema = z.object({
 
 const NewGroupModal = () => {
   const { data: session } = useSession();
+  const queryClient = useQueryClient();
   const { toast } = useToast();
   const router = useRouter();
   const { isOpen, onClose, type } = useModal();
@@ -65,6 +67,10 @@ const NewGroupModal = () => {
           },
         }
       );
+
+      queryClient.invalidateQueries({
+        queryKey: ["groups"],
+      });
       form.reset();
       router.push(`/chat/group-${data.id}`);
       onClose();

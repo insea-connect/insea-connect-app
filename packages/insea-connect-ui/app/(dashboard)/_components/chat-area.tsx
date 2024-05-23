@@ -12,6 +12,8 @@ import axios from "axios";
 import { Info, Paperclip, SendHorizonal } from "lucide-react";
 import ChatAreaHeader from "./chat-area-header";
 import ChatMessagesList from "./chat-messages-list";
+import MessageInput from "./message-input";
+import { getOrCreateConversation } from "@/services/api";
 
 interface ChatAreaProps {
   chatId: string;
@@ -20,7 +22,6 @@ interface ChatAreaProps {
 const ChatArea = async ({ chatId }: ChatAreaProps) => {
   const {
     // @ts-ignore
-
     tokens: { access_token },
   } = await auth();
 
@@ -36,27 +37,25 @@ const ChatArea = async ({ chatId }: ChatAreaProps) => {
 
   const theChatId = chatId.split("-")[1];
 
-  const { data } = await axios.get(
-    `${
-      isGroupChat
-        ? `${GROUP_INFO_ENDPOINT}/${theChatId}`
-        : `${CONVERSATION_INFO_ENDPOINT}/${theChatId}`
-    }`,
-    {
+  let chatName = "";
+  let otherUser = null;
+  let groupId = null;
+  if (isGroupChat) {
+    const {
+      data: { id, name },
+    } = await axios.get(`${GROUP_INFO_ENDPOINT}/${theChatId}`, {
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
-    }
-  );
+    });
 
-  console.log(data);
-
-  let chatName = "";
-  if (isGroupChat) {
-    chatName = data.name;
+    chatName = name;
+    groupId = id;
   } else {
-    const otherUser = data.member1.id === id ? data.member2 : data.member1;
-    chatName = otherUser.username;
+    const result = await getOrCreateConversation(theChatId, id, access_token);
+
+    chatName = result.chatName;
+    otherUser = result.otherUser;
   }
 
   return (
@@ -70,24 +69,12 @@ const ChatArea = async ({ chatId }: ChatAreaProps) => {
         isGroup={isGroupChat}
         connectedUserId={id}
       />
-      <div className="h-14 border-t flex py-2 px-4 gap-4 items-center">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="rounded-lg group"
-          aria-label="Info"
-        >
-          <Paperclip className="w-5 h-5 text-muted-foreground group-hover:text-foreground" />
-        </Button>
-        <Input
-          type="text"
-          placeholder="Type a message..."
-          className="flex-1 bg-background px-4 py-2 rounded-md"
-        />
-        <Button size="icon" className="rounded-lg" aria-label="Info">
-          <SendHorizonal className="w-5 h-5" />
-        </Button>
-      </div>
+      <MessageInput
+        isGroup={isGroupChat}
+        senderId={id}
+        recipientId={isGroupChat ? null : otherUser.id}
+        groupId={isGroupChat && groupId}
+      />
     </section>
   );
 };

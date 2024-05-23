@@ -28,7 +28,7 @@ const GroupList = ({ search }: GroupListProps) => {
     },
   });
 
-  if (isPending && isUserProfileLoading) {
+  if (isPending || isUserProfileLoading) {
     return <ChatListSkeleton />;
   }
 

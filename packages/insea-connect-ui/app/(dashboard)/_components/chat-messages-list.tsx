@@ -14,6 +14,8 @@ import {
 import { cn, getInitials } from "@/lib/utils";
 import ChatBubble from "./chat-bubble";
 import ChatMessagesListSkeleton from "./chat-messages-list-skeleton";
+import useSocketChat from "@/hooks/use-socket-chat";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ChatMessagesListProps {
   chatId: string;
@@ -48,12 +50,18 @@ const ChatMessagesList = ({
       );
       return result;
     },
+    refetchOnWindowFocus: false,
+    refetchInterval: false,
   });
+
+  useSocketChat({ chatId });
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (messagesContainerRef.current) {
+      console.log("scrolling to bottom");
+
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
     }
@@ -65,7 +73,7 @@ const ChatMessagesList = ({
   return (
     <div
       ref={messagesContainerRef}
-      className="w-full overflow-y-hidden overflow-x-hidden h-full flex flex-col justify-end"
+      className="w-full flex-grow overflow-y-auto overflow-x-hidden flex flex-col justify-end"
     >
       <AnimatePresence>
         {messages?.map((message: any, index: number) => (

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import NewGroupModal from "../modal/new-group-modal";
 import NewFolderModal from "../modal/new-folder-modal";
+import NewConversationModal from "../modal/new-conversation-modal";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -15,6 +16,7 @@ export const ModalProvider = () => {
 
   return (
     <>
+      <NewConversationModal />
       <NewFolderModal />
       <NewGroupModal />
     </>
