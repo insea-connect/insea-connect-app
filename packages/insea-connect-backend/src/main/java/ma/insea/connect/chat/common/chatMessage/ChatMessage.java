@@ -1,16 +1,12 @@
 package ma.insea.connect.chat.common.chatMessage;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ma.insea.connect.user.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -27,6 +23,8 @@ public class ChatMessage {
 
     private Long id;
     private String chatId;
+    @Column(name = "content", length = 1000)
+
     private String content;
     private Date timestamp;
 

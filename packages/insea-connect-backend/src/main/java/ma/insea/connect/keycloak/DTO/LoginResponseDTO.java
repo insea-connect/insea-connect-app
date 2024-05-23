@@ -30,6 +30,7 @@ public class LoginResponseDTO {
     private int refreshTokenDuration;
     private String accessTokenExpiration;
     private String refreshTokenExpiration;
+    private String threadId;
 
 
 
