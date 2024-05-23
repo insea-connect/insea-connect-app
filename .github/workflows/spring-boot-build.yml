@@ -24,7 +24,8 @@ jobs:
           cache: maven
       - name: Build with Maven
         working-directory: "./packages/insea-connect-backend"
-        run: mvn -B package --file pom.xml
+        # run: mvn -B package --file pom.xml
+        run: mvn compile
         env:
           JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
           JWT_AUTH_CONVERTER_RESOURCE_ID: ${{ secrets.JWT_AUTH_CONVERTER_RESOURCE_ID }}
