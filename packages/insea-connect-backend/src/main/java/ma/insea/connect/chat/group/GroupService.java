@@ -3,6 +3,9 @@ package ma.insea.connect.chat.group;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -10,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
 import ma.insea.connect.chat.common.chatMessage.GroupMessageDTO;
+import ma.insea.connect.exception.UnauthorizedException;
 import ma.insea.connect.user.User;
 import ma.insea.connect.user.UserDTO2;
 import ma.insea.connect.user.UserRepository;
@@ -70,6 +74,11 @@ public class GroupService {
             groupDTO.setLastMessage(chatMessage);
             groupDTOs.add(groupDTO);
         }
+        Collections.reverse(groupDTOs);
+        groupDTOs.sort(Comparator.comparing(
+        groupDTO2 -> ((GroupDTO2) groupDTO2).getLastMessage() != null ? ((GroupDTO2) groupDTO2).getLastMessage().getTimestamp() : new Date(0)).reversed());
+        
+    
         return groupDTOs;
     }
     public String deleteGroup(Long groupId) {
@@ -151,5 +160,34 @@ public class GroupService {
         return new GroupDTO3(group.getId(), group.getImagrUrl(), group.getName(), group.getDescription(), group.getIsOfficial(), group.getCreatedDate(), creatorDTO, admins);
         
     }
-    
+    public void addAdmin(Long groupId, Long long1) {
+        User connectedUser = functions.getConnectedUser();
+        Membership membership = membershipRepository.findByUserIdAndGroupId(connectedUser.getId(), groupId);
+        Membership membership2 = membershipRepository.findByUserIdAndGroupId(long1, groupId);
+        if (membership2 == null) {
+            throw new UnauthorizedException("User is not a member of this group");
+        }
+        else if(membership == null || !membership.getIsAdmin()) {
+            throw new UnauthorizedException("You are not allowed to add admins to this group");
+        }else{
+            Membership m=membershipRepository.findById(new MembershipKey(long1, groupId)).get();
+            m.setIsAdmin(true);
+            membershipRepository.save(m);
+        }
+    }
+    public void removeAdmin(Long groupId, Long long1) {
+        User connectedUser = functions.getConnectedUser();
+        Membership membership = membershipRepository.findByUserIdAndGroupId(connectedUser.getId(), groupId);
+        Membership membership2 = membershipRepository.findByUserIdAndGroupId(long1, groupId);
+        if (membership2 == null) {
+            throw new UnauthorizedException("User is not a member of this group");
+        }
+        else if(membership == null || !membership.getIsAdmin()) {
+            throw new UnauthorizedException("You are not allowed to remove admins from this group");
+        }else{
+            Membership m=membershipRepository.findById(new MembershipKey(long1, groupId)).get();
+            m.setIsAdmin(false);
+            membershipRepository.save(m);
+        }
+    }
 }

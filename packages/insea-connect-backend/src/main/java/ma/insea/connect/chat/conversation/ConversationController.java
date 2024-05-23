@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-public class ConversatonController {
+public class ConversationController {
     private final ConversationService conversationService;
 
     @GetMapping("/conversations/{conversationId}/messages")

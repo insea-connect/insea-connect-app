@@ -1,8 +1,10 @@
 package ma.insea.connect.user;
 
 import lombok.RequiredArgsConstructor;
+import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
 import ma.insea.connect.chat.conversation.Conversation;
 import ma.insea.connect.chat.conversation.ConversationDTO;
+import ma.insea.connect.chat.conversation.ConversationRepository;
 import ma.insea.connect.chat.conversation.ConversationService;
 import ma.insea.connect.chat.group.GroupDTO2;
 import ma.insea.connect.chat.group.GroupService;
@@ -11,6 +13,8 @@ import ma.insea.connect.keycloak.controller.KeyCloakController;
 import ma.insea.connect.keycloak.service.KeyCloakService;
 import ma.insea.connect.user.DTO.AddUserDTO;
 import ma.insea.connect.user.DTO.UserInfoResponseDTO;
+import ma.insea.connect.utils.Functions;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -36,6 +40,9 @@ public class UserController {
     private final UserRepository userRepository;
     private final ConversationService conversationService;
     private  final KeyCloakController keyCloakController;
+    private final Functions functions;
+    private final ChatMessageService chatMessageService;
+    private final ConversationRepository conversationRepository;
 
     @MessageMapping("/users.addUser")
     @SendTo("/user/public")
@@ -112,13 +119,20 @@ public class UserController {
 
     @GetMapping("/users/me/conversations")
     public ResponseEntity<List<ConversationDTO>> getUserConversations() {
-        List<ConversationDTO> conversations = conversationService.findConversationsByEmail();
-        return ResponseEntity.ok(conversations);
+        return ResponseEntity.ok(conversationService.findConversationsByEmail());
     }
 
-    @PostMapping("/user/me/conversations")
-    public ResponseEntity<Conversation> createConversation(@RequestBody Map<String,Long> recipientId) {
-        return ResponseEntity.ok(conversationService.createConversation(recipientId.get("recipientId")));
+    @PostMapping("/users/me/conversations")
+    public ResponseEntity<CreateConversationDTO> createConversation(@RequestBody Map<String,Long> body) {
+        User connectedUser = functions.getConnectedUser();
+        String chatId=chatMessageService.getChatRoomId(Long.toString(connectedUser.getId()),Long.toString(body.get("recipientId")),true);
+        if(conversationRepository.existsById(chatId))
+        {return ResponseEntity.ok(new CreateConversationDTO(chatId));
+        }
+        else{
+            conversationService.createConversation(body.get("recipientId"));
+            return ResponseEntity.created(null).build();
+        }
 
     }
 }
