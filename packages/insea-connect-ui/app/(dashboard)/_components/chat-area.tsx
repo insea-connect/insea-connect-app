@@ -12,6 +12,7 @@ import axios from "axios";
 import { Info, Paperclip, SendHorizonal } from "lucide-react";
 import ChatAreaHeader from "./chat-area-header";
 import ChatMessagesList from "./chat-messages-list";
+import MessageInput from "./message-input";
 
 interface ChatAreaProps {
   chatId: string;
@@ -52,10 +53,11 @@ const ChatArea = async ({ chatId }: ChatAreaProps) => {
   console.log(data);
 
   let chatName = "";
+  let otherUser = null;
   if (isGroupChat) {
     chatName = data.name;
   } else {
-    const otherUser = data.member1.id === id ? data.member2 : data.member1;
+    otherUser = data.member1.id === id ? data.member2 : data.member1;
     chatName = otherUser.username;
   }
 
@@ -70,24 +72,12 @@ const ChatArea = async ({ chatId }: ChatAreaProps) => {
         isGroup={isGroupChat}
         connectedUserId={id}
       />
-      <div className="h-14 border-t flex py-2 px-4 gap-4 items-center">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="rounded-lg group"
-          aria-label="Info"
-        >
-          <Paperclip className="w-5 h-5 text-muted-foreground group-hover:text-foreground" />
-        </Button>
-        <Input
-          type="text"
-          placeholder="Type a message..."
-          className="flex-1 bg-background px-4 py-2 rounded-md"
-        />
-        <Button size="icon" className="rounded-lg" aria-label="Info">
-          <SendHorizonal className="w-5 h-5" />
-        </Button>
-      </div>
+      <MessageInput
+        isGroup={isGroupChat}
+        senderId={id}
+        recipientId={isGroupChat ? null : otherUser.id}
+        groupId={isGroupChat && data.id}
+      />
     </section>
   );
 };

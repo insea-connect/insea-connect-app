@@ -14,6 +14,7 @@ import {
 import { cn, getInitials } from "@/lib/utils";
 import ChatBubble from "./chat-bubble";
 import ChatMessagesListSkeleton from "./chat-messages-list-skeleton";
+import useSocketChat from "@/hooks/use-socket-chat";
 
 interface ChatMessagesListProps {
   chatId: string;
@@ -48,7 +49,11 @@ const ChatMessagesList = ({
       );
       return result;
     },
+    refetchOnWindowFocus: false,
+    refetchInterval: false,
   });
+
+  useSocketChat({ chatId });
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
