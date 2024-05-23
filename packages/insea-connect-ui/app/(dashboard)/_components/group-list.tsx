@@ -26,6 +26,8 @@ const GroupList = ({ search }: GroupListProps) => {
       });
       return result;
     },
+    refetchIntervalInBackground: true,
+    refetchInterval: 10000,
   });
 
   if (isPending || isUserProfileLoading) {

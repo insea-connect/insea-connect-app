@@ -3,7 +3,7 @@ import ChatItem from "./chat-item";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { CONVERSATIONS_ENDPOINT } from "@/lib/constants";
+import { BOT_NAME, CONVERSATIONS_ENDPOINT } from "@/lib/constants";
 import ChatListSkeleton from "./chat-list-skeleton";
 import useUserProfile from "@/hooks/use-user-profile";
 
@@ -25,18 +25,20 @@ const ConversationList = ({ search }: ConversationListProps) => {
       });
       return result;
     },
+    refetchIntervalInBackground: true,
+    refetchInterval: 10000,
   });
 
   if (isPending || isUserProfilePending) {
     return <ChatListSkeleton />;
   }
 
-  let filteredConversations =
-    conversations && search
-      ? conversations.filter((conversation: any) =>
-          conversation.username.toLowerCase().includes(search.toLowerCase())
-        )
-      : conversations;
+  let filteredConversations = conversations
+    ?.filter((conversation: any) =>
+      conversation.username.toLowerCase().includes(search?.toLowerCase())
+    )
+    .filter((conversation: any) => conversation.username !== BOT_NAME)
+    .filter((conversation: any) => conversation.lastMessage);
 
   return (
     <ScrollArea className="h-full mt-2 pt-2">
