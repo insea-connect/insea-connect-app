@@ -1,7 +1,10 @@
 package ma.insea.connect.chat.conversation;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Collections;
 
 import org.springframework.stereotype.Service;
 
@@ -60,6 +63,9 @@ public class ConversationService {
             
             conversationDTOs.add(conversationDTO);
         }
+        Collections.reverse(conversationDTOs);
+        conversationDTOs.sort(Comparator.comparing(
+        conversationDTO -> ((ConversationDTO) conversationDTO).getLastMessage() != null ? ((ConversationDTO) conversationDTO).getLastMessage().getTimestamp() : new Date(0)).reversed());
         return conversationDTOs;
     
 

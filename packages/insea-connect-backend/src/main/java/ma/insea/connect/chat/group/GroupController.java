@@ -25,11 +25,8 @@ public class GroupController {
     private final GroupService groupService;
     private final ChatMessageService chatMessageService;
 
-    // @MessageMapping("/groups")
-    // @SendTo("/user/public")     //for realtime
-    @PostMapping("/groups")       //for rest anotations
+    @PostMapping("/groups")
     public GroupDTO addGroup(@RequestBody GroupDTO groupDTO) {
-        
         return groupService.saveGroup(groupDTO);
     }
     @DeleteMapping("/groups/{groupid}")
@@ -65,4 +62,15 @@ public class GroupController {
     public ResponseEntity<String> removeGroupMember(@PathVariable("groupid") Long groupId, @PathVariable("memberid") Long memberId) {
         return ResponseEntity.ok(groupService.removeGroupMember(groupId, memberId));
     }
+    @PostMapping("/groups/{groupid}/admin")
+    public ResponseEntity<?> addAdmin(@RequestBody Map<String, Long> userId, @PathVariable("groupid") Long groupId) {
+        groupService.addAdmin(groupId, userId.get("userId"));
+        return ResponseEntity.ok(null);    
+    }
+    @DeleteMapping("/groups/{groupid}/admin")
+    public ResponseEntity<?> removeAdmin(@RequestBody Map<String, Long> userId, @PathVariable("groupid") Long groupId) {
+        groupService.removeAdmin(groupId, userId.get("userId"));
+        return ResponseEntity.ok(null);    
+    }
+    
 }
