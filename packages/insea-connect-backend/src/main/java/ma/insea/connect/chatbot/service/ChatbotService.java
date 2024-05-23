@@ -4,14 +4,18 @@ package ma.insea.connect.chatbot.service;
 import lombok.extern.slf4j.Slf4j;
 import ma.insea.connect.chat.common.chatMessage.ChatMessageDTO;
 import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
-import ma.insea.connect.chatbot.DTO.ChatbotMessageRequestDTO;
-import ma.insea.connect.chatbot.DTO.ChatbotApiResponseDTO;
-import ma.insea.connect.chatbot.DTO.ChatbotApiRequestDTO;
-import ma.insea.connect.chatbot.DTO.ChatbotMessageResponseDTO;
+import ma.insea.connect.chat.common.chatMessage.GroupMessageDTO;
+import ma.insea.connect.chatbot.DTO.conversationDTO.ChatbotMessageRequestDTO;
+import ma.insea.connect.chatbot.DTO.conversationDTO.ChatbotApiResponseDTO;
+import ma.insea.connect.chatbot.DTO.conversationDTO.ChatbotApiRequestDTO;
+import ma.insea.connect.chatbot.DTO.conversationDTO.ChatbotMessageResponseDTO;
 import ma.insea.connect.chatbot.DTO.CreateThreadDTO;
+import ma.insea.connect.chatbot.DTO.groupDTO.ChatbotGroupMessageRequestDTO;
+import ma.insea.connect.chatbot.DTO.groupDTO.ChatbotGroupMessageResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -25,9 +29,11 @@ public class ChatbotService {
     ChatMessageService chatMessageService;
     @Value("${chatbotServer}")
     private String chatbotServer;
+
+    private final long chatbotId =(long) 1;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public ChatbotMessageResponseDTO addInteraction(ChatbotMessageRequestDTO chatbotMessageRequestDTO, String responseContent){
+    public ChatbotMessageResponseDTO addInteractionInConversation(ChatbotMessageRequestDTO chatbotMessageRequestDTO, String responseContent){
 
             Date date = new Date();
             ChatMessageDTO userRequest = new ChatMessageDTO();
@@ -47,6 +53,26 @@ public class ChatbotService {
             return chatbotMessageResponseDTO;
         }
 
+    public ChatbotGroupMessageResponseDTO addInteractionToGroup(ChatbotGroupMessageRequestDTO chatbotGroupMessageRequestDTO, String responseContent){
+
+        Date date = new Date();
+        GroupMessageDTO userRequest = new GroupMessageDTO();
+        userRequest.setContent(chatbotGroupMessageRequestDTO.getContent());
+        userRequest.setTimestamp(chatbotGroupMessageRequestDTO.getTimestamp());
+        userRequest.setSenderId(chatbotGroupMessageRequestDTO.getSenderId());
+        userRequest.setGroupId(chatbotGroupMessageRequestDTO.getGroupId());
+        GroupMessageDTO botResponse = new GroupMessageDTO();
+        botResponse.setGroupId(chatbotGroupMessageRequestDTO.getGroupId());
+        botResponse.setSenderId(chatbotId);
+        botResponse.setContent(responseContent);
+        botResponse.setTimestamp(date);
+        chatMessageService.savegroupmessage(userRequest);
+        chatMessageService.savegroupmessage(botResponse);
+        ChatbotGroupMessageResponseDTO chatbotGroupMessageResponseDTO = new ChatbotGroupMessageResponseDTO();
+        chatbotGroupMessageResponseDTO.setMessage(botResponse.getContent());
+        return chatbotGroupMessageResponseDTO;
+    }
+
 
 
 
@@ -56,12 +82,30 @@ public class ChatbotService {
         String url = chatbotServer + "/start_conversation";
         HttpEntity<String> request = new HttpEntity<>(new String());  // Prepare request. Update this if you need to send a body.
         ResponseEntity<CreateThreadDTO> response = restTemplate.postForEntity(url, request, CreateThreadDTO.class);
-
         if (response.getStatusCode().is2xxSuccessful()) {
             // Assuming the response body is properly mapped to CreateThreadDTO
             return ResponseEntity.ok(response.getBody());
         } else {
             return ResponseEntity.status(response.getStatusCode()).build();
+        }
+    }
+
+    public String getThreadIdString() {
+        String url = chatbotServer + "/start_conversation";
+        HttpEntity<String> request = new HttpEntity<>(new String());  // Prepare request. Update this if you need to send a body.
+        ResponseEntity<CreateThreadDTO> response = restTemplate.postForEntity(url, request, CreateThreadDTO.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            CreateThreadDTO createThreadDTO = response.getBody();
+            // Check if the body is not null and get the thread_id
+            if (createThreadDTO != null && createThreadDTO.getThread_id() != null) {
+                return createThreadDTO.getThread_id();
+            } else {
+                // Handle the case where thread_id is null or response body is null
+                return "Error creating thread";
+            }
+        } else {
+            return "Error creating thread";
         }
     }
 
@@ -87,12 +131,22 @@ public class ChatbotService {
     }
 
 
-    public ChatbotMessageResponseDTO sendToBot(ChatbotMessageRequestDTO chatbotMessageRequestDTO){
+
+    public ChatbotMessageResponseDTO sendToBotConversation(ChatbotMessageRequestDTO chatbotMessageRequestDTO){
 
         ChatbotApiRequestDTO  chatbotApiRequestDTO= new ChatbotApiRequestDTO(chatbotMessageRequestDTO.getThreadId(), chatbotMessageRequestDTO.getContent());
         ChatbotApiResponseDTO responseFromApi = redirect(chatbotApiRequestDTO);
-        ChatbotMessageResponseDTO chatbotMessageResponseDTO = addInteraction(chatbotMessageRequestDTO, responseFromApi.getMessage());
+        ChatbotMessageResponseDTO chatbotMessageResponseDTO = addInteractionInConversation(chatbotMessageRequestDTO, responseFromApi.getMessage());
         return chatbotMessageResponseDTO;
+
+    }
+
+    public ChatbotGroupMessageResponseDTO sendToBotGroup(ChatbotGroupMessageRequestDTO chatbotGroupMessageRequestDTO){
+
+        ChatbotApiRequestDTO  chatbotApiRequestDTO= new ChatbotApiRequestDTO(chatbotGroupMessageRequestDTO.getThreadId(), chatbotGroupMessageRequestDTO.getContent());
+        ChatbotApiResponseDTO responseFromApi = redirect(chatbotApiRequestDTO);
+        ChatbotGroupMessageResponseDTO chatbotGroupResponseDTO = addInteractionToGroup(chatbotGroupMessageRequestDTO, responseFromApi.getMessage());
+        return chatbotGroupResponseDTO;
 
     }
 }

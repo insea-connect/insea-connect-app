@@ -23,7 +23,7 @@ public class ChatMessage {
 
     private Long id;
     private String chatId;
-    @Column(name = "content", length = 1000)
+    @Column(name = "content", length = 10000)
 
     private String content;
     private Date timestamp;

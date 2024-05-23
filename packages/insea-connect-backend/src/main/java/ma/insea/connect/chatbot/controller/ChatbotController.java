@@ -1,9 +1,11 @@
 package ma.insea.connect.chatbot.controller;
 
 
+import ma.insea.connect.chatbot.DTO.groupDTO.ChatbotGroupMessageRequestDTO;
+import ma.insea.connect.chatbot.DTO.groupDTO.ChatbotGroupMessageResponseDTO;
 import ma.insea.connect.chatbot.service.ChatbotService;
-import ma.insea.connect.chatbot.DTO.ChatbotMessageRequestDTO;
-import ma.insea.connect.chatbot.DTO.ChatbotMessageResponseDTO;
+import ma.insea.connect.chatbot.DTO.conversationDTO.ChatbotMessageRequestDTO;
+import ma.insea.connect.chatbot.DTO.conversationDTO.ChatbotMessageResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -24,11 +26,26 @@ public class ChatbotController {
     @Autowired
     private ChatbotService chatbotService;
 
-    @PostMapping("/sendMessage")
-    public ResponseEntity<ChatbotMessageResponseDTO> redirect(@RequestBody ChatbotMessageRequestDTO requestDTO) {
+    @PostMapping("/sendMessage/conversation")
+    public ResponseEntity<ChatbotMessageResponseDTO> sendToBotConversation(@RequestBody ChatbotMessageRequestDTO requestDTO) {
         try {
-            ChatbotMessageResponseDTO chatbotMessageResponseDTO= chatbotService.sendToBot(requestDTO);
+            ChatbotMessageResponseDTO chatbotMessageResponseDTO= chatbotService.sendToBotConversation(requestDTO);
             return ResponseEntity.ok(chatbotMessageResponseDTO);
+        }
+
+        catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error: " + e.getMessage(), e);
+        }
+
+
+
+    }
+
+    @PostMapping("/sendMessage/group")
+    public ResponseEntity<ChatbotGroupMessageResponseDTO> sendToBotGroup(@RequestBody ChatbotGroupMessageRequestDTO requestDTO) {
+        try {
+            ChatbotGroupMessageResponseDTO chatbotGroupMessageResponseDTO= chatbotService.sendToBotGroup(requestDTO);
+            return ResponseEntity.ok(chatbotGroupMessageResponseDTO);
         }
 
         catch (Exception e){

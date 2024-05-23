@@ -1,6 +1,7 @@
 package ma.insea.connect.keycloak.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import ma.insea.connect.chatbot.service.ChatbotService;
 import ma.insea.connect.keycloak.DTO.*;
 import ma.insea.connect.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,9 @@ public class KeycloakLoginController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    ChatbotService chatbotService;
+
     @PostMapping("/login")
     //Map<String, Object>
     public ResponseEntity<LoginResponseDTO > login(@RequestBody LoginRequestDTO loginRequestDTO) {
@@ -74,6 +78,8 @@ public class KeycloakLoginController {
             loginResponseDTO.extractTokenInfo(response.getBody().toString());
             loginResponseDTO.setUser(LoginResponseUserDTO.mapToLoginUserResponseDTO(userService.findByUsername(username)));
             // Return the response containing the token
+            loginResponseDTO.setThreadId( chatbotService.getThreadIdString());
+
             return ResponseEntity.ok(loginResponseDTO);
         }
         catch (HttpClientErrorException | HttpServerErrorException e) {

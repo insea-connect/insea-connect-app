@@ -1,4 +1,4 @@
-package ma.insea.connect.chatbot.DTO;
+package ma.insea.connect.chatbot.DTO.conversationDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
