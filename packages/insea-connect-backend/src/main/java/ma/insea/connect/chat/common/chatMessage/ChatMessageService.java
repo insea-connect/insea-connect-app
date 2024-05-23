@@ -142,5 +142,20 @@ public class ChatMessageService {
             return groupMessageDTO;
         }
         return null;}
+    public TypingDTO chatTyping(Long recipientId) {
+        String chatId = getChatRoomId(Long.toString(functions.getConnectedUser().getId()), Long.toString(recipientId), true);
+        messagingTemplate.convertAndSendToUser(
+                chatId, "/queue/typing",
+                new TypingDTO(functions.getConnectedUser().getId())
+        );
+        return new TypingDTO(recipientId);
+    }
+    public TypingDTO groupTyping(Long long1) {
+        messagingTemplate.convertAndSendToUser(
+                Long.toString(long1), "/queue/typing",
+                new TypingDTO(functions.getConnectedUser().getId())
+        );
+        return new TypingDTO(long1);
+    }
     
 }

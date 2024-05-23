@@ -123,14 +123,14 @@ public class UserController {
     }
 
     @PostMapping("/users/me/conversations")
-    public ResponseEntity<Conversation> createConversation(@RequestBody Map<String,Long> recipientId) {
+    public ResponseEntity<CreateConversationDTO> createConversation(@RequestBody Map<String,Long> body) {
         User connectedUser = functions.getConnectedUser();
-        String chatId=chatMessageService.getChatRoomId(Long.toString(connectedUser.getId()),Long.toString(recipientId.get("recipientId")),true);
+        String chatId=chatMessageService.getChatRoomId(Long.toString(connectedUser.getId()),Long.toString(body.get("recipientId")),true);
         if(conversationRepository.existsById(chatId))
-        {return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        {return ResponseEntity.ok(new CreateConversationDTO(chatId));
         }
         else{
-            conversationService.createConversation(recipientId.get("recipientId"));
+            conversationService.createConversation(body.get("recipientId"));
             return ResponseEntity.created(null).build();
         }
 
