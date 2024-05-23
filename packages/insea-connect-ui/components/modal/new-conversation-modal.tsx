@@ -54,6 +54,7 @@ const NewConversationModal = () => {
   );
 
   const handleClose = () => {
+    setSearchTerm("");
     onClose();
   };
 

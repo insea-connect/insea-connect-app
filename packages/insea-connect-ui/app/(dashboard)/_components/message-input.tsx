@@ -3,6 +3,7 @@
 import { useSocket } from "@/components/provider/socket-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useQueryClient } from "@tanstack/react-query";
 import { Paperclip, SendHorizonal } from "lucide-react";
 import { useState } from "react";
 
@@ -21,6 +22,7 @@ const MessageInput = ({
 }: MessageInputProps) => {
   const { socket } = useSocket();
   const [content, setContent] = useState("");
+  const queryClient = useQueryClient();
 
   const onSendMessage = () => {
     const destination = isGroup ? `/app/sendgroupmessage` : `/app/sendmessage`;
@@ -40,6 +42,13 @@ const MessageInput = ({
       body: JSON.stringify(body),
     });
 
+    queryClient.invalidateQueries({
+      queryKey: ["conversations"],
+    });
+
+    queryClient.invalidateQueries({
+      queryKey: ["groups"],
+    });
     setContent("");
   };
   return (
