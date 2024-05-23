@@ -3,6 +3,9 @@ package ma.insea.connect.chat.group;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -70,6 +73,11 @@ public class GroupService {
             groupDTO.setLastMessage(chatMessage);
             groupDTOs.add(groupDTO);
         }
+        Collections.reverse(groupDTOs);
+        groupDTOs.sort(Comparator.comparing(
+        groupDTO2 -> ((GroupDTO2) groupDTO2).getLastMessage() != null ? ((GroupDTO2) groupDTO2).getLastMessage().getTimestamp() : new Date(0)).reversed());
+        
+    
         return groupDTOs;
     }
     public String deleteGroup(Long groupId) {
