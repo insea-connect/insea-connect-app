@@ -135,4 +135,13 @@ public class UserController {
         }
 
     }
+    @GetMapping("users/{userId}/status")
+    public ResponseEntity<OnlineDTO> getUserStatus(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getUserStatus(userId));
+    }
+    @PutMapping("users/me/heartbeat")
+    public ResponseEntity<Void> updateUserHeartbeat() {
+        userService.updateUserLastSeen();
+        return ResponseEntity.ok().build();
+    }
 }
