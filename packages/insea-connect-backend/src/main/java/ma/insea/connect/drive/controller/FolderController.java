@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -34,6 +35,7 @@ public class FolderController {
 
     @Autowired
     private FolderServiceImpl folderService;
+    private final Functions functions;
 
 
     @GetMapping("/{folderId}/items")
@@ -75,5 +77,20 @@ public class FolderController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{folderId}/upload")
+    public File handleFileUpload(@PathVariable Long folderId, @RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {return null;}
+
+        File fileObj = new File();
+        fileObj.setFileUrl(functions.uploadFile(file));
+        fileObj.setName(file.getOriginalFilename());
+        fileObj.setSize(file.getSize());
+        fileObj.setMimeType(file.getContentType());
+        fileObj.setCreatedAt(LocalDateTime.now());
+        fileObj.setParent(folderService.getFolderById(folderId));
+
+        return fileObj;
     }
 }

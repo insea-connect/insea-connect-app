@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import ma.insea.connect.user.DegreePath;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -53,6 +54,13 @@ public class Functions {
         } catch (IOException e) {
             return "Failed to upload file: " + e.getMessage();
         }
+    }
+
+    public boolean checkPermission(User user, DegreePath degreePath) {
+        if(user.getDegreePath().equals(degreePath)){
+            return true;
+        }
+        return false;
     }
     
 }
