@@ -3,6 +3,9 @@ package ma.insea.connect.exceptions;
 import ma.insea.connect.exceptions.chat.ChatGroupNotFoundException;
 import ma.insea.connect.exceptions.chat.ChatRoomNotFoundException;
 import ma.insea.connect.exceptions.chat.ChatUserNotFoundException;
+import ma.insea.connect.exceptions.chatbot.ChatbotException;
+import ma.insea.connect.exceptions.chatbot.ChatbotServerException;
+import ma.insea.connect.exceptions.chatbot.MessageSaveException;
 import ma.insea.connect.exceptions.keycloak.KeycloakCommunicationException;
 import ma.insea.connect.exceptions.keycloak.TokenRequestException;
 import ma.insea.connect.exceptions.user.DatabaseOperationException;
@@ -54,5 +57,21 @@ public class ExceptionHandlingController {
     @ExceptionHandler(ChatRoomNotFoundException.class)
     public ResponseEntity<Object> handleChatRoomNotFound(ChatRoomNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    }
+
+
+    @ExceptionHandler(ChatbotServerException.class)
+    public ResponseEntity<String> handleChatbotServerException(ChatbotServerException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(MessageSaveException.class)
+    public ResponseEntity<String> handleMessageSaveException(MessageSaveException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ChatbotException.class)
+    public ResponseEntity<String> handleChatbotException(ChatbotException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

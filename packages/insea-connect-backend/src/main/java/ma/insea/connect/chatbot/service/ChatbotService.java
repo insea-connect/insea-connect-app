@@ -12,6 +12,8 @@ import ma.insea.connect.chatbot.DTO.conversationDTO.ChatbotMessageResponseDTO;
 import ma.insea.connect.chatbot.DTO.CreateThreadDTO;
 import ma.insea.connect.chatbot.DTO.groupDTO.ChatbotGroupMessageRequestDTO;
 import ma.insea.connect.chatbot.DTO.groupDTO.ChatbotGroupMessageResponseDTO;
+import ma.insea.connect.exceptions.chatbot.ChatbotServerException;
+import ma.insea.connect.exceptions.chatbot.MessageSaveException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -24,128 +26,127 @@ import java.util.Date;
 @Slf4j
 @Service
 public class ChatbotService {
+
     @Autowired
-    ChatMessageService chatMessageService;
+    private ChatMessageService chatMessageService;
+
     @Value("${chatbotServer}")
     private String chatbotServer;
 
-    private final long chatbotId =(long) 1;
+    private final long chatbotId = 1L;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public ChatbotMessageResponseDTO addInteractionInConversation(ChatbotMessageRequestDTO chatbotMessageRequestDTO, String responseContent){
-
+    public ChatbotMessageResponseDTO addInteractionInConversation(ChatbotMessageRequestDTO chatbotMessageRequestDTO, String responseContent) {
+        try {
             Date date = new Date();
             ChatMessageDTO userRequest = new ChatMessageDTO();
             userRequest.setContent(chatbotMessageRequestDTO.getContent());
             userRequest.setTimestamp(chatbotMessageRequestDTO.getTimestamp());
             userRequest.setSenderId(chatbotMessageRequestDTO.getSenderId());
             userRequest.setRecipientId(chatbotMessageRequestDTO.getRecipientId());
+
             ChatMessageDTO botResponse = new ChatMessageDTO();
             botResponse.setRecipientId(chatbotMessageRequestDTO.getSenderId());
             botResponse.setSenderId(chatbotMessageRequestDTO.getRecipientId());
             botResponse.setContent(responseContent);
             botResponse.setTimestamp(date);
+
             chatMessageService.saveusermessage(userRequest);
             chatMessageService.saveusermessage(botResponse);
+
             ChatbotMessageResponseDTO chatbotMessageResponseDTO = new ChatbotMessageResponseDTO();
             chatbotMessageResponseDTO.setMessage(botResponse.getContent());
             return chatbotMessageResponseDTO;
+        } catch (Exception e) {
+            throw new MessageSaveException("Failed to save user or bot message");
         }
-
-    public ChatbotGroupMessageResponseDTO addInteractionToGroup(ChatbotGroupMessageRequestDTO chatbotGroupMessageRequestDTO, String responseContent){
-
-        Date date = new Date();
-        GroupMessageDTO userRequest = new GroupMessageDTO();
-        userRequest.setContent(chatbotGroupMessageRequestDTO.getContent());
-        userRequest.setTimestamp(chatbotGroupMessageRequestDTO.getTimestamp());
-        userRequest.setSenderId(chatbotGroupMessageRequestDTO.getSenderId());
-        userRequest.setGroupId(chatbotGroupMessageRequestDTO.getGroupId());
-        GroupMessageDTO botResponse = new GroupMessageDTO();
-        botResponse.setGroupId(chatbotGroupMessageRequestDTO.getGroupId());
-        botResponse.setSenderId(chatbotId);
-        botResponse.setContent(responseContent);
-        botResponse.setTimestamp(date);
-        chatMessageService.savegroupmessage(userRequest);
-        chatMessageService.savegroupmessage(botResponse);
-        ChatbotGroupMessageResponseDTO chatbotGroupMessageResponseDTO = new ChatbotGroupMessageResponseDTO();
-        chatbotGroupMessageResponseDTO.setMessage(botResponse.getContent());
-        return chatbotGroupMessageResponseDTO;
     }
 
+    public ChatbotGroupMessageResponseDTO addInteractionToGroup(ChatbotGroupMessageRequestDTO chatbotGroupMessageRequestDTO, String responseContent) {
+        try {
+            Date date = new Date();
+            GroupMessageDTO userRequest = new GroupMessageDTO();
+            userRequest.setContent(chatbotGroupMessageRequestDTO.getContent());
+            userRequest.setTimestamp(chatbotGroupMessageRequestDTO.getTimestamp());
+            userRequest.setSenderId(chatbotGroupMessageRequestDTO.getSenderId());
+            userRequest.setGroupId(chatbotGroupMessageRequestDTO.getGroupId());
 
+            GroupMessageDTO botResponse = new GroupMessageDTO();
+            botResponse.setGroupId(chatbotGroupMessageRequestDTO.getGroupId());
+            botResponse.setSenderId(chatbotId);
+            botResponse.setContent(responseContent);
+            botResponse.setTimestamp(date);
 
+            chatMessageService.savegroupmessage(userRequest);
+            chatMessageService.savegroupmessage(botResponse);
 
-
+            ChatbotGroupMessageResponseDTO chatbotGroupMessageResponseDTO = new ChatbotGroupMessageResponseDTO();
+            chatbotGroupMessageResponseDTO.setMessage(botResponse.getContent());
+            return chatbotGroupMessageResponseDTO;
+        } catch (Exception e) {
+            throw new MessageSaveException("Failed to save group message");
+        }
+    }
 
     public ResponseEntity<CreateThreadDTO> getThreadId() {
         String url = chatbotServer + "/start_conversation";
-        HttpEntity<String> request = new HttpEntity<>(new String());  // Prepare request. Update this if you need to send a body.
-        ResponseEntity<CreateThreadDTO> response = restTemplate.postForEntity(url, request, CreateThreadDTO.class);
-        if (response.getStatusCode().is2xxSuccessful()) {
-            // Assuming the response body is properly mapped to CreateThreadDTO
-            return ResponseEntity.ok(response.getBody());
-        } else {
-            return ResponseEntity.status(response.getStatusCode()).build();
+        HttpEntity<String> request = new HttpEntity<>(new String());
+        try {
+            ResponseEntity<CreateThreadDTO> response = restTemplate.postForEntity(url, request, CreateThreadDTO.class);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return ResponseEntity.ok(response.getBody());
+            } else {
+                throw new ChatbotServerException("Failed to start conversation");
+            }
+        } catch (Exception e) {
+            throw new ChatbotServerException("Error communicating with chatbot server");
         }
     }
 
     public String getThreadIdString() {
         String url = chatbotServer + "/start_conversation";
-        HttpEntity<String> request = new HttpEntity<>(new String());  // Prepare request. Update this if you need to send a body.
-        ResponseEntity<CreateThreadDTO> response = restTemplate.postForEntity(url, request, CreateThreadDTO.class);
-
-        if (response.getStatusCode().is2xxSuccessful()) {
-            CreateThreadDTO createThreadDTO = response.getBody();
-            // Check if the body is not null and get the thread_id
-            if (createThreadDTO != null && createThreadDTO.getThread_id() != null) {
-                return createThreadDTO.getThread_id();
+        HttpEntity<String> request = new HttpEntity<>(new String());
+        try {
+            ResponseEntity<CreateThreadDTO> response = restTemplate.postForEntity(url, request, CreateThreadDTO.class);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                CreateThreadDTO createThreadDTO = response.getBody();
+                if (createThreadDTO != null && createThreadDTO.getThread_id() != null) {
+                    return createThreadDTO.getThread_id();
+                } else {
+                    throw new ChatbotServerException("Invalid thread response from chatbot server");
+                }
             } else {
-                // Handle the case where thread_id is null or response body is null
-                return "Error creating thread";
+                throw new ChatbotServerException("Failed to start conversation");
             }
-        } else {
-            return "Error creating thread";
+        } catch (Exception e) {
+            throw new ChatbotServerException("Error communicating with chatbot server");
         }
     }
-
 
     public ChatbotApiResponseDTO redirect(ChatbotApiRequestDTO requestDTO) {
         String url = chatbotServer + "/process_request";
-
-        // Prepare the request entity with headers and body
-        //HttpHeaders headers = new HttpHeaders();
-        //headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<ChatbotApiRequestDTO> requestEntity = new HttpEntity<>(requestDTO);
-
-        // Send the request and get the response
-        ResponseEntity<ChatbotApiResponseDTO> responseEntity = restTemplate.postForEntity(url, requestEntity, ChatbotApiResponseDTO.class);
-        log.warn("after mapping "+responseEntity.getBody().toString());
-        // Return the response body if the request is successful
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return responseEntity.getBody();
-        } else {
-            // Handle the error scenario appropriately
-            throw new RuntimeException("Failed to get response from chatbot server");
+        try {
+            ResponseEntity<ChatbotApiResponseDTO> responseEntity = restTemplate.postForEntity(url, requestEntity, ChatbotApiResponseDTO.class);
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                return responseEntity.getBody();
+            } else {
+                throw new ChatbotServerException("Failed to get response from chatbot server");
+            }
+        } catch (Exception e) {
+            throw new ChatbotServerException("Error communicating with chatbot server");
         }
     }
 
-
-
-    public ChatbotMessageResponseDTO sendToBotConversation(ChatbotMessageRequestDTO chatbotMessageRequestDTO){
-
-        ChatbotApiRequestDTO  chatbotApiRequestDTO= new ChatbotApiRequestDTO(chatbotMessageRequestDTO.getThreadId(), chatbotMessageRequestDTO.getContent());
+    public ChatbotMessageResponseDTO sendToBotConversation(ChatbotMessageRequestDTO chatbotMessageRequestDTO) {
+        ChatbotApiRequestDTO chatbotApiRequestDTO = new ChatbotApiRequestDTO(chatbotMessageRequestDTO.getThreadId(), chatbotMessageRequestDTO.getContent());
         ChatbotApiResponseDTO responseFromApi = redirect(chatbotApiRequestDTO);
-        ChatbotMessageResponseDTO chatbotMessageResponseDTO = addInteractionInConversation(chatbotMessageRequestDTO, responseFromApi.getMessage());
-        return chatbotMessageResponseDTO;
-
+        return addInteractionInConversation(chatbotMessageRequestDTO, responseFromApi.getMessage());
     }
 
-    public ChatbotGroupMessageResponseDTO sendToBotGroup(ChatbotGroupMessageRequestDTO chatbotGroupMessageRequestDTO){
-
-        ChatbotApiRequestDTO  chatbotApiRequestDTO= new ChatbotApiRequestDTO(chatbotGroupMessageRequestDTO.getThreadId(), chatbotGroupMessageRequestDTO.getContent());
+    public ChatbotGroupMessageResponseDTO sendToBotGroup(ChatbotGroupMessageRequestDTO chatbotGroupMessageRequestDTO) {
+        ChatbotApiRequestDTO chatbotApiRequestDTO = new ChatbotApiRequestDTO(chatbotGroupMessageRequestDTO.getThreadId(), chatbotGroupMessageRequestDTO.getContent());
         ChatbotApiResponseDTO responseFromApi = redirect(chatbotApiRequestDTO);
-        ChatbotGroupMessageResponseDTO chatbotGroupResponseDTO = addInteractionToGroup(chatbotGroupMessageRequestDTO, responseFromApi.getMessage());
-        return chatbotGroupResponseDTO;
-
+        return addInteractionToGroup(chatbotGroupMessageRequestDTO, responseFromApi.getMessage());
     }
 }
