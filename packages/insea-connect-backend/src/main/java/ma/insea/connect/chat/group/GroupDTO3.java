@@ -18,6 +18,4 @@ public class GroupDTO3 {
     private String description;
     private Boolean isOfficial;
     private Date createdDate;
-    private UserDTO2 creator;
-    private List<UserDTO2> admins;
 }
