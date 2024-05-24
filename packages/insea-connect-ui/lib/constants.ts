@@ -14,4 +14,13 @@ export const LOGOUT_ENDPOINT = `${BACKEND_BASE_URL}/api/logout`;
 
 export const ALL_USERS_ENDPOINT = `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/users`;
 
+export const GROUP_MEMBERS = (groupId: number) =>
+  `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/groups/${groupId}/members`;
+
+export const GROUP_ASSIGN_ADMIN = (groupId: number) =>
+  `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/groups/${groupId}/admin`;
+
+export const GROUP_REMOVE_MEMBER = (groupId: number, userId: number) =>
+  `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/groups/${groupId}/members/${userId}`;
+
 export const BOT_NAME = "bot";

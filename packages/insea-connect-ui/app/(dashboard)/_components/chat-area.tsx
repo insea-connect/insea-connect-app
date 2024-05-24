@@ -63,7 +63,11 @@ const ChatArea = async ({ chatId }: ChatAreaProps) => {
       aria-labelledby="primary-heading"
       className="flex min-w-0 flex-1 flex-col lg:order-last h-dvh"
     >
-      <ChatAreaHeader chatName={chatName} />
+      <ChatAreaHeader
+        chatId={theChatId}
+        chatName={chatName}
+        isGroup={isGroupChat}
+      />
       <ChatMessagesList
         chatId={theChatId}
         isGroup={isGroupChat}
