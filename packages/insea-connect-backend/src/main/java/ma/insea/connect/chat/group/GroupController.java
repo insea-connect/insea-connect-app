@@ -62,12 +62,12 @@ public class GroupController {
     public ResponseEntity<String> removeGroupMember(@PathVariable("groupId") Long groupId, @PathVariable("memberid") Long memberId) {
         return ResponseEntity.ok(groupService.removeGroupMember(groupId, memberId));
     }
-    @PostMapping("/groups/{groupId}/admin")
+    @PostMapping("/groups/{groupId}/admins")
     public ResponseEntity<?> addAdmin(@RequestBody Map<String, Long> userId, @PathVariable("groupId") Long groupId) {
         groupService.addAdmin(groupId, userId.get("userId"));
         return ResponseEntity.ok(null);    
     }
-    @DeleteMapping("/groups/{groupId}/admin/{userId}")
+    @DeleteMapping("/groups/{groupId}/admins/{userId}")
     public ResponseEntity<?> removeAdmin(@PathVariable("groupId") Long groupId, @PathVariable("userId") Long userId) {
         groupService.removeAdmin(groupId, userId);
         return ResponseEntity.ok(null);    
