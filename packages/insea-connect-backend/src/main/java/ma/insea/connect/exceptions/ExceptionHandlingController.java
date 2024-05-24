@@ -1,5 +1,8 @@
 package ma.insea.connect.exceptions;
 
+import ma.insea.connect.exceptions.chat.ChatGroupNotFoundException;
+import ma.insea.connect.exceptions.chat.ChatRoomNotFoundException;
+import ma.insea.connect.exceptions.chat.ChatUserNotFoundException;
 import ma.insea.connect.exceptions.keycloak.KeycloakCommunicationException;
 import ma.insea.connect.exceptions.keycloak.TokenRequestException;
 import ma.insea.connect.exceptions.user.DatabaseOperationException;
@@ -38,5 +41,18 @@ public class ExceptionHandlingController {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found: " + ex.getMessage());
+    }
+    public ResponseEntity<Object> handleChatUserNotFound(ChatUserNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(ChatGroupNotFoundException.class)
+    public ResponseEntity<Object> handleChatGroupNotFound(ChatGroupNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(ChatRoomNotFoundException.class)
+    public ResponseEntity<Object> handleChatRoomNotFound(ChatRoomNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
 }

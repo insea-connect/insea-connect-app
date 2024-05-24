@@ -9,6 +9,8 @@ import ma.insea.connect.chat.common.chatMessage.model.ChatMessage;
 import ma.insea.connect.chat.common.chatMessage.model.GroupMessage;
 import ma.insea.connect.chat.common.chatMessage.repository.ChatMessageRepository;
 import ma.insea.connect.chat.common.chatMessage.repository.GroupMessageRepository;
+import ma.insea.connect.exceptions.chat.ChatRoomNotFoundException;
+import ma.insea.connect.exceptions.chat.ChatUserNotFoundException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -33,13 +35,14 @@ public class ChatMessageService {
     private final SimpMessagingTemplate messagingTemplate;
 
     public ChatMessage saveusermessage(ChatMessageDTO chatMessage) {
-
         ChatMessage chatMessage1 = new ChatMessage();
-        var chatId = getChatRoomId(Long.toString(chatMessage.getSenderId()),Long.toString(chatMessage.getRecipientId()), true);
+        String chatId = getChatRoomId(Long.toString(chatMessage.getSenderId()), Long.toString(chatMessage.getRecipientId()), true);
         chatMessage1.setChatId(chatId);
 
-        User recipient = userRepository.findById(chatMessage.getRecipientId()).get();
-        User sender = userRepository.findById(chatMessage.getSenderId()).get();
+        User recipient = userRepository.findById(chatMessage.getRecipientId())
+                .orElseThrow(() -> new ChatUserNotFoundException("Recipient not found with ID: " + chatMessage.getRecipientId()));
+        User sender = userRepository.findById(chatMessage.getSenderId())
+                .orElseThrow(() -> new ChatUserNotFoundException("Sender not found with ID: " + chatMessage.getSenderId()));
 
         chatMessage1.setSender(sender);
         chatMessage1.setRecipient(recipient);
@@ -57,10 +60,11 @@ public class ChatMessageService {
                         chatMessage1.getSender().getUsername())
         );
         return chatMessage1;
-
     }
-    public GroupMessage savegroupmessage(GroupMessageDTO groupMessageDTO) {
-        User sender = userRepository.findById(groupMessageDTO.getSenderId()).get();
+    public GroupMessage savegroupmessage(GroupMessageDTO groupMessageDTO) throws ChatUserNotFoundException {
+        User sender = userRepository.findById(groupMessageDTO.getSenderId())
+                .orElseThrow(() -> new ChatUserNotFoundException("Sender not found with ID: " + groupMessageDTO.getSenderId()));
+
         GroupMessage groupMessage = new GroupMessage();
         groupMessage.setSender(sender);
         groupMessage.setContent(groupMessageDTO.getContent());
@@ -69,30 +73,35 @@ public class ChatMessageService {
         groupMessageRepository.save(groupMessage);
 
         messagingTemplate.convertAndSendToUser(
-            Long.toString(groupMessageDTO.getGroupId()), "/queue/messages",
-            new GroupMessageDTO(
-                    groupMessage.getSender().getId(),
-                    groupMessage.getContent(),
-                    groupMessage.getGroupId(),
-                    groupMessage.getSender().getUsername(),
-                    new Date(System.currentTimeMillis())
-            )
+                Long.toString(groupMessage.getGroupId()), "/queue/messages",
+                new GroupMessageDTO(
+                        groupMessage.getSender().getId(),
+                        groupMessage.getContent(),
+                        groupMessage.getGroupId(),
+                        groupMessage.getSender().getUsername(),
+                        new java.util.Date(System.currentTimeMillis())
+                )
         );
         return groupMessage;
     }
+
+
     public List<ChatMessage> findChatMessages(String senderId, String recipientId) {
-        var chatId = getChatRoomId(senderId, recipientId, true);
+        String chatId = getChatRoomId(senderId, recipientId, false);
+        if (chatId == null || chatId.isEmpty()) {
+            throw new ChatRoomNotFoundException("Chat room not found for given user IDs.");
+        }
         return chatMessageRepository.findByChatId(chatId);
     }
 
     public void deleteChatMessages(String chatId) {
-        List<ChatMessage> chatMessages = chatMessageRepository.findAll();
-        for (ChatMessage chatMessage : chatMessages) {
-            if (chatMessage.getChatId().equals(chatId)) {
-                chatMessageRepository.delete(chatMessage);
-            }
+        List<ChatMessage> chatMessages = chatMessageRepository.findByChatId(chatId);
+        if (chatMessages.isEmpty()) {
+            throw new ChatRoomNotFoundException("No chat messages found for chat ID: " + chatId);
         }
+        chatMessages.forEach(chatMessageRepository::delete);
     }
+
 
     public String getChatRoomId(
         String senderId,
@@ -117,6 +126,7 @@ public class ChatMessageService {
         }
         return null;
     }
+
     public List<GroupMessageDTO> findGroupMessages(Long groupId) {
         List<GroupMessage> groupMessages = groupMessageRepository.findByGroupId(groupId);
         List<GroupMessageDTO> groupMessages2 = new ArrayList<GroupMessageDTO>();
