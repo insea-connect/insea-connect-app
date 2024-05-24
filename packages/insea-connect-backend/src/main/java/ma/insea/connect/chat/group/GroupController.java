@@ -67,9 +67,9 @@ public class GroupController {
         groupService.addAdmin(groupId, userId.get("userId"));
         return ResponseEntity.ok(null);    
     }
-    @DeleteMapping("/groups/{groupId}/admin")
-    public ResponseEntity<?> removeAdmin(@RequestBody Map<String, Long> userId, @PathVariable("groupId") Long groupId) {
-        groupService.removeAdmin(groupId, userId.get("userId"));
+    @DeleteMapping("/groups/{groupId}/admin/{userId}")
+    public ResponseEntity<?> removeAdmin(@PathVariable("groupId") Long groupId, @PathVariable("userId") Long userId) {
+        groupService.removeAdmin(groupId, userId);
         return ResponseEntity.ok(null);    
     }
     
