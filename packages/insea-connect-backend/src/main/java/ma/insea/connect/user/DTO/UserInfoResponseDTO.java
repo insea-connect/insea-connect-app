@@ -33,8 +33,8 @@ public class UserInfoResponseDTO {
                 .imagrUrl(user.getImageUrl())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .dateOfBirth(user.getDateOfBirth()) // Assuming this is stored as a String
-                .role(user.getRole())  // Assuming there's a getRole method, and it's directly compatible
+                .dateOfBirth(user.getDateOfBirth())
+                .role(user.getRole())
                 .build();
     }
 }

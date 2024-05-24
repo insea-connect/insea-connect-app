@@ -12,8 +12,8 @@ import ma.insea.connect.chat.common.chatMessage.repository.GroupMessageRepositor
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import ma.insea.connect.chat.group.Membership;
-import ma.insea.connect.chat.group.MembershipRepository;
+import ma.insea.connect.chat.group.model.Membership;
+import ma.insea.connect.chat.group.repository.MembershipRepository;
 import ma.insea.connect.user.model.User;
 import ma.insea.connect.user.repository.UserRepository;
 import ma.insea.connect.utils.Functions;

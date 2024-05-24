@@ -1,4 +1,4 @@
-package ma.insea.connect.exception;
+package ma.insea.connect.exceptions;
 
 // Add Exception Handling Status
 import org.springframework.http.HttpStatus;

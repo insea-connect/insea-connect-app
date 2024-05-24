@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import ma.insea.connect.chat.common.chatMessage.model.ChatMessage;
 import ma.insea.connect.chat.conversation.Conversation;
-import ma.insea.connect.chat.group.Group;
-import ma.insea.connect.chat.group.Membership;
+import ma.insea.connect.chat.group.model.Group;
+import ma.insea.connect.chat.group.model.Membership;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

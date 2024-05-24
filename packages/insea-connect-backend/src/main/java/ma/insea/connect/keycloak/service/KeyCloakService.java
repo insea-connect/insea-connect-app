@@ -4,7 +4,7 @@ package ma.insea.connect.keycloak.service;
 import lombok.AllArgsConstructor;
 import ma.insea.connect.keycloak.Credentials;
 import ma.insea.connect.keycloak.DTO.AddKeycloakDTO;
-import ma.insea.connect.keycloak.KeycloakConfig;
+import ma.insea.connect.config.keycloakApi.KeycloakConfig;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;

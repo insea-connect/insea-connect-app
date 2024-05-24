@@ -1,6 +1,8 @@
 package ma.insea.connect.keycloak.service;
 
 import ma.insea.connect.chatbot.service.ChatbotService;
+import ma.insea.connect.exceptions.keycloak.KeycloakCommunicationException;
+import ma.insea.connect.exceptions.keycloak.TokenRequestException;
 import ma.insea.connect.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -74,10 +76,10 @@ public class KeycloakApiService {
             return loginResponseDTO;
         }
         catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new ResponseStatusException(e.getStatusCode(), "Error requesting token from Keycloak: " + e.getMessage(), e);
+            throw new TokenRequestException("Error requesting token from Keycloak: " + e.getMessage(), e, e.getStatusCode());
         }
         catch (RestClientException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error: " + e.getMessage(), e);
+            throw new KeycloakCommunicationException("Unexpected error during communication with Keycloak: " + e.getMessage(), e);
         }
     }
 

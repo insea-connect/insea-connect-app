@@ -4,8 +4,9 @@ import lombok.RequiredArgsConstructor;
 import ma.insea.connect.chat.conversation.Conversation;
 import ma.insea.connect.chat.conversation.ConversationDTO;
 import ma.insea.connect.chat.conversation.ConversationService;
-import ma.insea.connect.chat.group.GroupDTO2;
-import ma.insea.connect.chat.group.GroupService;
+import ma.insea.connect.chat.group.DTO.GroupDTO2;
+import ma.insea.connect.chat.group.service.GroupService;
+import ma.insea.connect.exceptions.user.UserNotFoundException;
 import ma.insea.connect.keycloak.DTO.AddKeycloakDTO;
 import ma.insea.connect.keycloak.controller.KeyCloakController;
 import ma.insea.connect.keycloak.service.KeyCloakService;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -46,42 +48,15 @@ public class UserController {
 
     @MessageMapping("/users.addUser")
     @SendTo("/user/public")
-    public AddUserDTO addUser(@Payload AddUserDTO addUserDTO) {
-        User existingUser = userRepository.findByEmail(addUserDTO.getEmail());
-        if (existingUser == null) {
-
-            addUserDTO.setStatus(Status.ONLINE);
-            User user = AddUserDTO.mapToUser(addUserDTO);
-            userService.saveUser(user);
-            AddKeycloakDTO addKeycloakDTO = AddKeycloakDTO.mapToAddKeycloakDTO(addUserDTO);
-            keyCloakService.addUser(addKeycloakDTO);
-
-        } else {
-            existingUser.setStatus(Status.ONLINE);
-            AddKeycloakDTO addKeycloakDTO = AddKeycloakDTO.mapToAddKeycloakDTO(addUserDTO);
-            keyCloakService.addUser(addKeycloakDTO);
-            userService.saveUser(existingUser);
-        }
-        return addUserDTO;
+    public ResponseEntity<AddUserDTO> addUser(@Payload AddUserDTO addUserDTO) {
+        userService.addUser(addUserDTO);
+        return ResponseEntity.ok(addUserDTO);
     }
 
     @PostMapping("/user/addUser")
-    public AddKeycloakDTO addUser1(@RequestBody AddUserDTO addUserDTO) {
-        keyCloakController.addUser(AddKeycloakDTO.mapToAddKeycloakDTO(addUserDTO));
-
-        User existingUser = userRepository.findByEmail(addUserDTO.getEmail());
-        if (existingUser == null) {
-
-            addUserDTO.setStatus(Status.ONLINE);
-            User user = AddUserDTO.mapToUser(addUserDTO);
-            userService.saveUser(user);
-
-
-        } else {
-            existingUser.setStatus(Status.ONLINE);
-            userService.saveUser(existingUser);
-        }
-        return AddKeycloakDTO.mapToAddKeycloakDTO(addUserDTO);
+    public ResponseEntity<AddUserDTO> addUser1(@RequestBody AddUserDTO addUserDTO) {
+        userService.addUser(addUserDTO);
+        return ResponseEntity.ok(addUserDTO);
     }
 
 
@@ -106,15 +81,17 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(userRepository.findById(id).get());
+        User user = userService.findById(id);
+        return ResponseEntity.ok(user);
     }
     @GetMapping("/users/me")
-    public ResponseEntity<UserInfoResponseDTO> getUserById(@AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<UserInfoResponseDTO> getUserInfo(@AuthenticationPrincipal Jwt jwt) {
         if (jwt == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         String email = jwt.getClaimAsString("email");
-        UserInfoResponseDTO userInfoResponseDTO = UserInfoResponseDTO.mapToUserInfoDTO(userRepository.findByEmail(email)) ;
+        User user = userService.getUserInfo(email);
+        UserInfoResponseDTO userInfoResponseDTO = UserInfoResponseDTO.mapToUserInfoDTO(user);
         return ResponseEntity.ok(userInfoResponseDTO);
     }
 

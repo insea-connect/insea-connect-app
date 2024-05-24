@@ -35,7 +35,7 @@ public class ConversationService {
         User connectedUser = functions.getConnectedUser();
         String email=connectedUser.getEmail();
 
-        User user2=userRepository.findByEmail(email);
+        User user2=userRepository.findByEmail(email).get();
         System.out.println("useer" + user2);
         List<Conversation> conversations = conversationRepository.findAllByMember1OrMember2(user2,user2);
         
@@ -48,7 +48,7 @@ public class ConversationService {
             String member1=conversation.getMember1().getEmail();
             String member2=conversation.getMember2().getEmail();
             String recepientId=member1.equals(email)?member2:member1;
-            User user=userRepository.findByEmail(recepientId);
+            User user=userRepository.findByEmail(recepientId).get();
 
 
 

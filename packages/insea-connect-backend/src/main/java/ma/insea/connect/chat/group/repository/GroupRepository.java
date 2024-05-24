@@ -1,8 +1,9 @@
-package ma.insea.connect.chat.group;
+package ma.insea.connect.chat.group.repository;
 
 import java.util.List;
 import java.util.Optional;
 
+import ma.insea.connect.chat.group.model.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

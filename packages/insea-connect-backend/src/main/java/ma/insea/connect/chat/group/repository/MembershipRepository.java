@@ -1,11 +1,13 @@
-package ma.insea.connect.chat.group;
+package ma.insea.connect.chat.group.repository;
 import java.util.List;
 
+import ma.insea.connect.chat.group.model.Membership;
+import ma.insea.connect.chat.group.model.MembershipKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MembershipRepository  extends JpaRepository<Membership,MembershipKey> {
+public interface MembershipRepository  extends JpaRepository<Membership, MembershipKey> {
 
     List<Membership> findByUserId(Long myId);
 

@@ -33,19 +33,40 @@ public class AddUserDTO {
     private DegreePath degreePath;
 
     public static User mapToUser(AddUserDTO addUserDTO) {
-        return User.builder()
-                .email(addUserDTO.getEmail())
-                .username(addUserDTO.getUsername())
-                .imageUrl(addUserDTO.getImageUrl())
-                .firstName(addUserDTO.getFirstName())
-                .lastName(addUserDTO.getLastName())
-                .dateOfBirth(addUserDTO.getDateOfBirth())
-                .bio(addUserDTO.getBio())
-                .role(addUserDTO.getRole() != null ? addUserDTO.getRole() : Role.STUDENT)
-                .degreePath(addUserDTO.getDegreePath() != null ? addUserDTO.getDegreePath() : null)
-                .status(addUserDTO.getStatus())
-                .lastLogin(addUserDTO.getLastLogin())
-                .groups(addUserDTO.getGroups() != null ? addUserDTO.getGroups() : new ArrayList<>())
-                .build();
+        User user = new User();
+        user.setEmail(addUserDTO.getEmail());
+        user.setUsername(addUserDTO.getUsername());
+        user.setImageUrl(addUserDTO.getImageUrl());
+        user.setFirstName(addUserDTO.getFirstName());
+        user.setLastName(addUserDTO.getLastName());
+        user.setDateOfBirth(addUserDTO.getDateOfBirth());  // Assuming the date format is correctly handled elsewhere
+        user.setBio(addUserDTO.getBio());
+        user.setRole(addUserDTO.getRole() != null ? addUserDTO.getRole() : Role.STUDENT);
+        user.setStatus(addUserDTO.getStatus());
+        user.setLastLogin(addUserDTO.getLastLogin());
+        user.setGroups(addUserDTO.getGroups() != null ? new ArrayList<>(addUserDTO.getGroups()) : new ArrayList<>());
+        user.setDegreePath(addUserDTO.getDegreePath());
+
+        // Note: UserDetails-related properties and relationships are not directly set here as they require session/context-specific data.
+        return user;
+    }
+
+
+    public AddUserDTO toAddUserDTO() {
+        AddUserDTO addUserDTO = new AddUserDTO();
+        addUserDTO.setEmail(this.getEmail());
+        addUserDTO.setUsername(this.getUsername());
+        addUserDTO.setImageUrl(this.getImageUrl());
+        addUserDTO.setFirstName(this.getFirstName());
+        addUserDTO.setLastName(this.getLastName());
+        addUserDTO.setDateOfBirth(this.getDateOfBirth());  // Ensure format consistency
+        addUserDTO.setBio(this.getBio());
+        addUserDTO.setRole(this.getRole());
+        addUserDTO.setStatus(this.getStatus());
+        addUserDTO.setLastLogin(this.getLastLogin());
+        addUserDTO.setGroups(new ArrayList<>(this.getGroups()));  // Copy to prevent outside modifications
+        addUserDTO.setDegreePath(this.getDegreePath());
+        // Optionally handle other fields and complex mappings if needed
+        return addUserDTO;
     }
 }

@@ -1,11 +1,19 @@
-package ma.insea.connect.chat.group;
+package ma.insea.connect.chat.group.service;
 
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ma.insea.connect.exception.UnauthorizedException;
+import ma.insea.connect.chat.group.DTO.GroupDTO;
+import ma.insea.connect.chat.group.DTO.GroupDTO2;
+import ma.insea.connect.chat.group.DTO.GroupDTO3;
+import ma.insea.connect.chat.group.model.Group;
+import ma.insea.connect.chat.group.model.Membership;
+import ma.insea.connect.chat.group.model.MembershipKey;
+import ma.insea.connect.chat.group.repository.MembershipRepository;
+import ma.insea.connect.chat.group.repository.GroupRepository;
+import ma.insea.connect.exceptions.UnauthorizedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,4 +1,4 @@
-package ma.insea.connect.keycloak;
+package ma.insea.connect.config.keycloakApi;
 
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.OAuth2Constants;
