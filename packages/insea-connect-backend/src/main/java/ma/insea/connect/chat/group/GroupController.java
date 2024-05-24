@@ -29,13 +29,13 @@ public class GroupController {
     public GroupDTO addGroup(@RequestBody GroupDTO groupDTO) {
         return groupService.saveGroup(groupDTO);
     }
-    @DeleteMapping("/groups/{groupid}")
-    public ResponseEntity<String> deleteGroup(@PathVariable("groupid") Long groupId) {
+    @DeleteMapping("/groups/{groupId}")
+    public ResponseEntity<String> deleteGroup(@PathVariable("groupId") Long groupId) {
             return ResponseEntity.ok(groupService.deleteGroup(groupId));//cases for response ent
     }
 
-    @GetMapping("/groups/{groupid}")
-    public ResponseEntity<GroupDTO3> getGroupInfo(@PathVariable("groupid") Long groupId) {
+    @GetMapping("/groups/{groupId}")
+    public ResponseEntity<GroupDTO3> getGroupInfo(@PathVariable("groupId") Long groupId) {
             
             return ResponseEntity.ok(groupService.getGroup(groupId));//cases for response ent
     }
@@ -47,29 +47,29 @@ public class GroupController {
                 .ok(chatMessageService.findGroupMessages(groupId));
     }
 
-    @GetMapping("/groups/{groupid}/members")
-    public ResponseEntity<List<UserDTO3>> findGroupUsers(@PathVariable("groupid") Long groupId) {
+    @GetMapping("/groups/{groupId}/members")
+    public ResponseEntity<List<UserDTO3>> findGroupUsers(@PathVariable("groupId") Long groupId) {
         return ResponseEntity.ok(groupService.findUsers(groupId));
     }
     
-    @PostMapping("/groups/{groupid}/members")
-    public ResponseEntity<String> addGroupMembers(@PathVariable("groupid") Long groupId, @RequestBody Map<String, List<Long>>users) {
+    @PostMapping("/groups/{groupId}/members")
+    public ResponseEntity<String> addGroupMembers(@PathVariable("groupId") Long groupId, @RequestBody Map<String, List<Long>>users) {
         
         return ResponseEntity.ok(groupService.addGroupMembers(groupId, users.get("members")));
     }
 
-    @DeleteMapping("/groups/{groupid}/members/{memberid}")
-    public ResponseEntity<String> removeGroupMember(@PathVariable("groupid") Long groupId, @PathVariable("memberid") Long memberId) {
+    @DeleteMapping("/groups/{groupId}/members/{memberid}")
+    public ResponseEntity<String> removeGroupMember(@PathVariable("groupId") Long groupId, @PathVariable("memberid") Long memberId) {
         return ResponseEntity.ok(groupService.removeGroupMember(groupId, memberId));
     }
-    @PostMapping("/groups/{groupid}/admin")
-    public ResponseEntity<?> addAdmin(@RequestBody Map<String, Long> userId, @PathVariable("groupid") Long groupId) {
+    @PostMapping("/groups/{groupId}/admins")
+    public ResponseEntity<?> addAdmin(@RequestBody Map<String, Long> userId, @PathVariable("groupId") Long groupId) {
         groupService.addAdmin(groupId, userId.get("userId"));
         return ResponseEntity.ok(null);    
     }
-    @DeleteMapping("/groups/{groupid}/admin")
-    public ResponseEntity<?> removeAdmin(@RequestBody Map<String, Long> userId, @PathVariable("groupid") Long groupId) {
-        groupService.removeAdmin(groupId, userId.get("userId"));
+    @DeleteMapping("/groups/{groupId}/admins/{userId}")
+    public ResponseEntity<?> removeAdmin(@PathVariable("groupId") Long groupId, @PathVariable("userId") Long userId) {
+        groupService.removeAdmin(groupId, userId);
         return ResponseEntity.ok(null);    
     }
     
