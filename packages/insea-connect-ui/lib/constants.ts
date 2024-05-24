@@ -18,9 +18,13 @@ export const GROUP_MEMBERS = (groupId: number) =>
   `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/groups/${groupId}/members`;
 
 export const GROUP_ASSIGN_ADMIN = (groupId: number) =>
-  `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/groups/${groupId}/admin`;
+  `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/groups/${groupId}/admins`;
 
 export const GROUP_REMOVE_MEMBER = (groupId: number, userId: number) =>
   `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/groups/${groupId}/members/${userId}`;
+
+// TODO: make userId a number
+export const GROUP_REVOKE_ADMIN = (groupId: number, userId: string) =>
+  `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/groups/${groupId}/admins/${userId}`;
 
 export const BOT_NAME = "bot";

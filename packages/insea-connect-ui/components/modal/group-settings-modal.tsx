@@ -26,6 +26,7 @@ import {
   GROUP_ASSIGN_ADMIN,
   GROUP_MEMBERS,
   GROUP_REMOVE_MEMBER,
+  GROUP_REVOKE_ADMIN,
 } from "@/lib/constants";
 import { useState } from "react";
 import { buttonVariants } from "../ui/button";
@@ -97,13 +98,17 @@ const GroupSettingsModal = () => {
     },
   });
 
-  // TODO: Modify the revokeAdmin mutation to remove the user from the admin list
   const { mutate: revokeAdmin } = useMutation({
     mutationFn: async (userId: string) => {
-      await axios.delete(`${GROUP_ASSIGN_ADMIN(groupId)}`, {
+      await axios.delete(`${GROUP_REVOKE_ADMIN(groupId, userId)}`, {
         headers: {
           Authorization: `Bearer ${session?.tokens.access_token}`,
         },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["groups", "members"],
       });
     },
   });
