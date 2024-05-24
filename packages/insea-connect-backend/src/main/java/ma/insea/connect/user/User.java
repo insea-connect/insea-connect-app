@@ -56,6 +56,7 @@ public class User implements UserDetails
     private LocalDateTime updatedAt;
     
     private Status status;
+    @CreatedDate
     private Date lastLogin;
 
 
