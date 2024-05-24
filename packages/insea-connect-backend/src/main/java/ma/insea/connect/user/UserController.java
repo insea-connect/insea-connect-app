@@ -140,8 +140,8 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserStatus(userId));
     }
     @PutMapping("users/me/heartbeat")
-    public ResponseEntity<Void> updateUserHeartbeat() {
-        userService.updateUserLastSeen();
+    public ResponseEntity<Void> updateUserHeartbeat(@Payload Map<String,Status> status) {
+        userService.updateUserLastSeen(status.get("status"));
         return ResponseEntity.ok().build();
     }
 }
