@@ -4,6 +4,8 @@ export type ModalType =
   | "new-file"
   | "new-folder"
   | "new-group"
+  | "new-member"
+  | "group-settings"
   | "new-conversation";
 
 interface ModalStore {

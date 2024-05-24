@@ -25,8 +25,6 @@ const ConversationList = ({ search }: ConversationListProps) => {
       });
       return result;
     },
-    refetchIntervalInBackground: true,
-    refetchInterval: 10000,
   });
 
   if (isPending || isUserProfilePending) {

@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useQueryClient } from "@tanstack/react-query";
 import { Paperclip, SendHorizonal } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { throttle } from "lodash";
 
 interface MessageInputProps {
   isGroup: boolean;
@@ -23,6 +24,27 @@ const MessageInput = ({
   const { socket } = useSocket();
   const [content, setContent] = useState("");
   const queryClient = useQueryClient();
+
+  const throttledSendTypingEvent = useCallback(
+    throttle(() => {
+      console.log("sending typing event");
+      const destination = isGroup
+        ? `/app/group/Typing`
+        : `/app/conversation/typing`;
+      const body = !isGroup
+        ? {
+            recipientId,
+          }
+        : {
+            groupId,
+          };
+      socket?.publish({
+        destination,
+        body: JSON.stringify(body),
+      });
+    }, 2000),
+    [isGroup, recipientId, groupId]
+  );
 
   const onSendMessage = () => {
     const destination = isGroup ? `/app/sendgroupmessage` : `/app/sendmessage`;
@@ -66,7 +88,10 @@ const MessageInput = ({
         placeholder="Type a message..."
         className="flex-1 bg-background px-4 py-2 rounded-md"
         value={content}
-        onChange={(e) => setContent(e.target.value)}
+        onChange={(e) => {
+          setContent(e.target.value);
+          throttledSendTypingEvent();
+        }}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             onSendMessage();
