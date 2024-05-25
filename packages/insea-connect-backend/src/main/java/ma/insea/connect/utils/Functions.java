@@ -34,7 +34,7 @@ public class Functions {
         }
         
             // Get the filename and sanitize it
-            // String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
             // Create the upload directory if it doesn't exist
             Path uploadPath = Paths.get(UPLOAD_DIR);
@@ -43,15 +43,15 @@ public class Functions {
             }
 
             // Copy the file to the upload directory
-            // Path filePath = uploadPath.resolve(fileName);
-            // Files.copy(file.getInputStream(), filePath);
+             Path filePath = uploadPath.resolve(fileName);
+             Files.copy(file.getInputStream(), filePath);
 
             // Return the path of the saved file
-            return UPLOAD_DIR+"/"+file.getOriginalFilename();
+            return filePath.toString();
     }
 
     public boolean checkPermission(User user, DegreePath degreePath) {
-        if(user.getDegreePath().equals(degreePath)){
+        if(user.getDegreePath().getMajor().equals(degreePath.getMajor())){
             return true;
         }
         return false;
