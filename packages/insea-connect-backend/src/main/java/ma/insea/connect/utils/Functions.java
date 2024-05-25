@@ -28,14 +28,13 @@ public class Functions {
         return connectedUser;
     }
 
-    public String uploadFile(MultipartFile file) {
+    public String uploadFile(MultipartFile file)throws IOException{
         if (file.isEmpty()) {
             return "Please select a file to upload";
         }
         
-        try {
             // Get the filename and sanitize it
-            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            // String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
             // Create the upload directory if it doesn't exist
             Path uploadPath = Paths.get(UPLOAD_DIR);
@@ -44,14 +43,11 @@ public class Functions {
             }
 
             // Copy the file to the upload directory
-            Path filePath = uploadPath.resolve(fileName);
-            Files.copy(file.getInputStream(), filePath);
+            // Path filePath = uploadPath.resolve(fileName);
+            // Files.copy(file.getInputStream(), filePath);
 
             // Return the path of the saved file
-            return filePath.toString();
-        } catch (IOException e) {
-            return "Failed to upload file: " + e.getMessage();
-        }
+            return UPLOAD_DIR+"/"+file.getOriginalFilename();
     }
 
     public boolean checkPermission(User user, DegreePath degreePath) {
