@@ -35,10 +35,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         reconnectDelay: 5000,
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
-        brokerURL: `ws://localhost:8081/ws`,
-        connectHeaders: {
-          Authorization: `Bearer ${access_token}`,
-        },
+        brokerURL: `ws://localhost:8081/ws?token=${access_token}`,
       });
 
       stompClient.onConnect = () => {

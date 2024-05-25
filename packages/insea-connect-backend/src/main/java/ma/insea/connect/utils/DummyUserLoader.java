@@ -44,6 +44,17 @@ public class DummyUserLoader implements CommandLineRunner {
     }
 
     private void loadDummyUsers(UserRepository userRepository,GroupRepository groupRepository, MembershipRepository membershipRepository,GroupMessageRepository groupMessageRepository , ChatMessageRepository chatMessageRepository,ConversationRepository conversationRepository) {
+        AddUserDTO bot = AddUserDTO.builder()
+                .username("bot")
+                .email("bot@example.com")
+                .firstName("bot")
+                .lastName("bot")
+                .role(Role.ADMIN)
+                .password("admin")
+
+                .build();
+        userController.addUser1(bot);
+
         AddUserDTO user = AddUserDTO.builder()
 					.username("anas")
 					.email("anas@example.com")
@@ -118,16 +129,7 @@ public class DummyUserLoader implements CommandLineRunner {
 			System.out.println("here it is "+AddKeycloakDTO.mapToAddKeycloakDTO(user6).toString());
 			userController.addUser1(user6);
 
-            AddUserDTO bot = AddUserDTO.builder()
-					.username("bot")
-					.email("bot@example.com")
-					.firstName("bot")
-					.lastName("bot")
-					.role(Role.ADMIN)
-					.password("admin")
-					
-					.build();
-			userController.addUser1(bot);
+
 
 
 
@@ -162,6 +164,7 @@ public class DummyUserLoader implements CommandLineRunner {
             m1.setUser(anas);
             m1.setIsAdmin(true);
             m1.setJoiningDate(new java.sql.Date(System.currentTimeMillis()));
+
             Membership m2 = new Membership();
             m2.setId(new MembershipKey(soulayman.getId(),group.getId()));
             m2.setGroup(group);
@@ -171,7 +174,23 @@ public class DummyUserLoader implements CommandLineRunner {
             groupRepository.save(group);
             group.addMembership(m1);
             group.addMembership(m2);
+
+
+            Membership mBot = new Membership();
+            mBot.setId(new MembershipKey(the_bot.getId(),group.getId()));
+            mBot.setUser(the_bot);
+            mBot.setGroup(group);
+            mBot.setJoiningDate(new java.sql.Date(System.currentTimeMillis()));
+            mBot.setIsAdmin(true);
+            group.addMembership(mBot);
+
+
             groupRepository.save(group);
+
+
+
+
+
 
 
             Group group2 = new Group();
@@ -201,7 +220,21 @@ public class DummyUserLoader implements CommandLineRunner {
             group2.addMembership(m11);
             group2.addMembership(m22);
             group2.addMembership(m33);
+
+
+            Membership mBot2 = new Membership();
+            mBot2.setId(new MembershipKey(the_bot.getId(),group2.getId()));
+            mBot2.setUser(the_bot);
+            mBot2.setGroup(group2);
+            mBot2.setJoiningDate(new java.sql.Date(System.currentTimeMillis()));
+            mBot2.setIsAdmin(true);
+            group2.addMembership(mBot2);
+
+
             groupRepository.save(group2);
+
+
+
 
             GroupMessage groupMessage0=new GroupMessage();
             groupMessage0.setGroupId(group2.getId());

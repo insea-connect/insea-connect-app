@@ -1,4 +1,4 @@
-package ma.insea.connect.keycloak.controller;
+package ma.insea.connect.keycloak.DTO;
 
 import lombok.*;
 

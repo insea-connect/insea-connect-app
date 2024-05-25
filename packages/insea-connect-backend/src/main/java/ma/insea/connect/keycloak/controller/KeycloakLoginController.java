@@ -1,10 +1,12 @@
 package ma.insea.connect.keycloak.controller;
 
-import ma.insea.connect.keycloak.DTO.LoginRequestDTO;
+import lombok.extern.slf4j.Slf4j;
+import ma.insea.connect.chatbot.service.ChatbotService;
+import ma.insea.connect.keycloak.DTO.*;
+import ma.insea.connect.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,20 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
+
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-
-import java.util.Map;
-import java.util.logging.Logger;
 
 @RestController
+@Slf4j
 @RequestMapping("/api")
 public class KeycloakLoginController {
 
@@ -43,9 +39,15 @@ public class KeycloakLoginController {
     private String clientSecret;
 
     private final RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    ChatbotService chatbotService;
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+    //Map<String, Object>
+    public ResponseEntity<LoginResponseDTO > login(@RequestBody LoginRequestDTO loginRequestDTO) {
         String username = loginRequestDTO.getUsername();
         String password = loginRequestDTO.getPassword();
 
@@ -72,10 +74,13 @@ public class KeycloakLoginController {
             ResponseEntity<Map> response = restTemplate.exchange(
                     tokenUrl, HttpMethod.POST, requestEntity, Map.class);
 
-
-
+            LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
+            loginResponseDTO.extractTokenInfo(response.getBody().toString());
+            loginResponseDTO.setUser(LoginResponseUserDTO.mapToLoginUserResponseDTO(userService.findByUsername(username)));
             // Return the response containing the token
-            return ResponseEntity.ok(response.getBody());
+            loginResponseDTO.setThread_id( chatbotService.getThreadIdString());
+
+            return ResponseEntity.ok(loginResponseDTO);
         }
         catch (HttpClientErrorException | HttpServerErrorException e) {
             // Handle client and server errors specifically
