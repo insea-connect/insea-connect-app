@@ -34,6 +34,8 @@ public class DriveItemController {
     private ma.insea.connect.drive.service.FolderServiceImpl folderService;
     @Autowired
     private ma.insea.connect.drive.repository.DegreePathRepository degreePathRepository;
+    @Autowired
+    private ma.insea.connect.drive.repository.FileRepository fileRepository;
 
 
 
@@ -56,7 +58,7 @@ public class DriveItemController {
 
     @PreAuthorize("hasRole('CLASS_REP')")
     @PostMapping("/degreePaths/{degreePathCode}/upload")
-    public File handleFileUpload(@RequestParam("file") MultipartFile file,@PathVariable Long degreePathCode) {
+    public File handleFileUpload(@RequestParam("file") MultipartFile file,@PathVariable Long degreePathCode) throws Exception{
         User user=functions.getConnectedUser();
         DegreePath degreePath = degreePathRepository.findById(degreePathCode).get();
         if(!functions.checkPermission(user, degreePath)){
@@ -71,13 +73,16 @@ public class DriveItemController {
         fileObj.setMimeType(file.getContentType());
         fileObj.setCreatedAt(LocalDateTime.now());
         fileObj.setParent(null);
+        fileObj.setDegreePath(degreePath);
+        fileObj.setCreator(user);
+        fileRepository.save(fileObj);
 
         return fileObj;
 
     }
     @PreAuthorize("hasRole('CLASS_REP')")
     @PostMapping("/{folderId}/upload")
-    public File handleFileUploadOnFolder(@RequestParam("file") MultipartFile file, @PathVariable Long folderId) {
+    public File handleFileUploadOnFolder(@RequestParam("file") MultipartFile file, @PathVariable Long folderId) throws Exception{
 
         User user = functions.getConnectedUser();
         if(!functions.checkPermission(user, folderService.getFolderById(folderId).getDegreePath())){
