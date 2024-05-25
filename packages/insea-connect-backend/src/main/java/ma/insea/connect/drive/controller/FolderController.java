@@ -87,22 +87,4 @@ public class FolderController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{folderId}/upload")
-    public File handleFileUpload(@PathVariable Long folderId, @RequestParam("file") MultipartFile file) {
-        User user = functions.getConnectedUser();
-        if(!functions.checkPermission(user, folderService.getFolderById(folderId).getDegreePath())){
-            return null;
-        }
-        if (file.isEmpty()) {return null;}
-
-        File fileObj = new File();
-        fileObj.setFileUrl(functions.uploadFile(file));
-        fileObj.setName(file.getOriginalFilename());
-        fileObj.setSize(file.getSize());
-        fileObj.setMimeType(file.getContentType());
-        fileObj.setCreatedAt(LocalDateTime.now());
-        fileObj.setParent(folderService.getFolderById(folderId));
-
-        return fileObj;
-    }
 }
