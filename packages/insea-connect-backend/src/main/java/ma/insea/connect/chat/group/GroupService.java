@@ -111,12 +111,12 @@ public class GroupService {
         return groupMembersDTOs;
 
     }
-    public String addGroupMembers(Long groupId, List<Long> users) {
+    public Boolean addGroupMembers(Long groupId, List<Long> users) {
         User connectedUser = functions.getConnectedUser();
         Membership membership = membershipRepository.findByUserIdAndGroupId(connectedUser.getId(), groupId);
         
         if(membership == null || !membership.getIsAdmin()) {
-            return "You are not allowed to add members to this group";
+            return false;
         }else{
         for (Long user : users) {
             Membership m = new Membership();
@@ -127,20 +127,20 @@ public class GroupService {
             m.setJoiningDate(new java.util.Date(System.currentTimeMillis()));
             membershipRepository.save(m);
         }
-        return "Group members added successfully";
+        return true;
     }
         
     }
     @Transactional
-    public String removeGroupMember(Long groupId, Long memberId) {
+    public Boolean removeGroupMember(Long groupId, Long memberId) {
         User connectedUser = functions.getConnectedUser();
         Membership membership = membershipRepository.findByUserIdAndGroupId(connectedUser.getId(), groupId);
         
         if(membership == null || !membership.getIsAdmin()) {
-            return "You are not allowed to add members to this group";
+            return false;
         }else{
         membershipRepository.deleteByGroupIdAndUserId(groupId, memberId);
-        return "Group member removed successfully";}
+        return true;}
     }
     public GroupDTO3 getGroup(Long groupId) {
         Group group = groupRepository.findById(groupId).get();

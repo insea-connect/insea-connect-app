@@ -8,6 +8,7 @@ import ma.insea.connect.user.UserDTO3;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,13 +55,22 @@ public class GroupController {
     
     @PostMapping("/groups/{groupId}/members")
     public ResponseEntity<String> addGroupMembers(@PathVariable("groupId") Long groupId, @RequestBody Map<String, List<Long>>users) {
+        Boolean added=groupService.addGroupMembers(groupId, users.get("members"));
+        if(!added){
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);}
+        else{
+            return new ResponseEntity(HttpStatus.OK);}
+
         
-        return ResponseEntity.ok(groupService.addGroupMembers(groupId, users.get("members")));
     }
 
     @DeleteMapping("/groups/{groupId}/members/{memberid}")
     public ResponseEntity<String> removeGroupMember(@PathVariable("groupId") Long groupId, @PathVariable("memberid") Long memberId) {
-        return ResponseEntity.ok(groupService.removeGroupMember(groupId, memberId));
+        Boolean deleted=groupService.removeGroupMember(groupId, memberId);
+        if(!deleted){
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);}
+        else{
+            return new ResponseEntity(HttpStatus.OK);}
     }
     @PostMapping("/groups/{groupId}/admins")
     public ResponseEntity<?> addAdmin(@RequestBody Map<String, Long> userId, @PathVariable("groupId") Long groupId) {
