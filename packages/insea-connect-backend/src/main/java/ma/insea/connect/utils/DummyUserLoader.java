@@ -1,5 +1,6 @@
 package ma.insea.connect.utils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.boot.CommandLineRunner;
@@ -18,9 +19,16 @@ import ma.insea.connect.chat.group.GroupRepository;
 import ma.insea.connect.chat.group.Membership;
 import ma.insea.connect.chat.group.MembershipKey;
 import ma.insea.connect.chat.group.MembershipRepository;
+import ma.insea.connect.drive.dto.DriveUserDto;
+import ma.insea.connect.drive.dto.FolderDto;
 import ma.insea.connect.drive.model.DriveItem;
+import ma.insea.connect.drive.model.File;
+import ma.insea.connect.drive.model.Folder;
 import ma.insea.connect.drive.repository.DegreePathRepository;
+import ma.insea.connect.drive.repository.FileRepository;
+import ma.insea.connect.drive.repository.FolderRepository;
 import ma.insea.connect.drive.service.DriveItemService;
+import ma.insea.connect.drive.service.DriveItemServiceImpl;
 import ma.insea.connect.keycloak.DTO.AddKeycloakDTO;
 import ma.insea.connect.user.DegreePath;
 import ma.insea.connect.user.Role;
@@ -42,14 +50,16 @@ public class DummyUserLoader implements CommandLineRunner {
     private final ChatMessageRepository chatMessageRepository;
     private final ConversationRepository conversationRepository;
     private final DegreePathRepository degreePathRepository;
-    private final DriveItemService driveItemService;
+    private final DriveItemServiceImpl driveItemService;
+    private final FolderRepository folderRepository;
+    private final FileRepository fileRepository;
 
     @Override
     public void run(String... args) throws Exception {
-        loadDummyUsers(userRepository,groupRepository,membershipRepository, groupMessageRepository,chatMessageRepository,conversationRepository,degreePathRepository,driveItemService);
+        loadDummyUsers(userRepository,groupRepository,membershipRepository, groupMessageRepository,chatMessageRepository,conversationRepository,degreePathRepository,driveItemService,folderRepository,fileRepository);
     }
 
-    private void loadDummyUsers(UserRepository userRepository,GroupRepository groupRepository, MembershipRepository membershipRepository,GroupMessageRepository groupMessageRepository , ChatMessageRepository chatMessageRepository,ConversationRepository conversationRepository,DegreePathRepository degreePathRepository,DriveItemService driveItemService) {
+    private void loadDummyUsers(UserRepository userRepository,GroupRepository groupRepository, MembershipRepository membershipRepository,GroupMessageRepository groupMessageRepository , ChatMessageRepository chatMessageRepository,ConversationRepository conversationRepository,DegreePathRepository degreePathRepository,DriveItemServiceImpl driveItemService,FolderRepository folderRepository,FileRepository fileRepository) {
         AddUserDTO bot = AddUserDTO.builder()
                 .username("bot")
                 .email("bot@example.com")
@@ -396,16 +406,45 @@ public class DummyUserLoader implements CommandLineRunner {
             userRepository.save(soulayman);
             userRepository.save(anas);
             
-            //add folder S3 to 2nd year DSE students
-            DriveItem folder = new DriveItem();
-            folder.setName("S3");
-            folder.setDescription("folder for S3");
-            folder.setCreator(anas);
-            folder.setDegreePath(degreePath1);
-            folder.setParent(null);
-            // driveItemService.createDriveItem(degreePath1.getId(), folder);
-        
+        //add folder S3 to 2nd year DSE students
+        DegreePath degreePath = degreePathRepository.findByCycleAndMajorAndPathYear("ing","DSE",2).get();
+        Folder folder = new Folder();
+        folder.setName("Genie Logiciel");
+        folder.setCreatedAt(LocalDateTime.now());
+        folder.setDegreePath(degreePath);
+        folder.setDescription("genie logiciel cours et td");
+        folder.setParent(null);
+        folder.setCreator(anas);
+        folderRepository.save(folder);
+
+
+
+        Folder folder3 = new Folder();
+        folder3.setName("Frameworks de developpement web");
+        folder3.setCreatedAt(LocalDateTime.now());
+        folder3.setDegreePath(degreePath);
+        folder3.setDescription("frameworks de developpement web cours et td");
+        folder3.setParent(null);
+        folder3.setCreator(hamza);
+        folderRepository.save(folder3);
+
+        //add files to Framework folder
+
+        File fileObj = new File();
+        fileObj.setFileUrl("/uploads/Chapitre1.pdf");
+        fileObj.setName("cours_complet.pdf");
+        fileObj.setSize((long)134000);
+        fileObj.setMimeType("application/pdf");
+        fileObj.setCreatedAt(LocalDateTime.now());
+        fileObj.setParent(folder3);
+        fileRepository.save(fileObj);
+
+
+
+
     }
+
+
     public String getChatRoomId(String senderId,String recipientId,boolean createNewRoomIfNotExists)
          {
             var first = senderId.compareTo(recipientId) < 0 ? senderId : recipientId;
