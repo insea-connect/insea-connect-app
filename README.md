@@ -63,16 +63,16 @@ Work in progress
 
 #### Frontend
 
-- [ ] Build Chat feature UI
+- [x] Build Chat feature UI
 - [ ] Build Drive storage feature UI
-- [ ] Build Bot assistant feature UI
+- [x] Build Bot assistant feature UI
 
 #### Backend
 
-- [ ] Build chat feature
+- [x] Build chat feature
 - [ ] Build drive storage feature
-- [ ] Build bot assistant feature
-- [ ] Add support to authentication w/ Keycloak
+- [x] Build bot assistant feature
+- [x] Add support to authentication w/ Keycloak
 
 #### DevOps
 
@@ -96,7 +96,6 @@ We enthusiastically welcome contributions from the INSEA community to help enhan
 5. Open a Pull Request
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 ## Authors
 

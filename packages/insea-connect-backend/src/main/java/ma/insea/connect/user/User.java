@@ -50,12 +50,13 @@ public class User implements UserDetails
     @CreatedDate
     @Column(updatable = false,nullable = false)
     private LocalDateTime createdAt;
-
     @LastModifiedDate
     @Column(insertable = false)
     private LocalDateTime updatedAt;
-    
+
+
     private Status status;
+    @CreatedDate
     private Date lastLogin;
 
 
@@ -86,6 +87,7 @@ public class User implements UserDetails
     private List<Group> createdGroups;
 
     @ManyToOne
+    @JoinColumn(name = "degreePAth_id")
     private DegreePath degreePath;
 
 

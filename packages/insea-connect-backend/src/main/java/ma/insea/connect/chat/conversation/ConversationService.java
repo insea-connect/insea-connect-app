@@ -1,7 +1,10 @@
 package ma.insea.connect.chat.conversation;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Collections;
 
 import org.springframework.stereotype.Service;
 
@@ -60,6 +63,9 @@ public class ConversationService {
             
             conversationDTOs.add(conversationDTO);
         }
+        Collections.reverse(conversationDTOs);
+        conversationDTOs.sort(Comparator.comparing(
+        conversationDTO -> ((ConversationDTO) conversationDTO).getLastMessage() != null ? ((ConversationDTO) conversationDTO).getLastMessage().getTimestamp() : new Date(0)).reversed());
         return conversationDTOs;
     
 
@@ -138,6 +144,18 @@ public class ConversationService {
 
 
         
+    }
+
+    public Conversation createConversation(Long long1) {
+        User connectedUser = functions.getConnectedUser();
+        User user2=userRepository.findById(long1).get();
+        String chatId=chatMessageService.getChatRoomId(connectedUser.getId().toString(), user2.getId().toString(), true);
+        Conversation conversation = new Conversation();
+        conversation.setChatId(chatId);
+        conversation.setMember1(connectedUser);
+        conversation.setMember2(user2);
+        conversationRepository.save(conversation);
+        return conversation;
     }
     
 }

@@ -2,40 +2,34 @@ package ma.insea.connect.chat.common.chatMessage;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
 public class ChatController {
 
-    private final SimpMessagingTemplate messagingTemplate;
     private final ChatMessageService chatMessageService;
 
-    @MessageMapping("/chat.sendmessage")
-    public void processMessage(@Payload ChatMessageDTO chatMessage) {
-        ChatMessage savedMsg = chatMessageService.saveusermessage(chatMessage);
-
-        messagingTemplate.convertAndSendToUser(
-                Long.toString(chatMessage.getRecipientId()), "/queue/messages",
-                new ChatNotification(
-                        savedMsg.getId(),
-                        savedMsg.getSender().getEmail(),
-                        savedMsg.getRecipient().getEmail(),
-                        savedMsg.getContent()
-                )
-        );
+    @MessageMapping("/sendmessage")
+    public ChatMessage processMessage(@RequestBody ChatMessageDTO chatMessage) {
+        return chatMessageService.saveusermessage(chatMessage);
     }
-    @MessageMapping("/chat.sendgroupmessage")
-    @SendTo("/user/public")
-    public GroupMessage processGroupMessage(@Payload GroupMessageDTO groupMessage) {
-        GroupMessage groupMessage2=chatMessageService.savegroupmessage(groupMessage);
-        return groupMessage2;
+    @MessageMapping("/sendgroupmessage")
+    public GroupMessage processGroupMessage(@RequestBody GroupMessageDTO groupMessage) {
+        return chatMessageService.savegroupmessage(groupMessage);
+    }
+    @MessageMapping("/conversation/typing")
+    public ResponseEntity<TypingDTO> chatTyping(@RequestBody TypingDTO body) {
+        return ResponseEntity.ok(chatMessageService.chatTyping(body));
+    }
+    @MessageMapping("/group/Typing")
+    public ResponseEntity<GroupTypingDTO> grouptyping(@RequestBody GroupTypingDTO body) {
+        return ResponseEntity.ok(chatMessageService.groupTyping(body));
     }
 }

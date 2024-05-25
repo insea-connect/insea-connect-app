@@ -17,6 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/drive")
@@ -92,4 +95,9 @@ public class DriveItemController {
         fileObj.setParent(folder);
         return fileObj;
     }
+    @GetMapping("/degreePaths")
+    public List<DegreePath> getDegreePaths() {
+        return degreePathRepository.findAll();
+    }
+    
 }

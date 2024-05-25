@@ -109,7 +109,14 @@ def process_request():
     # Check if there is a response and extract the content
     if latest_message and latest_message.content:
         # Extract text from all text blocks in the message
-        text_blocks = [block.text.value for block in latest_message.content if hasattr(block, 'text') and block.text]
+        text_blocks = []
+        for block in latest_message.content:
+            if "text" in block.__dict__:
+                text_blocks.append(block.text.value)
+            else:
+                text_blocks.append(block.model_extra["text"]["value"])
+
+        # text_blocks = [block.text.value for block in latest_message.content if "text" in block.__dict__ else "hello"]
         response_text = " ".join(text_blocks) if text_blocks else "No valid response received."
     else:
         response_text = 'No valid response received.'

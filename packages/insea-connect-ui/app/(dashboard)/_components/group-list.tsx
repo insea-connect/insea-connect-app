@@ -28,16 +28,24 @@ const GroupList = ({ search }: GroupListProps) => {
     },
   });
 
-  if (isPending && isUserProfileLoading) {
+  if (isPending || isUserProfileLoading) {
     return <ChatListSkeleton />;
   }
+
+  let filteredGroups =
+    groups && search
+      ? groups.filter((group: any) =>
+          group.name.toLowerCase().includes(search.toLowerCase())
+        )
+      : groups;
 
   return (
     <ScrollArea className="h-full mt-2 pt-2">
       <div className="flex flex-col gap-2 px-4 h-full">
-        {groups?.map((group: any) => (
+        {filteredGroups?.map((group: any) => (
           <ChatItem
             key={group.id}
+            id={group.id}
             username={group.name}
             message={group?.lastMessage?.content}
             date={group?.lastMessage?.timestamp}

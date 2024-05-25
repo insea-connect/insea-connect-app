@@ -45,8 +45,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return {
           ...token,
           ...user,
-          // @ts-ignore
-          expiresInDate: Date.now() + user.expires_in,
         };
       }
 
@@ -56,7 +54,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.tokens = {
         access_token: token.access_token,
         refresh_token: token.refresh_token,
+        access_token_duration: token.access_token_duration,
+        access_token_expiration: token.access_token_expiration,
+        refresh_token_duration: token.access_token_duration,
+        refresh_token_expiration: token.access_token_expiration,
       };
+
+      session.thread_id = token.thread_id;
+      session.user_profile = token.user;
 
       return session;
     },

@@ -2,9 +2,9 @@ package ma.insea.connect.chat.common.chatMessage;
 
 import lombok.AllArgsConstructor;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import ma.insea.connect.chat.conversation.Conversation;
 import ma.insea.connect.chat.conversation.ConversationRepository;
 import ma.insea.connect.chat.group.Membership;
 import ma.insea.connect.chat.group.MembershipRepository;
@@ -12,7 +12,7 @@ import ma.insea.connect.user.User;
 import ma.insea.connect.user.UserRepository;
 import ma.insea.connect.utils.Functions;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +20,14 @@ import java.util.List;
 @AllArgsConstructor
 public class ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
-    private final ConversationRepository conversationRepository;
     private final UserRepository userRepository;
     private final GroupMessageRepository groupMessageRepository;
     private final Functions functions;
     private final MembershipRepository membershipRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public ChatMessage saveusermessage(ChatMessageDTO chatMessage) {
+
         ChatMessage chatMessage1 = new ChatMessage();
         var chatId = getChatRoomId(Long.toString(chatMessage.getSenderId()),Long.toString(chatMessage.getRecipientId()), true);
         chatMessage1.setChatId(chatId);
@@ -41,20 +42,36 @@ public class ChatMessageService {
 
         chatMessageRepository.save(chatMessage1);
 
-        Conversation conversation = new Conversation();
-        conversation.setChatId(chatId);
-        conversation.setMember1(chatMessage1.getSender());
-        conversation.setMember2(chatMessage1.getRecipient());
-        conversationRepository.save(conversation);
+        messagingTemplate.convertAndSendToUser(
+                chatId, "/queue/messages",
+                new ChatMessageDTO2(
+                        chatMessage1.getSender().getId(),
+                        chatMessage1.getContent(),
+                        new java.util.Date(System.currentTimeMillis()),
+                        chatMessage1.getSender().getUsername())
+        );
         return chatMessage1;
+
     }
     public GroupMessage savegroupmessage(GroupMessageDTO groupMessageDTO) {
         User sender = userRepository.findById(groupMessageDTO.getSenderId()).get();
         GroupMessage groupMessage = new GroupMessage();
         groupMessage.setSender(sender);
         groupMessage.setContent(groupMessageDTO.getContent());
+        groupMessage.setGroupId(groupMessageDTO.getGroupId());
         groupMessage.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
         groupMessageRepository.save(groupMessage);
+
+        messagingTemplate.convertAndSendToUser(
+            Long.toString(groupMessageDTO.getGroupId()), "/queue/messages",
+            new GroupMessageDTO(
+                    groupMessage.getSender().getId(),
+                    groupMessage.getContent(),
+                    groupMessage.getGroupId(),
+                    groupMessage.getSender().getUsername(),
+                    new Date(System.currentTimeMillis())
+            )
+        );
         return groupMessage;
     }
     public List<ChatMessage> findChatMessages(String senderId, String recipientId) {
@@ -103,6 +120,7 @@ public class ChatMessageService {
             groupMessageDTO.setTimestamp(groupMessage.getTimestamp());
             groupMessageDTO.setSenderId(groupMessage.getSender().getId());
             groupMessageDTO.setSenderName(groupMessage.getSender().getUsername());
+            groupMessageDTO.setGroupId(groupMessage.getGroupId());
             groupMessages2.add(groupMessageDTO);
         }
         User connectedUser = functions.getConnectedUser();
@@ -124,5 +142,20 @@ public class ChatMessageService {
             return groupMessageDTO;
         }
         return null;}
+    public TypingDTO chatTyping(TypingDTO body) {
+        String chatId = getChatRoomId(Long.toString(body.getSenderId()), Long.toString(body.getReceiverId()), true);
+        messagingTemplate.convertAndSendToUser(
+                chatId, "/queue/typing",
+                new TypingDTO(body.getSenderId(), body.getReceiverId())
+        );
+        return new TypingDTO(body.getSenderId(), body.getReceiverId());
+    }
+    public GroupTypingDTO groupTyping(GroupTypingDTO body) {
+        messagingTemplate.convertAndSendToUser(
+                Long.toString(body.getGroupId()), "/queue/typing",
+                new GroupTypingDTO(body.getSenderId(),body.getGroupId())
+        );
+        return new GroupTypingDTO(body.getSenderId(),body.getGroupId());
+    }
     
 }

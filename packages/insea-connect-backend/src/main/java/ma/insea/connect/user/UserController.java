@@ -1,7 +1,10 @@
 package ma.insea.connect.user;
 
 import lombok.RequiredArgsConstructor;
+import ma.insea.connect.chat.common.chatMessage.ChatMessageService;
+import ma.insea.connect.chat.conversation.Conversation;
 import ma.insea.connect.chat.conversation.ConversationDTO;
+import ma.insea.connect.chat.conversation.ConversationRepository;
 import ma.insea.connect.chat.conversation.ConversationService;
 import ma.insea.connect.chat.group.GroupDTO2;
 import ma.insea.connect.chat.group.GroupService;
@@ -10,17 +13,21 @@ import ma.insea.connect.keycloak.controller.KeyCloakController;
 import ma.insea.connect.keycloak.service.KeyCloakService;
 import ma.insea.connect.user.DTO.AddUserDTO;
 import ma.insea.connect.user.DTO.UserInfoResponseDTO;
+import ma.insea.connect.utils.Functions;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -34,6 +41,11 @@ public class UserController {
     private final UserRepository userRepository;
     private final ConversationService conversationService;
     private  final KeyCloakController keyCloakController;
+    private final Functions functions;
+    private final ChatMessageService chatMessageService;
+    private final ConversationRepository conversationRepository;
+
+
 
     @MessageMapping("/users.addUser")
     @SendTo("/user/public")
@@ -83,6 +95,7 @@ public class UserController {
         return user;
     }
 
+
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> findConnectedUsers() {
         return ResponseEntity.ok(userService.findAllUsers());
@@ -110,7 +123,29 @@ public class UserController {
 
     @GetMapping("/users/me/conversations")
     public ResponseEntity<List<ConversationDTO>> getUserConversations() {
-        List<ConversationDTO> conversations = conversationService.findConversationsByEmail();
-        return ResponseEntity.ok(conversations);
+        return ResponseEntity.ok(conversationService.findConversationsByEmail());
+    }
+
+    @PostMapping("/users/me/conversations")
+    public ResponseEntity<CreateConversationDTO> createConversation(@RequestBody Map<String,Long> body) {
+        User connectedUser = functions.getConnectedUser();
+        String chatId=chatMessageService.getChatRoomId(Long.toString(connectedUser.getId()),Long.toString(body.get("recipientId")),true);
+        if(conversationRepository.existsById(chatId))
+        {return ResponseEntity.ok(new CreateConversationDTO(chatId));
+        }
+        else{
+            conversationService.createConversation(body.get("recipientId"));
+            return ResponseEntity.created(null).build();
+        }
+
+    }
+    @GetMapping("users/{userId}/status")
+    public ResponseEntity<OnlineDTO> getUserStatus(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getUserStatus(userId));
+    }
+    @PutMapping("users/me/heartbeat")
+    public ResponseEntity<Void> updateUserHeartbeat(@Payload Map<String,Status> status) {
+        userService.updateUserLastSeen(status.get("status"));
+        return ResponseEntity.ok().build();
     }
 }

@@ -2,9 +2,14 @@ package ma.insea.connect.user;
 
 
 import lombok.AllArgsConstructor;
+import ma.insea.connect.utils.Functions;
 
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +18,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final Functions functions;
 
     public User saveUser(User user) {
         user.setStatus(Status.ONLINE);
@@ -38,4 +44,36 @@ public class UserService {
         }
         return userDTOs;
     }
+
+    public OnlineDTO getUserStatus(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null) {
+            return new OnlineDTO(user.getStatus(), user.getLastLogin());
+        }
+        return null;
+    }
+    public void updateUserLastSeen(Status status) {
+        User connectedUser = functions.getConnectedUser();
+        connectedUser.setLastLogin(new java.util.Date(System.currentTimeMillis()));
+        connectedUser.setStatus(status);
+        userRepository.save(connectedUser);
+    }
+
+    @Scheduled(fixedRate = 60000)
+    public void checkUserStatuses() {
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            LocalDateTime lastLogin = LocalDateTime.ofInstant(user.getLastLogin().toInstant(), ZoneId.systemDefault());
+            if (lastLogin.isBefore(lastLogin.now().minusMinutes(2))) { // Offline if no heartbeat for 2 minutes
+                user.setStatus(Status.OFFLINE);
+                userRepository.save(user);
+            }
+        }
+    }
+    public User findByUsername(String username){
+        User user = userRepository.findByUsername(username).orElse(null);
+        return user;
+
+    }
+
 }

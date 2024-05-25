@@ -3,7 +3,7 @@ import ChatItem from "./chat-item";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { CONVERSATIONS_ENDPOINT } from "@/lib/constants";
+import { BOT_NAME, CONVERSATIONS_ENDPOINT } from "@/lib/constants";
 import ChatListSkeleton from "./chat-list-skeleton";
 import useUserProfile from "@/hooks/use-user-profile";
 
@@ -27,16 +27,24 @@ const ConversationList = ({ search }: ConversationListProps) => {
     },
   });
 
-  if (isPending && isUserProfilePending) {
+  if (isPending || isUserProfilePending) {
     return <ChatListSkeleton />;
   }
+
+  let filteredConversations = conversations
+    ?.filter((conversation: any) =>
+      conversation.username.toLowerCase().includes(search?.toLowerCase())
+    )
+    .filter((conversation: any) => conversation.username !== BOT_NAME)
+    .filter((conversation: any) => conversation.lastMessage);
 
   return (
     <ScrollArea className="h-full mt-2 pt-2">
       <div className="flex flex-col gap-2 px-4 h-full">
-        {conversations?.map((conversation: any) => (
+        {filteredConversations?.map((conversation: any) => (
           <ChatItem
             key={conversation.chatId}
+            id={conversation.chatId}
             username={conversation.username}
             message={conversation?.lastMessage?.content}
             date={conversation?.lastMessage?.timestamp}

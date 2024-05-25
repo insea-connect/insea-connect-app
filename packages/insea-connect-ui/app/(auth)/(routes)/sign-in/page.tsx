@@ -99,6 +99,7 @@ const SignInPage = () => {
                     <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input
+                        autoComplete="off"
                         disabled={isSubmitting}
                         placeholder="Username"
                         {...field}
@@ -116,6 +117,7 @@ const SignInPage = () => {
                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <Input
+                        autoComplete="new-password"
                         disabled={isSubmitting}
                         placeholder="Password"
                         type="password"

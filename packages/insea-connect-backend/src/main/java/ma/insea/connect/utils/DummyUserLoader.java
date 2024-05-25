@@ -1,15 +1,12 @@
 package ma.insea.connect.utils;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import ma.insea.connect.chat.common.chatMessage.ChatMessage;
 import ma.insea.connect.chat.common.chatMessage.ChatMessageRepository;
 import ma.insea.connect.chat.common.chatMessage.GroupMessage;
@@ -21,13 +18,15 @@ import ma.insea.connect.chat.group.GroupRepository;
 import ma.insea.connect.chat.group.Membership;
 import ma.insea.connect.chat.group.MembershipKey;
 import ma.insea.connect.chat.group.MembershipRepository;
+import ma.insea.connect.drive.model.DriveItem;
+import ma.insea.connect.drive.repository.DegreePathRepository;
+import ma.insea.connect.drive.service.DriveItemService;
 import ma.insea.connect.keycloak.DTO.AddKeycloakDTO;
 import ma.insea.connect.user.DegreePath;
 import ma.insea.connect.user.Role;
 import ma.insea.connect.user.User;
 import ma.insea.connect.user.UserController;
 import ma.insea.connect.user.UserRepository;
-import ma.insea.connect.user.UserService;
 import ma.insea.connect.user.DTO.AddUserDTO;
 
 @Component
@@ -36,21 +35,32 @@ import ma.insea.connect.user.DTO.AddUserDTO;
 public class DummyUserLoader implements CommandLineRunner {
 
     private final UserController userController;
-    private final UserService userService;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final MembershipRepository membershipRepository;
     private final GroupMessageRepository groupMessageRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ConversationRepository conversationRepository;
-
+    private final DegreePathRepository degreePathRepository;
+    private final DriveItemService driveItemService;
 
     @Override
     public void run(String... args) throws Exception {
-        loadDummyUsers(userRepository,groupRepository,membershipRepository, groupMessageRepository,chatMessageRepository,conversationRepository);
+        loadDummyUsers(userRepository,groupRepository,membershipRepository, groupMessageRepository,chatMessageRepository,conversationRepository,degreePathRepository,driveItemService);
     }
 
-    private void loadDummyUsers(UserRepository userRepository,GroupRepository groupRepository, MembershipRepository membershipRepository,GroupMessageRepository groupMessageRepository , ChatMessageRepository chatMessageRepository,ConversationRepository conversationRepository) {
+    private void loadDummyUsers(UserRepository userRepository,GroupRepository groupRepository, MembershipRepository membershipRepository,GroupMessageRepository groupMessageRepository , ChatMessageRepository chatMessageRepository,ConversationRepository conversationRepository,DegreePathRepository degreePathRepository,DriveItemService driveItemService) {
+        AddUserDTO bot = AddUserDTO.builder()
+                .username("bot")
+                .email("bot@example.com")
+                .firstName("bot")
+                .lastName("bot")
+                .role(Role.ADMIN)
+                .password("admin")
+
+                .build();
+        userController.addUser1(bot);
+
         AddUserDTO user = AddUserDTO.builder()
 					.username("anas")
 					.email("anas@example.com")
@@ -62,7 +72,7 @@ public class DummyUserLoader implements CommandLineRunner {
 			System.out.println("here it is "+AddKeycloakDTO.mapToAddKeycloakDTO(user).toString());
 			userController.addUser1(user);
 
-
+        
 
 			AddUserDTO user2 = AddUserDTO.builder()
 					.username("soulayman")
@@ -127,14 +137,30 @@ public class DummyUserLoader implements CommandLineRunner {
 
 
 
+
+
             User anas =userRepository.findByUsername("anas").get();
             User hamza =userRepository.findByUsername("hamza").get();
             User soulayman =userRepository.findByUsername("soulayman").get();
             User mohammed =userRepository.findByUsername("mohammed").get();
             User ahmed =userRepository.findByUsername("ahmed").get();
             User saad =userRepository.findByUsername("saad").get();
+            User the_bot =userRepository.findByUsername("bot").get();
+            
+            
+            
 
 
+            List<User> users = List.of(anas,hamza,soulayman,mohammed,saad);
+            //initialize conversation with the bot
+            for(User u:users){
+                var chatId = getChatRoomId(Long.toString(u.getId()),Long.toString(the_bot.getId()), true);
+                Conversation conversation = new Conversation();
+                conversation.setChatId(chatId);
+                conversation.setMember1(u);
+                conversation.setMember2(the_bot);
+                conversationRepository.save(conversation);
+            }
 
             Group group = new Group();
             group.setName("1A dse");
@@ -148,6 +174,7 @@ public class DummyUserLoader implements CommandLineRunner {
             m1.setUser(anas);
             m1.setIsAdmin(true);
             m1.setJoiningDate(new java.sql.Date(System.currentTimeMillis()));
+
             Membership m2 = new Membership();
             m2.setId(new MembershipKey(soulayman.getId(),group.getId()));
             m2.setGroup(group);
@@ -157,7 +184,23 @@ public class DummyUserLoader implements CommandLineRunner {
             groupRepository.save(group);
             group.addMembership(m1);
             group.addMembership(m2);
+
+
+            Membership mBot = new Membership();
+            mBot.setId(new MembershipKey(the_bot.getId(),group.getId()));
+            mBot.setUser(the_bot);
+            mBot.setGroup(group);
+            mBot.setJoiningDate(new java.sql.Date(System.currentTimeMillis()));
+            mBot.setIsAdmin(true);
+            group.addMembership(mBot);
+
+
             groupRepository.save(group);
+
+
+
+
+
 
 
             Group group2 = new Group();
@@ -187,7 +230,21 @@ public class DummyUserLoader implements CommandLineRunner {
             group2.addMembership(m11);
             group2.addMembership(m22);
             group2.addMembership(m33);
+
+
+            Membership mBot2 = new Membership();
+            mBot2.setId(new MembershipKey(the_bot.getId(),group2.getId()));
+            mBot2.setUser(the_bot);
+            mBot2.setGroup(group2);
+            mBot2.setJoiningDate(new java.sql.Date(System.currentTimeMillis()));
+            mBot2.setIsAdmin(true);
+            group2.addMembership(mBot2);
+
+
             groupRepository.save(group2);
+
+
+
 
             GroupMessage groupMessage0=new GroupMessage();
             groupMessage0.setGroupId(group2.getId());
@@ -214,7 +271,7 @@ public class DummyUserLoader implements CommandLineRunner {
             GroupMessage groupMessage3=new GroupMessage();
             groupMessage3.setGroupId(group.getId());
             groupMessage3.setContent("this is a nce group");
-            groupMessage3.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
+            groupMessage3.setTimestamp(new java.sql.Date(System.currentTimeMillis()-1000000));
             groupMessage3.setSender(anas);
             groupMessageRepository.save(groupMessage3);
 
@@ -250,7 +307,7 @@ public class DummyUserLoader implements CommandLineRunner {
             chatMessage3.setSender(anas);
             chatMessage3.setRecipient(soulayman);
             chatMessage3.setContent("nice to meet you too soulayman");
-            chatMessage3.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
+            chatMessage3.setTimestamp(new java.sql.Date(System.currentTimeMillis()+1000000));
             chatMessageRepository.save(chatMessage3);
 
 
@@ -286,6 +343,63 @@ public class DummyUserLoader implements CommandLineRunner {
             chatMessage33.setContent("nice to meet you too ahmed");
             chatMessage33.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
             chatMessageRepository.save(chatMessage33);
+
+            var chatId4 = getChatRoomId(Long.toString(anas.getId()),Long.toString(saad.getId()), true);
+                Conversation conversation4 = new Conversation();
+                conversation4.setChatId(chatId4);
+                conversation4.setMember1(anas);
+                conversation4.setMember2(saad);
+                conversationRepository.save(conversation4);
+
+            //drives
+
+            //initialize DegreePaths
+            List<DegreePath> degreePaths = new ArrayList<>();
+            for(int i=1;i<=3;i++){
+                DegreePath degreePath1 = new DegreePath();
+                degreePath1.setCycle("ing");
+                degreePath1.setMajor("DSE");
+                degreePath1.setPathYear(i);
+                degreePaths.add(degreePath1);
+                DegreePath degreePath2 = new DegreePath();
+                degreePath2.setCycle("ing");
+                degreePath2.setMajor("DS");
+                degreePath2.setPathYear(i);
+                degreePaths.add(degreePath2);
+                DegreePath degreePath3 = new DegreePath();
+                degreePath3.setCycle("ing");
+                degreePath3.setMajor("RO");
+                degreePath3.setPathYear(i);
+                degreePaths.add(degreePath3);
+                DegreePath degreePath4 = new DegreePath();
+                degreePath4.setCycle("ing");
+                degreePath4.setMajor("AF");
+                degreePath4.setPathYear(i);
+                degreePaths.add(degreePath4);
+                DegreePath degreePath5 = new DegreePath();
+                degreePath5.setCycle("ing");
+                degreePath5.setMajor("SE");
+                degreePath5.setPathYear(i);
+                degreePaths.add(degreePath5);
+                DegreePath degreePath6 = new DegreePath();
+                degreePath6.setCycle("ing");
+                degreePath6.setMajor("SD");
+                degreePath6.setPathYear(i);
+                degreePaths.add(degreePath6);
+            }
+            degreePathRepository.saveAll(degreePaths);
+            DegreePath degreePath1 = degreePathRepository.findByCycleAndMajorAndPathYear("ing","DSE",2).get();
+            anas.setDegreePath(degreePath1);
+            userRepository.save(anas);
+            
+            //add folder S3 to 2nd year DSE students
+            DriveItem folder = new DriveItem();
+            folder.setName("S3");
+            folder.setDescription("folder for S3");
+            folder.setCreator(anas);
+            folder.setDegreePath(degreePath1);
+            folder.setParent(null);
+            driveItemService.createDriveItem(degreePath1.getId(), folder);
         
     }
     public String getChatRoomId(String senderId,String recipientId,boolean createNewRoomIfNotExists)
