@@ -33,10 +33,12 @@ const MessageInput = ({
         : `/app/conversation/typing`;
       const body = !isGroup
         ? {
-            recipientId,
+            receiverId: recipientId,
+            senderId,
           }
         : {
             groupId,
+            senderId,
           };
       socket?.publish({
         destination,
