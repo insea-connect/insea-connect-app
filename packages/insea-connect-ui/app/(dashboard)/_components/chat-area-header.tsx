@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { useModal } from "@/hooks/use-modal-store";
 import { getInitials } from "@/lib/utils";
 import { Info, Settings, UserPlus } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useSession } from "next-auth/react";
+import { useEffect, useRef, useState } from "react";
 
 interface ChatAreaHeaderProps {
   chatName: string;
@@ -15,8 +16,12 @@ interface ChatAreaHeaderProps {
 const ChatAreaHeader = ({ chatName, isGroup, chatId }: ChatAreaHeaderProps) => {
   const { onOpen } = useModal();
 
+  const { data } = useSession();
+
   const { socket, isConnected } = useSocket();
+  const [isTyping, setIsTyping] = useState(false);
   const subscriptionRef = useRef<any>(null);
+  const typingTimeoutRef = useRef<any>(null);
 
   useEffect(() => {
     if (!isConnected || !socket) return;
@@ -29,7 +34,19 @@ const ChatAreaHeader = ({ chatName, isGroup, chatId }: ChatAreaHeaderProps) => {
     subscriptionRef.current = socket?.subscribe(
       `/user/${chatId}/queue/typing`,
       (payload: any) => {
-        console.log("from socket body", JSON.parse(payload.body));
+        const { senderId } = JSON.parse(payload.body);
+
+        if (senderId !== data?.user_profile.id) {
+          setIsTyping(true);
+
+          if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+          }
+
+          typingTimeoutRef.current = setTimeout(() => {
+            setIsTyping(false);
+          }, 100);
+        }
       }
     );
 
@@ -47,7 +64,12 @@ const ChatAreaHeader = ({ chatName, isGroup, chatId }: ChatAreaHeaderProps) => {
             {getInitials(chatName ?? "Unknown User")}
           </AvatarFallback>
         </Avatar>
-        <span className="font-semibold">{chatName}</span>
+        <div className="flex flex-col">
+          <span className="font-semibold">{chatName}</span>
+          {isTyping && (
+            <span className="text-muted-foreground text-xs">typing...</span>
+          )}
+        </div>
       </div>
 
       {isGroup && (
