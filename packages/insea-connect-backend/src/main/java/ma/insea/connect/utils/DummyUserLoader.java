@@ -146,13 +146,7 @@ public class DummyUserLoader implements CommandLineRunner {
             User saad =userRepository.findByUsername("saad").get();
             User the_bot =userRepository.findByUsername("bot").get();
             
-            DegreePath degreePath=new DegreePath();
-            degreePath.setCycle("ingg");
-            degreePath.setMajor("DSE");
-            degreePath.setPathYear(1);
-            degreePathRepository.save(degreePath);
-            anas.setDegreePath(degreePath);
-            userRepository.save(anas);
+            
             
 
 
@@ -355,6 +349,47 @@ public class DummyUserLoader implements CommandLineRunner {
                 conversation4.setMember1(anas);
                 conversation4.setMember2(saad);
                 conversationRepository.save(conversation4);
+
+            //drives
+
+            //initialize DegreePaths
+            List<DegreePath> degreePaths = new ArrayList<>();
+            for(int i=1;i<=3;i++){
+                DegreePath degreePath1 = new DegreePath();
+                degreePath1.setCycle("ing");
+                degreePath1.setMajor("DSE");
+                degreePath1.setPathYear(i);
+                degreePaths.add(degreePath1);
+                DegreePath degreePath2 = new DegreePath();
+                degreePath2.setCycle("ing");
+                degreePath2.setMajor("DS");
+                degreePath2.setPathYear(i);
+                degreePaths.add(degreePath2);
+                DegreePath degreePath3 = new DegreePath();
+                degreePath3.setCycle("ing");
+                degreePath3.setMajor("RO");
+                degreePath3.setPathYear(i);
+                degreePaths.add(degreePath3);
+                DegreePath degreePath4 = new DegreePath();
+                degreePath4.setCycle("ing");
+                degreePath4.setMajor("AF");
+                degreePath4.setPathYear(i);
+                degreePaths.add(degreePath4);
+                DegreePath degreePath5 = new DegreePath();
+                degreePath5.setCycle("ing");
+                degreePath5.setMajor("SE");
+                degreePath5.setPathYear(i);
+                degreePaths.add(degreePath5);
+                DegreePath degreePath6 = new DegreePath();
+                degreePath6.setCycle("ing");
+                degreePath6.setMajor("SD");
+                degreePath6.setPathYear(i);
+                degreePaths.add(degreePath6);
+            }
+            degreePathRepository.saveAll(degreePaths);
+            DegreePath degreePath1 = degreePathRepository.findByCycleAndMajorAndPathYear("ing","DSE",2).get();
+            anas.setDegreePath(degreePath1);
+            userRepository.save(anas);
         
     }
     public String getChatRoomId(String senderId,String recipientId,boolean createNewRoomIfNotExists)
