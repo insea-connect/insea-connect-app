@@ -18,8 +18,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class DriveItemServiceImpl implements DriveItemService {
-    public DriveItemRepository driveItemRepository;
-    public DegreePathRepository degreePathRepository;
+    private final DriveItemRepository driveItemRepository;
+    private final DegreePathRepository degreePathRepository;
     private final Functions functions;
 
 
