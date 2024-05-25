@@ -49,7 +49,6 @@ public class DummyUserLoader implements CommandLineRunner {
     }
 
     private void loadDummyUsers(UserRepository userRepository,GroupRepository groupRepository, MembershipRepository membershipRepository,GroupMessageRepository groupMessageRepository , ChatMessageRepository chatMessageRepository,ConversationRepository conversationRepository,DegreePathRepository degreePathRepository) {
-    private void loadDummyUsers(UserRepository userRepository,GroupRepository groupRepository, MembershipRepository membershipRepository,GroupMessageRepository groupMessageRepository , ChatMessageRepository chatMessageRepository,ConversationRepository conversationRepository) {
         AddUserDTO bot = AddUserDTO.builder()
                 .username("bot")
                 .email("bot@example.com")
