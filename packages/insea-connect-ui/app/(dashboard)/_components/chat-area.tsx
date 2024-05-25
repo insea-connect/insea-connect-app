@@ -67,6 +67,7 @@ const ChatArea = async ({ chatId }: ChatAreaProps) => {
         chatId={theChatId}
         chatName={chatName}
         isGroup={isGroupChat}
+        otherUser={otherUser}
       />
       <ChatMessagesList
         chatId={theChatId}

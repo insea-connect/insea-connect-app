@@ -29,3 +29,8 @@ export const GROUP_REVOKE_ADMIN = (groupId: number, userId: string) =>
 
 export const NEW_ASSISTANT_MESSAGE_ENDPOINT = `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/chatbot/sendMessage/conversation`;
 export const BOT_NAME = "bot";
+
+export const USER_STATUS_ENDPOINT = (userId: string) =>
+  `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/users/${userId}/status`;
+
+export const HEARTBEAT_ENDPOINT = `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/users/me/heartbeat`;

@@ -64,7 +64,7 @@ public class UserService {
         List<User> users = userRepository.findAll();
         for (User user : users) {
             LocalDateTime lastLogin = LocalDateTime.ofInstant(user.getLastLogin().toInstant(), ZoneId.systemDefault());
-            if (lastLogin.isBefore(lastLogin.now().minusMinutes(2))) { // Offline if no heartbeat for 2 minutes
+            if (lastLogin.isBefore(lastLogin.now().minusSeconds(30))) { // Offline if no heartbeat for 2 minutes
                 user.setStatus(Status.OFFLINE);
                 userRepository.save(user);
             }

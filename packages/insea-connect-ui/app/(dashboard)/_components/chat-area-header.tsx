@@ -3,8 +3,11 @@ import { useSocket } from "@/components/provider/socket-provider";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useModal } from "@/hooks/use-modal-store";
+import { USER_STATUS_ENDPOINT } from "@/lib/constants";
 import { getInitials } from "@/lib/utils";
-import { Info, Settings, UserPlus } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { Dot, Info, Settings, UserPlus } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 
@@ -12,8 +15,14 @@ interface ChatAreaHeaderProps {
   chatName: string;
   chatId: string;
   isGroup?: boolean;
+  otherUser?: any;
 }
-const ChatAreaHeader = ({ chatName, isGroup, chatId }: ChatAreaHeaderProps) => {
+const ChatAreaHeader = ({
+  chatName,
+  isGroup,
+  chatId,
+  otherUser,
+}: ChatAreaHeaderProps) => {
   const { onOpen } = useModal();
 
   const { data } = useSession();
@@ -22,6 +31,26 @@ const ChatAreaHeader = ({ chatName, isGroup, chatId }: ChatAreaHeaderProps) => {
   const [isTyping, setIsTyping] = useState(false);
   const subscriptionRef = useRef<any>(null);
   const typingTimeoutRef = useRef<any>(null);
+
+  console.log("otherUser", otherUser);
+
+  const { data: otherMemberStatus } = useQuery({
+    queryKey: ["member-status"],
+    queryFn: async () => {
+      const { data: result } = await axios.get(
+        USER_STATUS_ENDPOINT(otherUser.id),
+        {
+          headers: {
+            Authorization: `Bearer ${data?.tokens.access_token}`,
+          },
+        }
+      );
+
+      return result;
+    },
+
+    refetchInterval: 1000 * 10,
+  });
 
   useEffect(() => {
     if (!isConnected || !socket) return;
@@ -45,7 +74,7 @@ const ChatAreaHeader = ({ chatName, isGroup, chatId }: ChatAreaHeaderProps) => {
 
           typingTimeoutRef.current = setTimeout(() => {
             setIsTyping(false);
-          }, 100);
+          }, 2500);
         }
       }
     );
@@ -65,9 +94,18 @@ const ChatAreaHeader = ({ chatName, isGroup, chatId }: ChatAreaHeaderProps) => {
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
-          <span className="font-semibold">{chatName}</span>
+          <span className="font-semibold flex gap-1 items-center">
+            <span>{chatName}</span>
+            {!isGroup && otherMemberStatus?.status === "ONLINE" && (
+              <span className="inline text-green-500 animate-pulse text-2xl">
+                •
+              </span>
+            )}
+          </span>
           {isTyping && (
-            <span className="text-muted-foreground text-xs">typing...</span>
+            <span className="text-muted-foreground text-xs">
+              {isGroup ? "someone" : ""} is typing...
+            </span>
           )}
         </div>
       </div>
