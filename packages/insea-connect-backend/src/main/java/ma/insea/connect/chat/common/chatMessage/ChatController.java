@@ -25,11 +25,11 @@ public class ChatController {
         return chatMessageService.savegroupmessage(groupMessage);
     }
     @MessageMapping("/conversation/typing")
-    public ResponseEntity<TypingDTO> chatTyping(@RequestBody Map<String,Long> body) {
-        return ResponseEntity.ok(chatMessageService.chatTyping(body.get("recipientId")));
+    public ResponseEntity<TypingDTO> chatTyping(@RequestBody TypingDTO body) {
+        return ResponseEntity.ok(chatMessageService.chatTyping(body));
     }
     @MessageMapping("/group/Typing")
-    public ResponseEntity<TypingDTO> grouptyping(@RequestBody Map<String,Long> body) {
-        return ResponseEntity.ok(chatMessageService.groupTyping(body.get("groupId")));
+    public ResponseEntity<GroupTypingDTO> grouptyping(@RequestBody GroupTypingDTO body) {
+        return ResponseEntity.ok(chatMessageService.groupTyping(body));
     }
 }

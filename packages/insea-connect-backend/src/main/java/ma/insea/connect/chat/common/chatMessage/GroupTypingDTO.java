@@ -1,5 +1,4 @@
 package ma.insea.connect.chat.common.chatMessage;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,8 +6,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TypingDTO {
+public class GroupTypingDTO {
     private Long senderId;
-    private Long receiverId;
+    private Long groupId;
 
 }
