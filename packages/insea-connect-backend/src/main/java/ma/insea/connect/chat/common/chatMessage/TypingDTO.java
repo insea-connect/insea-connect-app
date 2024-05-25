@@ -9,5 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TypingDTO {
     private Long senderId;
+    private Long receiverId;
 
 }

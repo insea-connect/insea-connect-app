@@ -27,4 +27,5 @@ export const GROUP_REMOVE_MEMBER = (groupId: number, userId: number) =>
 export const GROUP_REVOKE_ADMIN = (groupId: number, userId: string) =>
   `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/groups/${groupId}/admins/${userId}`;
 
+export const NEW_ASSISTANT_MESSAGE_ENDPOINT = `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/chatbot/sendMessage/conversation`;
 export const BOT_NAME = "bot";
