@@ -29,13 +29,14 @@ public class DriveItemServiceImpl implements DriveItemService {
     public DriveItem createDriveItem(Long degreePathCode, DriveItem driveItem) {
         User user = functions.getConnectedUser();
         DegreePath degreePath = degreePathRepository.findById(degreePathCode).get();
-        if(!user.getDegreePath().equals(degreePath)){
+        System.out.println("Filiere user : "+user.getDegreePath().toString());
+        System.out.println("Filiere driveItem : "+degreePath.toString());
+        if(!user.getDegreePath().getMajor().equals(degreePath.getMajor())){
             return null;
         }
         if(!degreePathRepository.existsById(degreePathCode)){
             return null;
         }
-        
         driveItem.setDegreePath(degreePath);
         return driveItemRepository.save(driveItem);
     }
