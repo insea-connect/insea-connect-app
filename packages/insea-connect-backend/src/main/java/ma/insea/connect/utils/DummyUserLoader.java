@@ -390,6 +390,10 @@ public class DummyUserLoader implements CommandLineRunner {
             degreePathRepository.saveAll(degreePaths);
             DegreePath degreePath1 = degreePathRepository.findByCycleAndMajorAndPathYear("ing","DSE",2).get();
             anas.setDegreePath(degreePath1);
+            soulayman.setDegreePath(degreePath1);
+            hamza.setDegreePath(degreePath1);
+            userRepository.save(hamza);
+            userRepository.save(soulayman);
             userRepository.save(anas);
             
             //add folder S3 to 2nd year DSE students
@@ -399,7 +403,7 @@ public class DummyUserLoader implements CommandLineRunner {
             folder.setCreator(anas);
             folder.setDegreePath(degreePath1);
             folder.setParent(null);
-            driveItemService.createDriveItem(degreePath1.getId(), folder);
+            // driveItemService.createDriveItem(degreePath1.getId(), folder);
         
     }
     public String getChatRoomId(String senderId,String recipientId,boolean createNewRoomIfNotExists)
