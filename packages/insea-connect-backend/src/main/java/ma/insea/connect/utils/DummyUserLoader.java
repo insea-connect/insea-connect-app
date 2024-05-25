@@ -20,6 +20,7 @@ import ma.insea.connect.chat.group.MembershipKey;
 import ma.insea.connect.chat.group.MembershipRepository;
 import ma.insea.connect.drive.model.DriveItem;
 import ma.insea.connect.drive.repository.DegreePathRepository;
+import ma.insea.connect.drive.service.DriveItemService;
 import ma.insea.connect.keycloak.DTO.AddKeycloakDTO;
 import ma.insea.connect.user.DegreePath;
 import ma.insea.connect.user.Role;
@@ -41,14 +42,14 @@ public class DummyUserLoader implements CommandLineRunner {
     private final ChatMessageRepository chatMessageRepository;
     private final ConversationRepository conversationRepository;
     private final DegreePathRepository degreePathRepository;
-
+    private final DriveItemService driveItemService;
 
     @Override
     public void run(String... args) throws Exception {
-        loadDummyUsers(userRepository,groupRepository,membershipRepository, groupMessageRepository,chatMessageRepository,conversationRepository,degreePathRepository);
+        loadDummyUsers(userRepository,groupRepository,membershipRepository, groupMessageRepository,chatMessageRepository,conversationRepository,degreePathRepository,driveItemService);
     }
 
-    private void loadDummyUsers(UserRepository userRepository,GroupRepository groupRepository, MembershipRepository membershipRepository,GroupMessageRepository groupMessageRepository , ChatMessageRepository chatMessageRepository,ConversationRepository conversationRepository,DegreePathRepository degreePathRepository) {
+    private void loadDummyUsers(UserRepository userRepository,GroupRepository groupRepository, MembershipRepository membershipRepository,GroupMessageRepository groupMessageRepository , ChatMessageRepository chatMessageRepository,ConversationRepository conversationRepository,DegreePathRepository degreePathRepository,DriveItemService driveItemService) {
         AddUserDTO bot = AddUserDTO.builder()
                 .username("bot")
                 .email("bot@example.com")
@@ -390,6 +391,15 @@ public class DummyUserLoader implements CommandLineRunner {
             DegreePath degreePath1 = degreePathRepository.findByCycleAndMajorAndPathYear("ing","DSE",2).get();
             anas.setDegreePath(degreePath1);
             userRepository.save(anas);
+            
+            //add folder S3 to 2nd year DSE students
+            DriveItem folder = new DriveItem();
+            folder.setName("S3");
+            folder.setDescription("folder for S3");
+            folder.setCreator(anas);
+            folder.setDegreePath(degreePath1);
+            folder.setParent(null);
+            driveItemService.createDriveItem(degreePath1.getId(), folder);
         
     }
     public String getChatRoomId(String senderId,String recipientId,boolean createNewRoomIfNotExists)

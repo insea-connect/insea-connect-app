@@ -6,6 +6,7 @@ import ma.insea.connect.drive.model.DriveItem;
 import ma.insea.connect.drive.model.File;
 import ma.insea.connect.drive.model.Folder;
 import ma.insea.connect.drive.service.DriveItemServiceImpl;
+import ma.insea.connect.user.DegreePath;
 import ma.insea.connect.utils.Functions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/drive")
@@ -26,6 +30,8 @@ public class DriveItemController {
     private DriveItemServiceImpl driveItemService;
     @Autowired
     private ma.insea.connect.drive.service.FolderServiceImpl folderService;
+    @Autowired
+    private ma.insea.connect.drive.repository.DegreePathRepository degreePathRepository;
 
 
 
@@ -73,6 +79,10 @@ public class DriveItemController {
         Folder folder = folderService.getFolderById(folderId);
         fileObj.setParent(folder);
         return fileObj;
-
     }
+    @GetMapping("/degreePaths")
+    public List<DegreePath> getDegreePaths() {
+        return degreePathRepository.findAll();
+    }
+    
 }
