@@ -77,27 +77,11 @@ public class DriveItemController {
     @PreAuthorize("hasRole('CLASS_REP')")
     @PostMapping("/degreePaths/{degreePathCode}/folder")
     public ResponseEntity<FolderDto> CreateDriveItem(@PathVariable Long degreePathCode, @RequestBody FolderDto folderDto) {
-
-        User user = functions.getConnectedUser();
-        DriveUserDto driveUserDto = new DriveUserDto();
-        Folder folder = new Folder();
-        folder.setName(folderDto.getName());
-        folder.setCreatedAt(LocalDateTime.now());
-        folder.setDegreePath(degreePathRepository.findById(degreePathCode).get());
-        folder.setDescription(folderDto.getDescription());
-        folder.setParent(null);
-        folder.setCreator(functions.getConnectedUser());
-
-        driveUserDto.setId(user.getId());
-        driveUserDto.setEmail(user.getEmail());
-        driveUserDto.setUsername(user.getUsername());
-
-        folderDto.setCreator(driveUserDto);
-
-        if (driveItemService.createDriveItem(degreePathCode, folder) == null) {
+        FolderDto folderDTO=driveItemService.createFolder(degreePathCode, folderDto);
+        if(folderDTO==null){
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(folderDto);
+        return ResponseEntity.ok(folderDTO);
     }
 
     @PreAuthorize("hasRole('CLASS_REP')")
