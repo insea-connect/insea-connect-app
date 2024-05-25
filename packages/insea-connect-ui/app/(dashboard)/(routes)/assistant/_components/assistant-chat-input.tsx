@@ -9,58 +9,39 @@ import { ArrowUp } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
-const AssistantChatInput = () => {
-  const queryClient = useQueryClient();
-  const [content, setContent] = useState("");
-  const { data } = useSession();
-  const { mutate: sendAssistantMessage, isPending: isSendingMessage } =
-    useMutation({
-      mutationKey: ["send-assistant-message"],
-      onMutate: async (message: string) => {
-        await axios.post(
-          NEW_ASSISTANT_MESSAGE_ENDPOINT,
-          {
-            senderId: data?.user_profile.id,
-            content: message,
-            recipientId: 1,
-            threadId: data?.thread_id,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${data?.tokens.access_token}`,
-            },
-          }
-        );
+interface AssistantChatInputProps {
+  isLoading: boolean;
+  onSend: (content: string) => void;
+  content: string;
+  setContent: (content: string) => void;
+}
 
-        queryClient.invalidateQueries({
-          queryKey: ["bot-messages"],
-        });
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: ["bot-messages"],
-        });
-      },
-    });
-
+const AssistantChatInput = ({
+  content,
+  isLoading,
+  onSend,
+  setContent,
+}: AssistantChatInputProps) => {
   return (
     <div className="py-8 relative">
       <Input
-        disabled={isSendingMessage}
+        disabled={isLoading}
         type="search"
         placeholder="Send a message..."
         className="w-full bg-background h-14 pl-4 pr-8"
+        value={content}
         onChange={(e) => setContent(e.target.value)}
         onKeyDown={(e) => {
+          if (content.trim() === "") return;
           if (e.key === "Enter") {
-            sendAssistantMessage(content);
             setContent("");
+            onSend(content);
           }
         }}
       />
 
       <Button
-        disabled={isSendingMessage}
+        disabled={isLoading}
         className="absolute right-4 bottom-1/2 translate-y-1/2 h-9 w-9 px-2"
       >
         <ArrowUp className="text-background" />

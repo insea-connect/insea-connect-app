@@ -10,7 +10,13 @@ import { AnimatePresence } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef } from "react";
 
-const AssistantChatMessages = () => {
+interface AssistantChatMessagesProps {
+  isWaitingResponse: boolean;
+}
+
+const AssistantChatMessages = ({
+  isWaitingResponse,
+}: AssistantChatMessagesProps) => {
   const { data } = useSession();
 
   const { data: messages, isPending: isMessagesPending } = useQuery({
@@ -52,6 +58,18 @@ const AssistantChatMessages = () => {
             message={message}
           />
         ))}
+        {isWaitingResponse && (
+          <ChatBubble
+            connectedUserId={data?.user_profile.id as number}
+            index={messages?.length}
+            message={{
+              senderName: "Bot",
+              content: "Crafting response...",
+              senderId: 1,
+              timestamp: new Date(),
+            }}
+          />
+        )}
       </AnimatePresence>
       <div ref={bottomRef}></div>
     </ScrollArea>
