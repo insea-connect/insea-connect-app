@@ -307,7 +307,7 @@ public class DummyUserLoader implements CommandLineRunner {
             chatMessage3.setSender(anas);
             chatMessage3.setRecipient(soulayman);
             chatMessage3.setContent("nice to meet you too soulayman");
-            chatMessage3.setTimestamp(new java.sql.Date(System.currentTimeMillis()+1000000));
+            chatMessage3.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
             chatMessageRepository.save(chatMessage3);
 
 
@@ -341,7 +341,7 @@ public class DummyUserLoader implements CommandLineRunner {
             chatMessage33.setSender(anas);
             chatMessage33.setRecipient(ahmed);
             chatMessage33.setContent("nice to meet you too ahmed");
-            chatMessage33.setTimestamp(new java.sql.Date(System.currentTimeMillis()));
+            chatMessage33.setTimestamp(new java.sql.Date(System.currentTimeMillis()-1000000));
             chatMessageRepository.save(chatMessage33);
 
             var chatId4 = getChatRoomId(Long.toString(anas.getId()),Long.toString(saad.getId()), true);
