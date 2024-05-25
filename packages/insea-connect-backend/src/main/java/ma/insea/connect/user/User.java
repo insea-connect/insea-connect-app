@@ -54,7 +54,7 @@ public class User implements UserDetails
     @Column(insertable = false)
     private LocalDateTime updatedAt;
 
-
+    @Enumerated(value = EnumType.STRING)
     private Status status;
     @CreatedDate
     private Date lastLogin;
