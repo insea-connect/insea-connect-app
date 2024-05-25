@@ -87,6 +87,7 @@ public class User implements UserDetails
     private List<Group> createdGroups;
 
     @ManyToOne
+    @JoinColumn(name = "degreePAth_id")
     private DegreePath degreePath;
 
 

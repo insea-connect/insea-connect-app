@@ -1,6 +1,7 @@
 package ma.insea.connect.user.DTO;
 
 import lombok.*;
+import ma.insea.connect.user.DegreePath;
 import ma.insea.connect.user.Role;
 import ma.insea.connect.user.User;
 
@@ -19,6 +20,7 @@ public class UserInfoResponseDTO {
     private String lastName;
     private String dateOfBirth;
     private Role role = Role.STUDENT;
+    private DegreePath degreePath;
 
 
     public static UserInfoResponseDTO mapToUserInfoDTO(User user) {
@@ -35,6 +37,7 @@ public class UserInfoResponseDTO {
                 .lastName(user.getLastName())
                 .dateOfBirth(user.getDateOfBirth()) // Assuming this is stored as a String
                 .role(user.getRole())  // Assuming there's a getRole method, and it's directly compatible
+                .degreePath(user.getDegreePath())
                 .build();
     }
 }

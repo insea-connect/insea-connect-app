@@ -1,5 +1,6 @@
 package ma.insea.connect.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -17,7 +18,10 @@ import ma.insea.connect.chat.group.GroupRepository;
 import ma.insea.connect.chat.group.Membership;
 import ma.insea.connect.chat.group.MembershipKey;
 import ma.insea.connect.chat.group.MembershipRepository;
+import ma.insea.connect.drive.model.DriveItem;
+import ma.insea.connect.drive.repository.DegreePathRepository;
 import ma.insea.connect.keycloak.DTO.AddKeycloakDTO;
+import ma.insea.connect.user.DegreePath;
 import ma.insea.connect.user.Role;
 import ma.insea.connect.user.User;
 import ma.insea.connect.user.UserController;
@@ -36,13 +40,15 @@ public class DummyUserLoader implements CommandLineRunner {
     private final GroupMessageRepository groupMessageRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ConversationRepository conversationRepository;
+    private final DegreePathRepository degreePathRepository;
 
 
     @Override
     public void run(String... args) throws Exception {
-        loadDummyUsers(userRepository,groupRepository,membershipRepository, groupMessageRepository,chatMessageRepository,conversationRepository);
+        loadDummyUsers(userRepository,groupRepository,membershipRepository, groupMessageRepository,chatMessageRepository,conversationRepository,degreePathRepository);
     }
 
+    private void loadDummyUsers(UserRepository userRepository,GroupRepository groupRepository, MembershipRepository membershipRepository,GroupMessageRepository groupMessageRepository , ChatMessageRepository chatMessageRepository,ConversationRepository conversationRepository,DegreePathRepository degreePathRepository) {
     private void loadDummyUsers(UserRepository userRepository,GroupRepository groupRepository, MembershipRepository membershipRepository,GroupMessageRepository groupMessageRepository , ChatMessageRepository chatMessageRepository,ConversationRepository conversationRepository) {
         AddUserDTO bot = AddUserDTO.builder()
                 .username("bot")
@@ -66,7 +72,7 @@ public class DummyUserLoader implements CommandLineRunner {
 			System.out.println("here it is "+AddKeycloakDTO.mapToAddKeycloakDTO(user).toString());
 			userController.addUser1(user);
 
-
+        
 
 			AddUserDTO user2 = AddUserDTO.builder()
 					.username("soulayman")
@@ -140,6 +146,16 @@ public class DummyUserLoader implements CommandLineRunner {
             User ahmed =userRepository.findByUsername("ahmed").get();
             User saad =userRepository.findByUsername("saad").get();
             User the_bot =userRepository.findByUsername("bot").get();
+            
+            DegreePath degreePath=new DegreePath();
+            degreePath.setCycle("ingg");
+            degreePath.setMajor("DSE");
+            degreePath.setPathYear(1);
+            degreePathRepository.save(degreePath);
+            anas.setDegreePath(degreePath);
+            userRepository.save(anas);
+            
+
 
             List<User> users = List.of(anas,hamza,soulayman,mohammed,saad);
             //initialize conversation with the bot
