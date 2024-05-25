@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import ma.insea.connect.utils.Functions;
 
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -69,4 +70,10 @@ public class UserService {
             }
         }
     }
+    public User findByUsername(String username){
+        User user = userRepository.findByUsername(username).orElse(null);
+        return user;
+
+    }
+
 }

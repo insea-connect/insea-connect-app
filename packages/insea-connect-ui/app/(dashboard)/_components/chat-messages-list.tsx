@@ -64,7 +64,7 @@ const ChatMessagesList = ({
 
   useSocketChat({ chatId });
 
-  if (isMessagesPending && isUserProfilePending)
+  if (isMessagesPending || isUserProfilePending)
     return <ChatMessagesListSkeleton />;
 
   return (

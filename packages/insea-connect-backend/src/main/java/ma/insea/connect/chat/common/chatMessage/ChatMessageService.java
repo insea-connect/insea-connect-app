@@ -142,20 +142,20 @@ public class ChatMessageService {
             return groupMessageDTO;
         }
         return null;}
-    public TypingDTO chatTyping(Long recipientId) {
-        String chatId = getChatRoomId(Long.toString(functions.getConnectedUser().getId()), Long.toString(recipientId), true);
+    public TypingDTO chatTyping(TypingDTO body) {
+        String chatId = getChatRoomId(Long.toString(body.getSenderId()), Long.toString(body.getReceiverId()), true);
         messagingTemplate.convertAndSendToUser(
                 chatId, "/queue/typing",
-                new TypingDTO(functions.getConnectedUser().getId())
+                new TypingDTO(body.getSenderId(), body.getReceiverId())
         );
-        return new TypingDTO(recipientId);
+        return new TypingDTO(body.getSenderId(), body.getReceiverId());
     }
-    public TypingDTO groupTyping(Long long1) {
+    public GroupTypingDTO groupTyping(GroupTypingDTO body) {
         messagingTemplate.convertAndSendToUser(
-                Long.toString(long1), "/queue/typing",
-                new TypingDTO(functions.getConnectedUser().getId())
+                Long.toString(body.getGroupId()), "/queue/typing",
+                new GroupTypingDTO(body.getSenderId(),body.getGroupId())
         );
-        return new TypingDTO(long1);
+        return new GroupTypingDTO(body.getSenderId(),body.getGroupId());
     }
     
 }

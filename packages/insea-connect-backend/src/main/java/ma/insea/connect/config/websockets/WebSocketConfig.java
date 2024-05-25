@@ -1,6 +1,7 @@
-package ma.insea.connect.config;
+package ma.insea.connect.config.websockets;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ma.insea.connect.config.websockets.TokenExtractorInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.DefaultContentTypeResolver;
@@ -31,8 +32,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").setAllowedOrigins(allowedserver);
-    }
+        registry.addEndpoint("/ws").setAllowedOrigins(allowedserver).addInterceptors(new TokenExtractorInterceptor());
+               // .withSockJS();
+         }
 
     @Override
     public boolean configureMessageConverters(List<MessageConverter> messageConverters) {
