@@ -89,7 +89,7 @@ const SignInPage = () => {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4 w-full"
+              className="flex flex-col gap-4 w-full"
             >
               <FormField
                 control={form.control}
@@ -129,7 +129,7 @@ const SignInPage = () => {
                 )}
               ></FormField>
               <Button
-                className="w-full"
+                className="mt-4 w-full"
                 type="submit"
                 disabled={!isValid || isSubmitting}
               >
