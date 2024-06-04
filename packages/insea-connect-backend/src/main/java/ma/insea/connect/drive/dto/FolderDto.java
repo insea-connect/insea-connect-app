@@ -7,4 +7,5 @@ public class FolderDto {
     private String name;
     private String description;
     private DriveUserDto creator;
+    private FolderDto parent;
 }

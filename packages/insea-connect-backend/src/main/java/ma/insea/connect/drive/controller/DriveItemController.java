@@ -167,6 +167,9 @@ public class DriveItemController {
         fileObj.setCreatedAt(LocalDateTime.now());
         Folder folder = folderService.getFolderById(folderId);
         fileObj.setParent(folder);
+
+        fileRepository.save(fileObj);
+
         return fileObj;
     }
     @GetMapping("/degreePaths")

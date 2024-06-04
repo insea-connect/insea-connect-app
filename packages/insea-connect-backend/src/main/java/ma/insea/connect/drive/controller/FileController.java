@@ -46,7 +46,7 @@ public class FileController {
     @DeleteMapping("/{fileId}")
     public ResponseEntity<File> deleteFile(@PathVariable Long fileId) {
         User user = functions.getConnectedUser();
-        if(!functions.checkPermission(user, fileRepository.getReferenceById(fileId).getDegreePath())){
+        if(!functions.checkPermission(user, fileService.getFileById(fileId).getDegreePath()))  {
             return ResponseEntity.notFound().build();
         }
         if (!fileService.deleteFile(fileId)) {
@@ -54,5 +54,4 @@ public class FileController {
         }
         return ResponseEntity.noContent().build();
     }
-
 }
