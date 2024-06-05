@@ -3,15 +3,25 @@ from flask import Flask, request, jsonify
 import time
 from datetime import datetime, timedelta
 from openai import OpenAI
+from flask_cors import CORS
 import threading
+import os
+from dotenv import load_dotenv
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-client = OpenAI(api_key="api_key")
-ASSISTANT_ID = "assistant"
+CORS(app)  
+
+API_KEY  = os.getenv('API_KEY', 'default_key')
+logger.info("api key "+ API_KEY)
+ASSISTANT_ID  = os.getenv('ASSISTANT_ID', 'default_key')
+
+
+client = OpenAI(api_key=API_KEY)
+
 
 # Storage for conversation threads, each with an expiration time
 conversations = {}
@@ -32,6 +42,8 @@ threading.Thread(target=cleanup_expired_conversations, daemon=True).start()
 
 @app.route('/start_conversation', methods=['POST'])
 def start_conversation():
+    logger.info("api key "+ API_KEY)
+
     # Create a conversation thread with an initial empty user message
     thread = client.beta.threads.create(
         messages=[
@@ -126,4 +138,4 @@ def process_request():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True ,host='0.0.0.0', port=5001)
