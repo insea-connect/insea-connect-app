@@ -35,6 +35,19 @@ services:
     networks:
       - backend
 
+  flask-app:
+    build:
+      context: ../insea-connect-chatbot
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    volumes:
+      - ../insea-connect-chatbot:/app
+    networks:
+      - backend
+    depends_on:
+      - postgres
+
 networks:
   backend:
     driver: bridge
