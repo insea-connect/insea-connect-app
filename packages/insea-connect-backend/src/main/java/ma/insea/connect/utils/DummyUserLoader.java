@@ -432,11 +432,13 @@ public class DummyUserLoader implements CommandLineRunner {
 
         File fileObj = new File();
         fileObj.setFileUrl("/uploads/Chapitre1.pdf");
-        fileObj.setName("cours_complet.pdf");
+        fileObj.setName("cours complet");
         fileObj.setSize((long)134000);
         fileObj.setMimeType("application/pdf");
         fileObj.setCreatedAt(LocalDateTime.now());
+        fileObj.setFileUrl("uploads/cours_complet.pdf");
         fileObj.setParent(folder3);
+        fileObj.setCreator(hamza);
         fileRepository.save(fileObj);
 
 
