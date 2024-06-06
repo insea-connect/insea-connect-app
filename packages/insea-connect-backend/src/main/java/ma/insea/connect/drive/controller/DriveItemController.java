@@ -71,6 +71,11 @@ public class DriveItemController {
             driveItemDto.setParent(null);
 
             if(driveItem instanceof Folder) {driveItemDto.setFolder(true);}
+            if(driveItem instanceof File) {
+                driveItemDto.setFolder(false);
+                driveItemDto.setSize(((File) driveItem).getSize());
+                driveItemDto.setMimeType(((File) driveItem).getMimeType());
+                driveItemDto.setItemUrl(((File) driveItem).getFileUrl());}
             driveItemDtos.add(driveItemDto);
         }
         return ResponseEntity.ok(driveItemDtos);
