@@ -35,6 +35,7 @@ public class Functions {
         
             // Get the filename and sanitize it
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            fileName = "A"+System.currentTimeMillis()+fileName;
 
             // Create the upload directory if it doesn't exist
             Path uploadPath = Paths.get(UPLOAD_DIR);
