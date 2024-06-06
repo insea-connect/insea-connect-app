@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import ma.insea.connect.user.DegreePath;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -16,10 +18,12 @@ import lombok.RequiredArgsConstructor;
 import ma.insea.connect.user.User;
 import ma.insea.connect.user.UserRepository;
 
+
 @Component
 @RequiredArgsConstructor
 public class Functions {
-    private static final String UPLOAD_DIR = "packages\\insea-connect-backend\\src\\main\\resources\\static\\uploads";
+    @Value("${UPLOAD_DIR}")
+    private String UPLOAD_DIR;
 
     private final UserRepository userRepository;
     public User getConnectedUser() {
