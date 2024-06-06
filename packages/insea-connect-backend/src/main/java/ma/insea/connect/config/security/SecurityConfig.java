@@ -47,6 +47,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/api/refreshToken").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/ws/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/user/*").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/user.addUser").hasRole("ADMIN")
                                 .anyRequest().authenticated()

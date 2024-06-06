@@ -17,3 +17,4 @@ spring.security.oauth2.resourceserver.jwt.issuer-uri=http://localhost:8088/realm
 allowedserver = http://localhost:3000
 spring.servlet.multipart.max-file-size=50MB
 spring.servlet.multipart.max-request-size=50MB
+UPLOAD_DIR = src\\main\\resources\\static\\uploads
