@@ -21,10 +21,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Service
 public class ChatbotService {
+
+    private String cleanResponseMessage(String message) {
+        String regex = "【\\d+:\\d+†source】";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(message);
+        log.info("Formatted text without crosses "+matcher.replaceAll("") );
+        return matcher.replaceAll("");
+    }
     @Autowired
     ChatMessageService chatMessageService;
     @Value("${chatbotServer}")
@@ -44,7 +54,7 @@ public class ChatbotService {
             ChatMessageDTO botResponse = new ChatMessageDTO();
             botResponse.setRecipientId(chatbotMessageRequestDTO.getSenderId());
             botResponse.setSenderId(chatbotMessageRequestDTO.getRecipientId());
-            botResponse.setContent(responseContent);
+            botResponse.setContent(cleanResponseMessage(responseContent));
             botResponse.setTimestamp(date);
             chatMessageService.saveusermessage(userRequest);
             chatMessageService.saveusermessage(botResponse);

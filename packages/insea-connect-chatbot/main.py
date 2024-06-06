@@ -175,7 +175,7 @@ def process_request_stream():
         conversation['expires_at'] = datetime.now() + timedelta(minutes=15)
 
     # Wait for the run to complete or time out
-    timeout_seconds = 5 * 60  # 5 minutes timeout
+    timeout_seconds = 300 * 60  # 5 minutes timeout
     start_time = time.time()
 
     while run.status != "completed":
