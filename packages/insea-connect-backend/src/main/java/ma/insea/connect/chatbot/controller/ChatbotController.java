@@ -1,6 +1,7 @@
 package ma.insea.connect.chatbot.controller;
 
 
+import lombok.extern.slf4j.Slf4j;
 import ma.insea.connect.chatbot.DTO.groupDTO.ChatbotGroupMessageRequestDTO;
 import ma.insea.connect.chatbot.DTO.groupDTO.ChatbotGroupMessageResponseDTO;
 import ma.insea.connect.chatbot.service.ChatbotService;
@@ -20,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
+@Slf4j
 @RestController
 @RequestMapping("api/v1/chatbot")
 public class ChatbotController {
@@ -35,6 +37,7 @@ public class ChatbotController {
         String regex = "【\\d+:\\d+†source】";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(message);
+        log.info("Formatted text without crosses "+matcher.replaceAll("") );
         return matcher.replaceAll("");
     }
 
@@ -71,6 +74,9 @@ public class ChatbotController {
     public ResponseEntity<ChatbotMessageResponseDTO> sendToBotConversation(@RequestBody ChatbotMessageRequestDTO requestDTO) {
         try {
             ChatbotMessageResponseDTO chatbotMessageResponseDTO= chatbotService.sendToBotConversation(requestDTO);
+            chatbotMessageResponseDTO.setMessage(cleanResponseMessage(chatbotMessageResponseDTO.getMessage()));
+            log.info("the formated text included in the message body "+ chatbotMessageResponseDTO.getMessage());
+            log.info("the text it should have is  "+cleanResponseMessage(chatbotMessageResponseDTO.getMessage()));
             return ResponseEntity.ok(chatbotMessageResponseDTO);
         }
 
