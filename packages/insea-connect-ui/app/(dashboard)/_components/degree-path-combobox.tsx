@@ -14,12 +14,128 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { USER_INFO_ENDPOINT } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+
+const theDegreePaths = [
+  {
+    id: 1,
+    cycle: "ing",
+    major: "DSE",
+    pathYear: 1,
+  },
+  {
+    id: 2,
+    cycle: "ing",
+    major: "DS",
+    pathYear: 1,
+  },
+  {
+    id: 3,
+    cycle: "ing",
+    major: "RO",
+    pathYear: 1,
+  },
+  {
+    id: 4,
+    cycle: "ing",
+    major: "AF",
+    pathYear: 1,
+  },
+  {
+    id: 5,
+    cycle: "ing",
+    major: "SE",
+    pathYear: 1,
+  },
+  {
+    id: 6,
+    cycle: "ing",
+    major: "SD",
+    pathYear: 1,
+  },
+  {
+    id: 7,
+    cycle: "ing",
+    major: "DSE",
+    pathYear: 2,
+  },
+  {
+    id: 8,
+    cycle: "ing",
+    major: "DS",
+    pathYear: 2,
+  },
+  {
+    id: 9,
+    cycle: "ing",
+    major: "RO",
+    pathYear: 2,
+  },
+  {
+    id: 10,
+    cycle: "ing",
+    major: "AF",
+    pathYear: 2,
+  },
+  {
+    id: 11,
+    cycle: "ing",
+    major: "SE",
+    pathYear: 2,
+  },
+  {
+    id: 12,
+    cycle: "ing",
+    major: "SD",
+    pathYear: 2,
+  },
+  {
+    id: 13,
+    cycle: "ing",
+    major: "DSE",
+    pathYear: 3,
+  },
+  {
+    id: 14,
+    cycle: "ing",
+    major: "DS",
+    pathYear: 3,
+  },
+  {
+    id: 15,
+    cycle: "ing",
+    major: "RO",
+    pathYear: 3,
+  },
+  {
+    id: 16,
+    cycle: "ing",
+    major: "AF",
+    pathYear: 3,
+  },
+  {
+    id: 17,
+    cycle: "ing",
+    major: "SE",
+    pathYear: 3,
+  },
+  {
+    id: 18,
+    cycle: "ing",
+    major: "SD",
+    pathYear: 3,
+  },
+];
 
 const degreePaths = [
   {
+    id: "1",
     label: "Data & Software Engineering",
     value: "data-software-engineering",
   },
@@ -50,9 +166,17 @@ const degreePaths = [
   },
 ];
 
-const DegreePathCombobox = () => {
+interface DegreePathComboboxProps {
+  value: string;
+  setValue: (value: string) => void;
+}
+
+const DegreePathCombobox = ({ value, setValue }: DegreePathComboboxProps) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+
+  const selectedDegreePath = theDegreePaths.find(
+    (degreePath) => `${degreePath.id}` === value
+  );
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -63,8 +187,7 @@ const DegreePathCombobox = () => {
           className="max-w-[350px] lg:w-[350px] justify-between"
         >
           {value
-            ? degreePaths.find((degreePath) => degreePath.value === value)
-                ?.label
+            ? selectedDegreePath?.pathYear + " " + selectedDegreePath?.major
             : "Select degree path..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -75,10 +198,10 @@ const DegreePathCombobox = () => {
           <CommandEmpty>No degree path found.</CommandEmpty>
           <CommandList>
             <CommandGroup>
-              {degreePaths.map((degreePath) => (
+              {theDegreePaths.map((degreePath) => (
                 <CommandItem
-                  key={degreePath.value}
-                  value={degreePath.value}
+                  key={degreePath.id}
+                  value={`${degreePath.id}`}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
                     setOpen(false);
@@ -87,10 +210,10 @@ const DegreePathCombobox = () => {
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === degreePath.value ? "opacity-100" : "opacity-0"
+                      value === `${degreePath.id}` ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {degreePath.label}
+                  {degreePath.pathYear} {degreePath.major}
                 </CommandItem>
               ))}
             </CommandGroup>

@@ -10,9 +10,19 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useModal } from "@/hooks/use-modal-store";
+interface NewDriveItemButtonProps {
+  folderId?: string;
+  degreePathId?: string | number;
+}
 
-const NewDriveItemButton = () => {
+const NewDriveItemButton = ({
+  folderId,
+  degreePathId,
+}: NewDriveItemButtonProps) => {
   const { onOpen } = useModal();
+
+  console.log("folderId", folderId);
+  console.log("degreePathId", degreePathId);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -22,7 +32,14 @@ const NewDriveItemButton = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem onClick={() => onOpen("new-folder")}>
+        <DropdownMenuItem
+          onClick={() =>
+            onOpen("new-folder", {
+              folderId,
+              degreePathId,
+            })
+          }
+        >
           <FolderPlus className="size-4 mr-2" />
           New Folder
         </DropdownMenuItem>

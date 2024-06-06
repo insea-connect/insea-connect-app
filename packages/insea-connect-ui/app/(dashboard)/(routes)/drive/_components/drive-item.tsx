@@ -37,9 +37,11 @@ type fileType =
 interface DriveItemProps {
   fileType: fileType;
   fileName: string;
+  folderId?: string;
+  link?: string;
 }
 
-const DriveItem = ({ fileType, fileName }: DriveItemProps) => {
+const DriveItem = ({ fileType, fileName, folderId, link }: DriveItemProps) => {
   const router = useRouter();
   const getIcon = (type: fileType) => {
     switch (type) {
@@ -62,15 +64,24 @@ const DriveItem = ({ fileType, fileName }: DriveItemProps) => {
 
   return (
     <div
-      onClick={() => router.push("/drive/folder/1")}
+      onClick={() => {
+        if (fileType !== "folder") return;
+        router.push(`/drive/folder/${folderId}`);
+      }}
       className={cn(
         buttonVariants({ variant: "outline" }),
         "flex cursor-pointer items-center justify-between h-12"
       )}
     >
-      <span className="flex items-center">
+      <span className="flex items-center w-full truncate">
         {getIcon(fileType)}
-        <span className="text-base">{fileName}</span>
+        {fileType === "folder" ? (
+          <span className="text-base">{fileName}</span>
+        ) : (
+          <a href="" target="_blank" className="text-base truncate">
+            {fileName}
+          </a>
+        )}
       </span>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -86,7 +97,9 @@ const DriveItem = ({ fileType, fileName }: DriveItemProps) => {
           {fileType !== "folder" && (
             <DropdownMenuItem>
               <Download className="h-4 w-4 mr-2" />
-              Download
+              <a href={link} target="_blank">
+                open
+              </a>
             </DropdownMenuItem>
           )}
           <DropdownMenuItem>

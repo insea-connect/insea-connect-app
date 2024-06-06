@@ -34,3 +34,11 @@ export const USER_STATUS_ENDPOINT = (userId: string) =>
   `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/users/${userId}/status`;
 
 export const HEARTBEAT_ENDPOINT = `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/users/me/heartbeat`;
+
+export const FILE_PATH = `${BACKEND_BASE_URL}/uploads/`;
+
+export const DRIVE_ITEMS_ENDPOINT = (
+  degreePathId: string,
+  parentId: string = "0"
+) =>
+  `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/drive/${degreePathId}/folders/${parentId}/items`;
