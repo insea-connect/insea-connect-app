@@ -41,17 +41,4 @@ public class FileController {
         }
         return ResponseEntity.ok(fileService.updateFile(fileId, file));
     }
-
-    @PreAuthorize("hasRole('CLASS_REP')")
-    @DeleteMapping("/{fileId}")
-    public ResponseEntity<File> deleteFile(@PathVariable Long fileId) {
-        User user = functions.getConnectedUser();
-        if(!functions.checkPermission(user, fileService.getFileById(fileId).getDegreePath()))  {
-            return ResponseEntity.notFound().build();
-        }
-        if (!fileService.deleteFile(fileId)) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.noContent().build();
-    }
 }
