@@ -94,44 +94,49 @@ public class FolderController {
 
     @PreAuthorize("hasRole('CLASS_REP')")
     @PostMapping("drive/{degreePathId}/folders/{parentId}/items")
-    public ResponseEntity<FolderDto> createItem(@PathVariable Long degreePathId , @PathVariable Long parentId, @RequestBody FolderDto folderDto) {
-
+    public ResponseEntity<FolderDto> createItem(@PathVariable Long degreePathId, @PathVariable Long parentId, @RequestBody FolderDto folderDto) {
+        if(parentId==0){
+            Folder folder = new Folder();
+            folder.setName(folderDto.getName());
+            folder.setCreatedAt(LocalDateTime.now());
+            folder.setDegreePath(degreePathRepository.findById(degreePathId).get());
+            folder.setDescription(folderDto.getDescription());
+            folder.setParent(null);
+            folder.setCreator(functions.getConnectedUser());
+            folderRepository.save(folder);
+            return ResponseEntity.ok(folderDto);
+        }else{
         User user = functions.getConnectedUser();
         DriveUserDto driveUserDto = new DriveUserDto();
-        Folder folder = new Folder();
-        FolderDto parentDto = new FolderDto();
         Folder parent = folderService.getFolderById(parentId);
+        
+        FolderDto parentDto = new FolderDto();
         parentDto.setName(parent.getName());
         parentDto.setDescription(parent.getDescription());
         parentDto.setCreator(driveUserDto);
         parentDto.setParent(null);
-        folder.setParent(parent);
-
+        folderDto.setParent(parentDto);
         
-
-
+        Folder folder = new Folder();
+        folder.setParent(parent);
         folder.setName(folderDto.getName());
         folder.setCreatedAt(LocalDateTime.now());
         folder.setDegreePath(degreePathRepository.findById(degreePathId).get());
         folder.setDescription(folderDto.getDescription());
-
         folder.setCreator(functions.getConnectedUser());
-
         folderRepository.save(folder);
-
 
         driveUserDto.setId(user.getId());
         driveUserDto.setEmail(user.getEmail());
         driveUserDto.setUsername(user.getUsername());
 
         folderDto.setCreator(driveUserDto);
-        folderDto.setParent(parentDto);
 
         if (folderService.createFolderItem(parentId, folder) == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        return ResponseEntity.ok(folderDto);
+        return ResponseEntity.ok(folderDto);}
     }
 
     @GetMapping("/{folderId}")

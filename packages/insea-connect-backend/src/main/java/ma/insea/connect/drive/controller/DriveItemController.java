@@ -41,14 +41,21 @@ public class DriveItemController {
     private ma.insea.connect.drive.repository.DegreePathRepository degreePathRepository;
     @Autowired
     private ma.insea.connect.drive.repository.FileRepository fileRepository;
+    @Autowired
+    private ma.insea.connect.drive.repository.DriveItemRepository driveItemRepository;
 
-    @GetMapping("/degreePaths/{degreePathCode}/items")
-    public ResponseEntity<List<DriveItemDto>> getDriveItems(@PathVariable Long degreePathCode) {
+    @GetMapping("drive/{degreePathId}/folders/{parentId}/items")
+    public ResponseEntity<List<DriveItemDto>> getDriveItems(@PathVariable Long degreePathId, @PathVariable Long parentId) {
+        List<DriveItem> driveItems;
+        if(parentId != 0) {
+            Folder folder = folderService.getFolderById(parentId);
+            if(folder == null) {return ResponseEntity.notFound().build();}
+            driveItems = folder.getChildren();
+        }else{
+            driveItems = driveItemRepository.findByDegreePathIdAndParent(degreePathId, null);}
         List<DriveItemDto> driveItemDtos = new ArrayList<>();
-        if (driveItemService.getDriveItems(degreePathCode) == null) {
-            return ResponseEntity.notFound().build();
-        }
-        for(DriveItem driveItem : driveItemService.getDriveItems(degreePathCode)){
+        if (driveItems == null) {return ResponseEntity.notFound().build();}
+        for(DriveItem driveItem : driveItems){
             DriveItemDto driveItemDto = new DriveItemDto();
             DriveUserDto driveUserDto = new DriveUserDto();
 
@@ -63,25 +70,12 @@ public class DriveItemController {
             driveItemDto.setUpdatedAt(driveItem.getUpdatedAt());
             driveItemDto.setCreator(driveUserDto);
             driveItemDto.setDegreePath(driveItem.getDegreePath());
-
             driveItemDto.setParent(null);
-            if(driveItem instanceof Folder) {
-                driveItemDto.setFolder(true);
-            }
+
+            if(driveItem instanceof Folder) {driveItemDto.setFolder(true);}
             driveItemDtos.add(driveItemDto);
         }
-
         return ResponseEntity.ok(driveItemDtos);
-    }
-
-    @PreAuthorize("hasRole('CLASS_REP')")
-    @PostMapping("/degreePaths/{degreePathCode}/folder")
-    public ResponseEntity<FolderDto> CreateDriveItem(@PathVariable Long degreePathCode, @RequestBody FolderDto folderDto) {
-        FolderDto folderDTO=driveItemService.createFolder(degreePathCode, folderDto);
-        if(folderDTO==null){
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(folderDTO);
     }
 
     @PreAuthorize("hasRole('CLASS_REP')")
