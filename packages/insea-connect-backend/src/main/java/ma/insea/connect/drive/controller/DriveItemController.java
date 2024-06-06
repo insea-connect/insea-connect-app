@@ -12,6 +12,8 @@ import ma.insea.connect.drive.service.DriveItemServiceImpl;
 import ma.insea.connect.user.DegreePath;
 import ma.insea.connect.user.User;
 import ma.insea.connect.utils.Functions;
+
+import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -71,6 +71,11 @@ public class DriveItemController {
             driveItemDto.setParent(null);
 
             if(driveItem instanceof Folder) {driveItemDto.setFolder(true);}
+            if(driveItem instanceof File) {
+                driveItemDto.setFolder(false);
+                driveItemDto.setSize(((File) driveItem).getSize());
+                driveItemDto.setMimeType(((File) driveItem).getMimeType());
+                driveItemDto.setItemUrl(((File) driveItem).getFileUrl());}
             driveItemDtos.add(driveItemDto);
         }
         return ResponseEntity.ok(driveItemDtos);
@@ -78,11 +83,10 @@ public class DriveItemController {
 
     @PreAuthorize("hasRole('CLASS_REP')")
     @PostMapping("drive/{degreePathId}/folders/{parentId}/upload")
-    public ResponseEntity<DriveItemDto> handleFileUpload(@RequestParam("file") MultipartFile file,@PathVariable Long degreePathId,@PathVariable Long parentId) throws Exception{
+    public ResponseEntity<HttpStatus> handleFileUpload(@RequestParam("file") MultipartFile file,@PathVariable Long degreePathId,@PathVariable Long parentId) throws Exception{
         User user=functions.getConnectedUser();
         DegreePath degreePath = degreePathRepository.findById(degreePathId).get();
 
-        DriveItemDto driveItemDto = new DriveItemDto();
         DriveUserDto driveUserDto = new DriveUserDto();
         File fileObj = new File();
 
@@ -107,24 +111,16 @@ public class DriveItemController {
         driveUserDto.setEmail(user.getEmail());
         driveUserDto.setId(user.getId());
 
-        driveItemDto.setItemUrl(fileUrl);
-        driveItemDto.setName(file.getOriginalFilename());
-        driveItemDto.setSize(file.getSize());
-        driveItemDto.setMimeType(file.getContentType());
-        driveItemDto.setCreatedAt(LocalDateTime.now());
-        driveItemDto.setCreator(driveUserDto);
-        driveItemDto.setDegreePath(degreePath);
         if(parentId != 0) {
             Folder folder = folderService.getFolderById(parentId);
             if(folder == null) {return ResponseEntity.notFound().build();}
             fileObj.setParent(folder);
         }else{
                 fileObj.setParent(null);
-                driveItemDto.setParent(null);
             }
         fileRepository.save(fileObj);
 
-        return ResponseEntity.ok(driveItemDto);
+        return new ResponseEntity(HttpStatus.CREATED);
 
     }
     @GetMapping("/degreePaths")
