@@ -23,6 +23,7 @@ import ma.insea.connect.drive.repository.FolderRepository;
 import ma.insea.connect.drive.service.FolderServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +47,11 @@ public class FolderController {
     @PreAuthorize("hasRole('CLASS_REP')")
     @PostMapping("drive/{degreePathId}/folders/{parentId}/items")
     public ResponseEntity<FolderDto> createItem(@PathVariable Long degreePathId, @PathVariable Long parentId, @RequestBody FolderDto folderDto) {
+        User user = functions.getConnectedUser();
+        DegreePath degreePath = degreePathRepository.findById(degreePathId).get();
+        if(!functions.checkPermission(user, degreePath)){
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
         if(parentId==0){
             Folder folder = new Folder();
             folder.setName(folderDto.getName());
@@ -57,7 +63,6 @@ public class FolderController {
             folderRepository.save(folder);
             return ResponseEntity.ok(folderDto);
         }else{
-        User user = functions.getConnectedUser();
         DriveUserDto driveUserDto = new DriveUserDto();
         Folder parent = folderService.getFolderById(parentId);
         
