@@ -42,3 +42,9 @@ export const DRIVE_ITEMS_ENDPOINT = (
   parentId: string = "0"
 ) =>
   `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/drive/${degreePathId}/folders/${parentId}/items`;
+
+export const UPLOAD_FILE_ENDPOINT = (
+  degreePathId: string,
+  parentId: string = "0"
+) =>
+  `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/drive/${degreePathId}/folders/${parentId}/upload`;

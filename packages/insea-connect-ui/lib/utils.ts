@@ -70,3 +70,19 @@ export const generateConversationId = (userId: number, otherUserId: number) => {
   const maxUserId = Math.max(userId, otherUserId);
   return `conv-${minUserId}_${maxUserId}`;
 };
+
+export const formatFileSize = (sizeInBytes: number) => {
+  const units = ["B", "KB", "MB", "GB", "TB"];
+
+  let index = 0;
+  let size = sizeInBytes;
+
+  while (size >= 1024) {
+    size /= 1024;
+    index++;
+  }
+
+  return `${size.toFixed(2)} ${units[index]}`;
+};
+
+type SizeUnit = "B" | "KB" | "MB" | "GB" | "TB";

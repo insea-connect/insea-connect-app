@@ -43,7 +43,14 @@ const NewDriveItemButton = ({
           <FolderPlus className="size-4 mr-2" />
           New Folder
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() =>
+            onOpen("new-file", {
+              folderId,
+              degreePathId,
+            })
+          }
+        >
           <FilePlus className="size-4 mr-2" />
           New File
         </DropdownMenuItem>

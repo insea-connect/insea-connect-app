@@ -12,6 +12,7 @@ import {
   Download,
   Pen,
   Delete,
+  FileImage,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -25,13 +26,15 @@ import {
 import { useRouter } from "next/navigation";
 
 type fileType =
+  | "image/png"
+  | "text/plain"
+  | "application/pdf"
+  | "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+  | "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  | "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
   | "folder"
   | "text"
-  | "spreadsheet"
   | "file"
-  | "pdf"
-  | "doc"
-  | "ppt"
   | "other";
 
 interface DriveItemProps {
@@ -44,21 +47,31 @@ interface DriveItemProps {
 const DriveItem = ({ fileType, fileName, folderId, link }: DriveItemProps) => {
   const router = useRouter();
   const getIcon = (type: fileType) => {
-    switch (type) {
-      case "folder":
-        return <Folder className="size-6 mr-2" />;
-      case "text":
-        return <FileText className={`size-6 mr-2`} />;
-      case "pdf":
-        return <FileText className={`size-6 mr-2 text-red-600`} />;
-      case "ppt":
-        return <FilePieChart className={`size-6 mr-2 text-yellow-600`} />;
-      case "doc":
-        return <FileText className={`size-6 mr-2 text-blue-600`} />;
-      case "spreadsheet":
-        return <FileSpreadsheet className={`size-6 mr-2 text-green-600`} />;
-      default:
-        return <File className="size-6 mr-2" />;
+    if (type === "folder") {
+      return <Folder className="size-6 mr-2" />;
+    } else if (type.startsWith("image")) {
+      return <FileImage className="size-6 mr-2" />;
+    } else if (type === "text/plain") {
+      return <FileText className={`size-6 mr-2`} />;
+    } else if (type === "application/pdf") {
+      return <FileText className={`size-6 mr-2 text-red-600`} />;
+    } else if (
+      type ===
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    ) {
+      return <FilePieChart className={`size-6 mr-2 text-yellow-600`} />;
+    } else if (
+      type ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
+      return <FileText className={`size-6 mr-2 text-blue-600`} />;
+    } else if (
+      type ===
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ) {
+      return <FileSpreadsheet className={`size-6 mr-2 text-green-600`} />;
+    } else {
+      return <File className="size-6 mr-2" />;
     }
   };
 

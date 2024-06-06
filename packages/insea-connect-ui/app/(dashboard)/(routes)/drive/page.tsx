@@ -6,6 +6,7 @@ import { useDegreePathContext } from "./layout";
 import { useQuery } from "@tanstack/react-query";
 import { DRIVE_ITEMS_ENDPOINT } from "@/lib/constants";
 import { useSession } from "next-auth/react";
+import DriveItemListSkeleton from "./_components/drive-item-list-skeleton";
 
 const DrivePage = () => {
   const { degreePath } = useDegreePathContext();
@@ -25,7 +26,7 @@ const DrivePage = () => {
     },
   });
 
-  if (isPending) return <div>Loading...</div>;
+  if (isPending) return <DriveItemListSkeleton />;
 
   return <DriveItemList driveItems={driveItems} />;
 };
