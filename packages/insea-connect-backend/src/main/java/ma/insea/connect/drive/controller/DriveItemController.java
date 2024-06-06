@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
-@RequestMapping("/drive")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class DriveItemController {
 

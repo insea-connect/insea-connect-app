@@ -33,14 +33,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/drive/folders")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class FolderController {
 
 
     private final FolderServiceImpl folderService;
     private final Functions functions;
-    private final DriveItemService driveItemService;
     private final DegreePathRepository degreePathRepository;
     private final FolderRepository folderRepository;
 
