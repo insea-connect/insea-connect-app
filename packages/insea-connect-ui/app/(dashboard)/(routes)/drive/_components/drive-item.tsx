@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
+import { BACKEND_BASE_URL } from "@/lib/constants";
 
 type fileType =
   | "image/png"
@@ -41,10 +42,15 @@ interface DriveItemProps {
   fileType: fileType;
   fileName: string;
   folderId?: string;
-  link?: string;
+  fileUrl?: string;
 }
 
-const DriveItem = ({ fileType, fileName, folderId, link }: DriveItemProps) => {
+const DriveItem = ({
+  fileType,
+  fileName,
+  folderId,
+  fileUrl,
+}: DriveItemProps) => {
   const router = useRouter();
   const getIcon = (type: fileType) => {
     if (type === "folder") {
@@ -91,7 +97,11 @@ const DriveItem = ({ fileType, fileName, folderId, link }: DriveItemProps) => {
         {fileType === "folder" ? (
           <span className="text-base">{fileName}</span>
         ) : (
-          <a href="" target="_blank" className="text-base truncate">
+          <a
+            href={`${BACKEND_BASE_URL}/${fileUrl}`}
+            target="_blank"
+            className="text-base truncate"
+          >
             {fileName}
           </a>
         )}
@@ -110,7 +120,7 @@ const DriveItem = ({ fileType, fileName, folderId, link }: DriveItemProps) => {
           {fileType !== "folder" && (
             <DropdownMenuItem>
               <Download className="h-4 w-4 mr-2" />
-              <a href={link} target="_blank">
+              <a href={`${BACKEND_BASE_URL}/${fileUrl}`} target="_blank">
                 open
               </a>
             </DropdownMenuItem>

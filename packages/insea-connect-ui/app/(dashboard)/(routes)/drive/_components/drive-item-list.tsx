@@ -14,6 +14,7 @@ const DriveItemList = ({ driveItems }: DriveItemListProps) => {
           fileType={!item.mimeType ? "folder" : item.mimeType}
           fileName={item.name}
           folderId={!item.mimeType ? item.id : undefined}
+          fileUrl={item.mimeType ? item.itemUrl : undefined}
         />
       ))}
     </div>

@@ -420,7 +420,7 @@ public class DummyUserLoader implements CommandLineRunner {
 
 
         Folder folder3 = new Folder();
-        folder3.setName("Frameworks de developpement web");
+        folder3.setName("Frameworks");
         folder3.setCreatedAt(LocalDateTime.now());
         folder3.setDegreePath(degreePath);
         folder3.setDescription("frameworks de developpement web cours et td");
