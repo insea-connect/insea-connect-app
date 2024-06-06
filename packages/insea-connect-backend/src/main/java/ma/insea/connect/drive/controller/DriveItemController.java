@@ -34,8 +34,6 @@ public class DriveItemController {
     private final Functions functions;
 
     @Autowired
-    private DriveItemServiceImpl driveItemService;
-    @Autowired
     private ma.insea.connect.drive.service.FolderServiceImpl folderService;
     @Autowired
     private ma.insea.connect.drive.repository.DegreePathRepository degreePathRepository;
@@ -79,10 +77,10 @@ public class DriveItemController {
     }
 
     @PreAuthorize("hasRole('CLASS_REP')")
-    @PostMapping("/degreePaths/{degreePathCode}/upload")
-    public ResponseEntity<DriveItemDto> handleFileUpload(@RequestParam("file") MultipartFile file,@PathVariable Long degreePathCode) throws Exception{
+    @PostMapping("drive/{degreePathId}/folders/{parentId}/upload")
+    public ResponseEntity<DriveItemDto> handleFileUpload(@RequestParam("file") MultipartFile file,@PathVariable Long degreePathId,@PathVariable Long parentId) throws Exception{
         User user=functions.getConnectedUser();
-        DegreePath degreePath = degreePathRepository.findById(degreePathCode).get();
+        DegreePath degreePath = degreePathRepository.findById(degreePathId).get();
 
         DriveItemDto driveItemDto = new DriveItemDto();
         DriveUserDto driveUserDto = new DriveUserDto();
@@ -94,7 +92,6 @@ public class DriveItemController {
         if (file.isEmpty()) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
-
         String fileUrl = functions.uploadFile(file);
 
         fileObj.setCreatedAt(LocalDateTime.now());
@@ -104,7 +101,6 @@ public class DriveItemController {
         fileObj.setName(file.getOriginalFilename());
         fileObj.setSize(file.getSize());
         fileObj.setMimeType(file.getContentType());
-        fileObj.setParent(null);
         fileObj.setFileUrl(fileUrl);
 
         driveUserDto.setUsername(user.getUsername());
@@ -116,39 +112,20 @@ public class DriveItemController {
         driveItemDto.setSize(file.getSize());
         driveItemDto.setMimeType(file.getContentType());
         driveItemDto.setCreatedAt(LocalDateTime.now());
-
         driveItemDto.setCreator(driveUserDto);
-
-        driveItemDto.setParent(null);
         driveItemDto.setDegreePath(degreePath);
-
+        if(parentId != 0) {
+            Folder folder = folderService.getFolderById(parentId);
+            if(folder == null) {return ResponseEntity.notFound().build();}
+            fileObj.setParent(folder);
+        }else{
+                fileObj.setParent(null);
+                driveItemDto.setParent(null);
+            }
         fileRepository.save(fileObj);
 
         return ResponseEntity.ok(driveItemDto);
 
-    }
-    @PreAuthorize("hasRole('CLASS_REP')")
-    @PostMapping("/{folderId}/upload")
-    public File handleFileUploadOnFolder(@RequestParam("file") MultipartFile file, @PathVariable Long folderId) throws Exception{
-
-        User user = functions.getConnectedUser();
-        if(!functions.checkPermission(user, folderService.getFolderById(folderId).getDegreePath())){
-            return null;
-        }
-        if (file.isEmpty()) {return null;}
-
-        File fileObj = new File();
-        fileObj.setFileUrl(functions.uploadFile(file));
-        fileObj.setName(file.getOriginalFilename());
-        fileObj.setSize(file.getSize());
-        fileObj.setMimeType(file.getContentType());
-        fileObj.setCreatedAt(LocalDateTime.now());
-        Folder folder = folderService.getFolderById(folderId);
-        fileObj.setParent(folder);
-
-        fileRepository.save(fileObj);
-
-        return fileObj;
     }
     @GetMapping("/degreePaths")
     public List<DegreePath> getDegreePaths() {
