@@ -19,7 +19,7 @@ import ma.insea.connect.user.UserRepository;
 @Component
 @RequiredArgsConstructor
 public class Functions {
-    private static final String UPLOAD_DIR = "uploads";
+    private static final String UPLOAD_DIR = "packages\\insea-connect-backend\\src\\main\\resources\\static\\uploads";
 
     private final UserRepository userRepository;
     public User getConnectedUser() {
@@ -47,7 +47,7 @@ public class Functions {
              Files.copy(file.getInputStream(), filePath);
 
             // Return the path of the saved file
-            return filePath.toString();
+            return "uploads/" + fileName;
     }
 
     public boolean checkPermission(User user, DegreePath degreePath) {
