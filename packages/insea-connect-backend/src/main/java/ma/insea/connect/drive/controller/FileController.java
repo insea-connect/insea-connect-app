@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/drive/files")
+@RequestMapping("api/v1/drive/files")
 @RequiredArgsConstructor
 public class FileController {
 

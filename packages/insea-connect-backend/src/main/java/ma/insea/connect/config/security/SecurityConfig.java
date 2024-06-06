@@ -49,7 +49,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/user/*").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/user.addUser").hasRole("ADMIN")
-                                .anyRequest().permitAll()
+                                .anyRequest().authenticated()
                 )
                 .csrf().disable()
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
