@@ -81,7 +81,7 @@ public class DriveItemController {
         return ResponseEntity.ok(driveItemDtos);
     }
 
-    @PreAuthorize("hasRole('CLASS_REP')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CLASS_REP')")
     @PostMapping("drive/{degreePathId}/folders/{parentId}/upload")
     public ResponseEntity<HttpStatus> handleFileUpload(@RequestParam("file") MultipartFile file,@PathVariable Long degreePathId,@PathVariable Long parentId) throws Exception{
         User user=functions.getConnectedUser();
