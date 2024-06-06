@@ -14,6 +14,7 @@ import axios from "axios";
 import { USER_INFO_ENDPOINT } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 const DegreePathContext = createContext<{
   degreePath: string;
@@ -28,6 +29,11 @@ export const useDegreePathContext = () => useContext(DegreePathContext);
 const DriveLayout = ({ children }: { children: React.ReactNode }) => {
   const [degreePath, setDegreePath] = useState<string>("");
   const { data: auth } = useSession();
+  const pathname = usePathname();
+
+  const folderId = pathname.includes("/folder/")
+    ? pathname.split("/").pop()
+    : undefined;
 
   const { data: userProfile } = useQuery({
     queryKey: ["user-profile"],
@@ -62,7 +68,7 @@ const DriveLayout = ({ children }: { children: React.ReactNode }) => {
       <main className="px-4 flex flex-col gap-3 pt-8 py-0">
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-semibold">All files</h3>
-          <NewDriveItemButton degreePathId={userProfile?.degreePath?.id} />
+          <NewDriveItemButton degreePathId={degreePath} folderId={folderId} />
         </div>
         <div className="flex flex-col gap-2 md:flex-row md:justify-between items-center">
           <Tabs defaultValue="view-all">

@@ -27,6 +27,9 @@ import { Input } from "@/components/ui/input";
 
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
+import { useSession } from "next-auth/react";
+import { DRIVE_ITEMS_ENDPOINT } from "@/lib/constants";
+import { useQueryClient } from "@tanstack/react-query";
 
 const schema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -36,7 +39,14 @@ const schema = z.object({
 const NewFolderModal = () => {
   const { toast } = useToast();
   const router = useRouter();
-  const { isOpen, onClose, type } = useModal();
+  const { isOpen, onClose, type, data } = useModal();
+  const { data: session } = useSession();
+  const queryClient = useQueryClient();
+
+  const folderId = data?.folderId;
+  const degreePathId = data?.degreePathId;
+  const access_token = session?.tokens.access_token;
+
   const isModalOpen = isOpen && type === "new-folder";
   const form = useForm({
     resolver: zodResolver(schema),
@@ -49,9 +59,24 @@ const NewFolderModal = () => {
   const isLoading = form.formState.isSubmitting;
   const onSubmit = async (values: z.infer<typeof schema>) => {
     try {
-      const { data } = await axios.post("/api/folders", values);
+      const url = folderId
+        ? DRIVE_ITEMS_ENDPOINT(degreePathId, folderId)
+        : DRIVE_ITEMS_ENDPOINT(degreePathId);
+
+      const { data } = await axios.post(url, values, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
       form.reset();
-      router.push(`/drive/${data.id}`);
+
+      queryClient.invalidateQueries({
+        queryKey: ["drive-items"],
+      });
+      toast({
+        title: "Folder created",
+        description: "Folder has been created successfully.",
+      });
       onClose();
     } catch (error) {
       toast({
