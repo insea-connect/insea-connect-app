@@ -3,17 +3,14 @@ package ma.insea.connect.drive.controller;
 
 import lombok.RequiredArgsConstructor;
 import ma.insea.connect.drive.dto.DriveItemDto;
-import ma.insea.connect.drive.dto.FolderDto;
 import ma.insea.connect.drive.dto.DriveUserDto;
 import ma.insea.connect.drive.model.DriveItem;
 import ma.insea.connect.drive.model.File;
 import ma.insea.connect.drive.model.Folder;
-import ma.insea.connect.drive.service.DriveItemServiceImpl;
 import ma.insea.connect.user.DegreePath;
 import ma.insea.connect.user.User;
 import ma.insea.connect.utils.Functions;
 
-import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -126,6 +124,24 @@ public class DriveItemController {
     @GetMapping("/degreePaths")
     public List<DegreePath> getDegreePaths() {
         return degreePathRepository.findAll();
+    }
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CLASS_REP')")
+    @DeleteMapping("drive/items/{itemId}")
+    public ResponseEntity<HttpStatus> deleteDriveItem( @PathVariable Long itemId) {
+        User user = functions.getConnectedUser();
+        Optional<DriveItem> optionalDriveItem = driveItemRepository.findById(itemId);
+        if (!optionalDriveItem.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        DriveItem driveItem = optionalDriveItem.get();        if(!functions.checkPermission(user, driveItem.getDegreePath())){
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
+        if(driveItem instanceof Folder){
+            folderService.deleteFolder(itemId);
+        }else{
+            fileRepository.deleteById(itemId);
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
     
 }

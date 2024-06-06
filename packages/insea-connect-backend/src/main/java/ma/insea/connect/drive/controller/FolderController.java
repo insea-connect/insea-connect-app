@@ -1,12 +1,7 @@
 package ma.insea.connect.drive.controller;
 
-import ma.insea.connect.chat.group.GroupRepository;
-import ma.insea.connect.drive.dto.DriveItemDto;
 import ma.insea.connect.drive.dto.DriveUserDto;
 import ma.insea.connect.drive.dto.FolderDto;
-import ma.insea.connect.drive.model.File;
-import ma.insea.connect.drive.service.DriveItemService;
-import ma.insea.connect.drive.service.FolderService;
 import ma.insea.connect.user.DegreePath;
 import ma.insea.connect.user.User;
 import ma.insea.connect.utils.Functions;
@@ -15,23 +10,17 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 
 
-import ma.insea.connect.drive.model.DriveItem;
 import ma.insea.connect.drive.model.Folder;
 import ma.insea.connect.drive.repository.DegreePathRepository;
-import ma.insea.connect.drive.repository.FileRepository;
 import ma.insea.connect.drive.repository.FolderRepository;
 import ma.insea.connect.drive.service.FolderServiceImpl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.multipart.MultipartFile;
 
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -44,7 +33,7 @@ public class FolderController {
     private final DegreePathRepository degreePathRepository;
     private final FolderRepository folderRepository;
 
-    @PreAuthorize("hasRole('CLASS_REP')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CLASS_REP')")
     @PostMapping("drive/{degreePathId}/folders/{parentId}/items")
     public ResponseEntity<FolderDto> createItem(@PathVariable Long degreePathId, @PathVariable Long parentId, @RequestBody FolderDto folderDto) {
         User user = functions.getConnectedUser();
@@ -128,18 +117,4 @@ public class FolderController {
         }
         return ResponseEntity.ok(folderService.updateFolder(folderId, folder));
     }
-
-    @PreAuthorize("hasRole('CLASS_REP')")
-    @DeleteMapping("/{folderId}")
-    public ResponseEntity<Boolean> deleteFolder(@PathVariable Long folderId, Folder folder) {
-        User user = functions.getConnectedUser();
-        if(!functions.checkPermission(user, folder.getDegreePath())){
-            return ResponseEntity.notFound().build();
-        }
-        if (!folderService.deleteFolder(folderId)) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.noContent().build();
-    }
-
 }
