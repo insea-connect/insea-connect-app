@@ -44,54 +44,6 @@ public class FolderController {
     private final DegreePathRepository degreePathRepository;
     private final FolderRepository folderRepository;
 
-    @GetMapping("/{folderId}/items")
-    public ResponseEntity<List<DriveItemDto>> getItems(@PathVariable Long folderId) {
-        if (folderService.getFolderById(folderId) == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        List<DriveItemDto> driveItemDtos = new ArrayList<>();
-        if(folderService.getFolderItems(folderId) == null){
-            return ResponseEntity.notFound().build();
-        }
-        for(DriveItem driveItem : folderService.getFolderItems(folderId)){
-            DriveItemDto driveItemDto = new DriveItemDto();
-            DriveUserDto driveUserDto = new DriveUserDto();
-            Folder folder = folderService.getFolderById(folderId);
-            FolderDto folderDto = new FolderDto();
-
-            driveUserDto.setId(driveItem.getCreator().getId());
-            driveUserDto.setEmail(driveItem.getCreator().getEmail());
-            driveUserDto.setUsername(driveItem.getCreator().getUsername());
-
-            driveItemDto.setId(driveItem.getId());
-            driveItemDto.setName(driveItem.getName());
-            driveItemDto.setDescription(driveItem.getDescription());
-            driveItemDto.setCreatedAt(driveItem.getCreatedAt());
-            driveItemDto.setUpdatedAt(driveItem.getUpdatedAt());
-            driveItemDto.setCreator(driveUserDto);
-            driveItemDto.setDegreePath(driveItem.getDegreePath());
-
-            folderDto.setName(folder.getName());
-            folderDto.setDescription(folder.getDescription());
-            folderDto.setCreator(driveUserDto);
-            folderDto.setParent(null);
-
-
-            driveItemDto.setParent(folderDto);
-            if(driveItem instanceof Folder) {
-                driveItemDto.setFolder(true);
-            }
-            if(driveItem instanceof File) {
-                driveItemDto.setFolder(false);
-                File file= (File) driveItem;
-                driveItemDto.setItemUrl(file.getFileUrl());
-            }
-            driveItemDtos.add(driveItemDto);
-        }
-        return ResponseEntity.ok(driveItemDtos);
-    }
-
     @PreAuthorize("hasRole('CLASS_REP')")
     @PostMapping("drive/{degreePathId}/folders/{parentId}/items")
     public ResponseEntity<FolderDto> createItem(@PathVariable Long degreePathId, @PathVariable Long parentId, @RequestBody FolderDto folderDto) {
