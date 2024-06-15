@@ -3,10 +3,15 @@ package ma.insea.connect.keycloak.controller;
 import lombok.extern.slf4j.Slf4j;
 import ma.insea.connect.chatbot.service.ChatbotService;
 import ma.insea.connect.keycloak.DTO.*;
+import ma.insea.connect.user.DTO.UserInfoResponseDTO;
+import ma.insea.connect.user.User;
+import ma.insea.connect.user.UserRepository;
 import ma.insea.connect.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,6 +49,8 @@ public class KeycloakLoginController {
 
     @Autowired
     ChatbotService chatbotService;
+    private UserRepository userRepository;
+
 
     @PostMapping("/login")
     //Map<String, Object>
@@ -93,7 +100,7 @@ public class KeycloakLoginController {
     }
 
     @PostMapping("/refreshToken")
-    public ResponseEntity<Map<String, Object>> refresh(@RequestBody RefreshTokenDTO refreshTokenDTO) {
+    public ResponseEntity<LoginResponseDTO >refresh(@RequestBody RefreshTokenDTO refreshTokenDTO ,@AuthenticationPrincipal Jwt jwt) {
 
         // Construct the token URL dynamically
         String tokenUrl = issuerUri + "/protocol/openid-connect/token";
@@ -114,12 +121,16 @@ public class KeycloakLoginController {
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(formData, headers);
 
         try {
+
             // Make the request to the Keycloak token endpoint
             ResponseEntity<Map> response = restTemplate.exchange(
                     tokenUrl, HttpMethod.POST, requestEntity, Map.class);
-
+            LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
+            String email = jwt.getClaimAsString("email");
+            loginResponseDTO.setUser(LoginResponseUserDTO.mapToLoginUserResponseDTO(userService.findByEmail(email)));
+            loginResponseDTO.extractTokenInfo(response.getBody().toString());
             // Return the response containing the token
-            return ResponseEntity.ok(response.getBody());
+            return ResponseEntity.ok(loginResponseDTO);
         }
         catch (HttpClientErrorException | HttpServerErrorException e) {
             // Handle client and server errors specifically
