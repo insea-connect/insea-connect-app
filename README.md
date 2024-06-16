@@ -61,22 +61,26 @@ Work in progress
 
 ## Roadmap
 
+#### Common
+
+- [ ] Refactor code for better readability
+
 #### Frontend
 
 - [x] Build Chat feature UI
-- [ ] Build Drive storage feature UI
+- [x] Build Drive storage feature UI
 - [x] Build Bot assistant feature UI
 
 #### Backend
 
 - [x] Build chat feature
-- [ ] Build drive storage feature
+- [x] Build drive storage feature
 - [x] Build bot assistant feature
 - [x] Add support to authentication w/ Keycloak
 
 #### DevOps
 
-- [ ] Implement CI/CD w/ github actions
+- [x] Implement CI/CD w/ github actions
 - [ ] Deploy the application on AWS
 
 #### Documentation
