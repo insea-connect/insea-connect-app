@@ -7,6 +7,7 @@ import NewConversationModal from "../modal/new-conversation-modal";
 import GroupSettingsModal from "../modal/group-settings-modal";
 import NewMemberModal from "../modal/new-member-modal";
 import NewFileModal from "../modal/new-file-modal";
+import DeleteDriveItemModal from "../modal/delete-drive-item-modal";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -22,6 +23,7 @@ export const ModalProvider = () => {
       <NewFileModal />
       <NewConversationModal />
       <NewFolderModal />
+      <DeleteDriveItemModal />
       <NewGroupModal />
       <GroupSettingsModal />
       <NewMemberModal />

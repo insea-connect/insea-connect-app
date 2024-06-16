@@ -48,3 +48,6 @@ export const UPLOAD_FILE_ENDPOINT = (
   parentId: string = "0"
 ) =>
   `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/drive/${degreePathId}/folders/${parentId}/upload`;
+
+export const DELETE_DRIVE_ITEM_ENDPOINT = (itemId: string) =>
+  `${BACKEND_BASE_URL}/${BACKEND_API_VERSION}/drive/items/${itemId}`;

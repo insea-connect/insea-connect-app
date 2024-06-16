@@ -3,6 +3,7 @@ import { create } from "zustand";
 export type ModalType =
   | "new-file"
   | "new-folder"
+  | "delete-drive-item"
   | "new-group"
   | "new-member"
   | "group-settings"

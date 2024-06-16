@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
 import { BACKEND_BASE_URL } from "@/lib/constants";
+import { useModal } from "@/hooks/use-modal-store";
 
 type fileType =
   | "image/png"
@@ -51,6 +52,7 @@ const DriveItem = ({
   folderId,
   fileUrl,
 }: DriveItemProps) => {
+  const { onOpen } = useModal();
   const router = useRouter();
   const getIcon = (type: fileType) => {
     if (type === "folder") {
@@ -130,7 +132,13 @@ const DriveItem = ({
             Details
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="text-red-500 group">
+          <DropdownMenuItem
+            className="text-red-500 group"
+            onClick={(event) => {
+              event.stopPropagation();
+              onOpen("delete-drive-item", { itemId: folderId });
+            }}
+          >
             <Delete className="h-4 w-4 mr-2 group-hover:text-red-700" />
             <span className="group-hover:text-red-700">Delete</span>
           </DropdownMenuItem>
