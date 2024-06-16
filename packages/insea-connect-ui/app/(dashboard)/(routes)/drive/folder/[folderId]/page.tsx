@@ -1,5 +1,4 @@
 "use client";
-import DriveItemInFolderList from "../../_components/drive-item-in-folder-list";
 import { usePathname } from "next/navigation";
 import { useDegreePathContext } from "../../layout";
 import { useSession } from "next-auth/react";
